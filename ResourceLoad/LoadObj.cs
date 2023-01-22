@@ -11,9 +11,9 @@ namespace GameEngine.ResourceLoad
     {
         public static Mesh Load(string path)
         {
-            List<Vector3> vertices = new List<Vector3>();
-            List<Vector3> textureVertices = new List<Vector3>();
-            List<Vector3> normals = new List<Vector3>();
+            List<float> vertices = new List<float>();
+            List<float> textureVertices = new List<float>();
+            List<float> normals = new List<float>();
             List<uint> vertexIndices = new List<uint>();
             List<uint> textureIndices = new List<uint>();
             List<uint> normalIndices = new List<uint>();
@@ -40,17 +40,24 @@ namespace GameEngine.ResourceLoad
                     {
                         // vertex
                         case "v":
-                            vertices.Add(new Vector3(float.Parse(words[0].Replace('.', ',')), float.Parse(words[1].Replace('.', ',')),
-                                                    float.Parse(words[2].Replace('.', ','))));
+                            /*vertices.Add(new Vector3(float.Parse(words[0].Replace('.', ',')), float.Parse(words[1].Replace('.', ',')),
+                                                    float.Parse(words[2].Replace('.', ','))));*/
+                            vertices.Add(float.Parse(words[0].Replace('.', ',')));
+                            vertices.Add(float.Parse(words[1].Replace('.', ',')));
+                            vertices.Add(float.Parse(words[2].Replace('.', ',')));
                             break;
 
                         case "vt":
-                            textureVertices.Add(new Vector3(float.Parse(words[0].Replace('.', ',')), float.Parse(words[1].Replace('.', ',')),
-                                                            words.Count < 3 ? 0 : float.Parse(words[2].Replace('.', ','))));
+                            //textureVertices.Add(new Vector2(float.Parse(words[0].Replace('.', ',')), float.Parse(words[1].Replace('.', ','))));
+                            textureVertices.Add(float.Parse(words[0].Replace('.', ',')));
+                            textureVertices.Add(float.Parse(words[1].Replace('.', ',')));
                             break;
 
                         case "vn":
-                            normals.Add(new Vector3(float.Parse(words[0].Replace('.', ',')), float.Parse(words[1].Replace('.', ',')), float.Parse(words[2].Replace('.', ','))));
+                            //normals.Add(new Vector3(float.Parse(words[0].Replace('.', ',')), float.Parse(words[1].Replace('.', ',')), float.Parse(words[2].Replace('.', ','))));
+                            normals.Add(float.Parse(words[0].Replace('.', ',')));
+                            normals.Add(float.Parse(words[1].Replace('.', ',')));
+                            normals.Add(float.Parse(words[2].Replace('.', ',')));
                             break;
 
                         // face
@@ -71,9 +78,6 @@ namespace GameEngine.ResourceLoad
                                 if (comps.Length > 2)
                                     normalIndices.Add(uint.Parse(comps[2]) - 1);
                             }
-                            break;
-
-                        default:
                             break;
                     }
                 }

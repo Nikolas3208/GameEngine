@@ -27,31 +27,37 @@ namespace GameEngine
         {
             base.OnLoad();
 
+
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+
+            GL.PolygonMode(MaterialFace.Back, PolygonMode.Line);
+            GL.PolygonMode(MaterialFace.Front, PolygonMode.Fill);
 
             GL.Enable(EnableCap.DepthTest);
 
             shader = new Shader("..\\..\\..\\Shaders\\shader.vert", "..\\..\\..\\Shaders\\shader.frag");
 
-            texture = Texture.LoadFromFile("..\\..\\..\\Content\\Textures\\Stone.jpg");
+            texture = Texture.LoadFromFile("..\\..\\..\\Content\\Textures\\cottage_diffuse.png");
 
-            mesh = LoadObj.Load("..\\..\\..\\Content\\Models\\Cube.obj");
+            mesh = LoadObj.Load("..\\..\\..\\Content\\Models\\cottage_obj.obj");
             mesh.Init(shader, texture);
-
-
 
             shader.Use();
 
             camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
+
+            CursorState = CursorState.Grabbed;
         }
 
         protected override void OnRenderFrame(FrameEventArgs args)
         {
             base.OnRenderFrame(args);
 
+            Title = ((int)(1 / args.Time)).ToString();
+
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            mesh.Draw(shader, camera);
+            mesh.Draw(camera);
 
             SwapBuffers();
         }

@@ -8,7 +8,12 @@ namespace GameEngine
     {
         public static void Main()
         {
-            using (Game game = new Game(GameWindowSettings.Default, NativeWindowSettings.Default))
+            NativeWindowSettings nativeWindowSettings = new NativeWindowSettings()
+            {
+                Size = new OpenTK.Mathematics.Vector2i(1920, 1080)
+            };
+
+            using (Game game = new Game(GameWindowSettings.Default, nativeWindowSettings))
             {
                 game.Run();
             }

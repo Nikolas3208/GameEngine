@@ -15,18 +15,16 @@ namespace GameEngine
         private Shader shader;
         private Texture texture;
 
-        public int VBO;
-        public int VAO;
-        public int EBO;
+        private int VAO;
 
-        public List<Vector3> vertices;
-        public List<Vector3> textureVertices;
-        public List<Vector3> normals;
+        public List<float> vertices;
+        public List<float> textureVertices;
+        public List<float> normals;
         public List<uint> vertexIndices;
         public List<uint> textureIndices;
         public List<uint> normalIndices;
 
-        public Mesh(List<Vector3> vertices, List<Vector3> textureVertices, List<Vector3> normals,
+        public Mesh(List<float> vertices, List<float> textureVertices, List<float> normals,
                     List<uint> vertexIndices, List<uint> textureIndices, List<uint> normalIndices)
         {
             this.vertices = vertices;
@@ -43,32 +41,62 @@ namespace GameEngine
             this.texture = texture;
 
             VAO = GL.GenVertexArray();
-
-            VBO = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VBO);
-            GL.BufferData(BufferTarget.ArrayBuffer, vertexIndices.Count * sizeof(float), vertices.ToArray(), BufferUsageHint.StaticDraw);
-
-            EBO = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, EBO);
-            GL.BufferData(BufferTarget.ElementArrayBuffer, vertexIndices.Count * sizeof(float), vertexIndices.ToArray(), BufferUsageHint.StaticDraw);
-
             GL.BindVertexArray(VAO);
-            {
-                var vertexLocation = shader.GetAttribLocation("aPos");
-                GL.EnableVertexAttribArray(vertexLocation);
-                GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
 
-                var normalLocation = shader.GetAttribLocation("aNormal");
-                GL.EnableVertexAttribArray(normalLocation);
-                GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 3 * sizeof(float));
+            int vboVerices = CreateVBO(vertices.ToArray());
+            int vboTexture = CreateVBO(textureVertices.ToArray());
 
-                var texturelLocation = shader.GetAttribLocation("aTexCoords");
-                GL.EnableVertexAttribArray(texturelLocation);
-                GL.VertexAttribPointer(texturelLocation, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float), 6 * sizeof(float));
-            }
+            int ebo = CreateEBO(vertexIndices.ToArray());
+
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, ebo);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, vboVerices);
+
+            var vertexLocation = shader.GetAttribLocation("aPos");
+            var normalLocation = shader.GetAttribLocation("aNormal");
+            var texturelLocation = shader.GetAttribLocation("aTexCoord");
+
+            GL.EnableVertexAttribArray(vertexLocation);
+            GL.EnableVertexAttribArray(normalLocation);
+            GL.EnableVertexAttribArray(texturelLocation);
+
+            //Vertices
+            GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
+
+            //Normals
+            GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
+
+            //Texture
+            GL.BindBuffer(BufferTarget.ArrayBuffer, vboTexture);
+            GL.VertexAttribPointer(texturelLocation, 2, VertexAttribPointerType.Float, false, 2 * sizeof(float), 0 * sizeof(float));
+
+            GL.BindVertexArray(0);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+
+            GL.DisableVertexAttribArray(vertexLocation);
+            GL.DisableVertexAttribArray(normalLocation);
+            GL.DisableVertexAttribArray(texturelLocation);
         }
 
-        public void Draw(Shader shader, Camera camera)
+        private int CreateVBO(float[] date)
+        {
+            int vbo = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
+            GL.BufferData(BufferTarget.ArrayBuffer, date.Length * sizeof(float), date, BufferUsageHint.StaticDraw);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+
+            return vbo;
+        }
+        private int CreateEBO(uint[] date)
+        {
+            int ebo = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, ebo);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, date.Length * sizeof(uint), date, BufferUsageHint.StaticDraw);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
+
+            return ebo;
+        }
+
+        public void Draw(Camera camera)
         {
             GL.BindVertexArray(VAO);
 
@@ -80,7 +108,7 @@ namespace GameEngine
             shader.SetMatrix4("view", camera.GetViewMatrix());
             shader.SetMatrix4("projection", camera.GetProjectionMatrix());
 
-            GL.DrawElements(BeginMode.Triangles, vertexIndices.Count, DrawElementsType.UnsignedInt, 0);
+            GL.DrawElements(PrimitiveType.Triangles, vertexIndices.Count, DrawElementsType.UnsignedInt, 0);
         }
     }
 }
