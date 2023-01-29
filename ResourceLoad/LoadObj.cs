@@ -40,21 +40,17 @@ namespace GameEngine.ResourceLoad
                     {
                         // vertex
                         case "v":
-                            /*vertices.Add(new Vector3(float.Parse(words[0].Replace('.', ',')), float.Parse(words[1].Replace('.', ',')),
-                                                    float.Parse(words[2].Replace('.', ','))));*/
                             vertices.Add(float.Parse(words[0].Replace('.', ',')));
                             vertices.Add(float.Parse(words[1].Replace('.', ',')));
                             vertices.Add(float.Parse(words[2].Replace('.', ',')));
                             break;
 
                         case "vt":
-                            //textureVertices.Add(new Vector2(float.Parse(words[0].Replace('.', ',')), float.Parse(words[1].Replace('.', ','))));
                             textureVertices.Add(float.Parse(words[0].Replace('.', ',')));
                             textureVertices.Add(float.Parse(words[1].Replace('.', ',')));
                             break;
 
                         case "vn":
-                            //normals.Add(new Vector3(float.Parse(words[0].Replace('.', ',')), float.Parse(words[1].Replace('.', ',')), float.Parse(words[2].Replace('.', ','))));
                             normals.Add(float.Parse(words[0].Replace('.', ',')));
                             normals.Add(float.Parse(words[1].Replace('.', ',')));
                             normals.Add(float.Parse(words[2].Replace('.', ',')));
@@ -72,7 +68,7 @@ namespace GameEngine.ResourceLoad
                                 // subtract 1: indices start from 1, not 0
                                 vertexIndices.Add(uint.Parse(comps[0]) - 1);
 
-                                if (comps.Length > 1 && comps[1].Length != 0)
+                                if (comps.Length > 1)
                                     textureIndices.Add(uint.Parse(comps[1]) - 1);
 
                                 if (comps.Length > 2)

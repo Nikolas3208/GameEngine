@@ -13,9 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Content\Models\" />
     <Folder Include="Content\Textures\" />
-    <Folder Include="Content\" />
   </ItemGroup>
 
 </Project>

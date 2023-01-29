@@ -12,8 +12,15 @@ namespace GameEngine
     {
         private Camera camera;
         private Shader shader;
-        private Texture texture;
-        private Mesh mesh;
+
+        private Texture txDiffuseCube;
+        private Texture txSpecularCube;
+
+        private Texture txDiffuseHome;
+        private Texture txSpecularHome;
+
+        private Model ModelCube;
+        private Model ModelHouse;
 
         private bool _firstMove = true;
 
@@ -23,24 +30,74 @@ namespace GameEngine
         {
         }
 
+        private readonly float[] _vertices =
+        {
+            // Positions          Normals              Texture coords
+            -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
+             0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 0.0f,
+             0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
+             0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
+            -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
+
+            -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f, 0.0f,
+             0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f, 0.0f,
+             0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f, 1.0f,
+             0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f, 1.0f,
+            -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f, 1.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f, 0.0f,
+
+            -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+            -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+            -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
+            -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+
+             0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+             0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
+             0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+             0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+             0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
+             0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+
+            -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
+             0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 1.0f,
+             0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
+             0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 0.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
+
+            -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
+             0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 1.0f,
+             0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
+             0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
+            -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
+            -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
+        };
+
         protected override void OnLoad()
         {
             base.OnLoad();
 
-
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-
-            GL.PolygonMode(MaterialFace.Back, PolygonMode.Line);
-            GL.PolygonMode(MaterialFace.Front, PolygonMode.Fill);
 
             GL.Enable(EnableCap.DepthTest);
 
             shader = new Shader("..\\..\\..\\Shaders\\shader.vert", "..\\..\\..\\Shaders\\shader.frag");
 
-            texture = Texture.LoadFromFile("..\\..\\..\\Content\\Textures\\cottage_diffuse.png");
+            txDiffuseCube = Texture.LoadFromFile("..\\..\\..\\Content\\Textures\\container2.png");
+            txSpecularCube = Texture.LoadFromFile("..\\..\\..\\Content\\Textures\\container2_specular.png");
 
-            mesh = LoadObj.Load("..\\..\\..\\Content\\Models\\cottage_obj.obj");
-            mesh.Init(shader, texture);
+            txDiffuseHome = Texture.LoadFromFile("..\\..\\..\\Content\\Textures\\cottage_diffuse.png");
+            txSpecularHome = Texture.LoadFromFile("..\\..\\..\\Content\\Textures\\cottage_normal.png");
+
+            Mesh Cube = new Mesh(_vertices);
+            Mesh Home = LoadObj.Load("..\\..\\..\\Content\\Models\\cottage_obj.obj");
+
+            ModelCube = new Model("Cube", false, new Vector3(1.2f, 1.0f, 2.0f), new Vector3(), 1, txDiffuseCube, txSpecularCube, shader, Cube);
+
+            ModelHouse = new Model("Home", true, new Vector3(), new Vector3(), 1, txDiffuseHome, txSpecularHome, shader, Home);
 
             shader.Use();
 
@@ -57,9 +114,23 @@ namespace GameEngine
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            mesh.Draw(camera);
+            updateShader(shader);
+
+            ModelCube.RenderModel(shader);
+
+            ModelHouse.RenderModel(shader);
 
             SwapBuffers();
+        }
+
+        private void updateShader(Shader shader)
+        {
+            shader.Use();
+
+            shader.SetMatrix4("view", camera.GetViewMatrix());
+            shader.SetMatrix4("projection", camera.GetProjectionMatrix());
+
+            shader.SetVector3("viewPos", camera.Position);
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
