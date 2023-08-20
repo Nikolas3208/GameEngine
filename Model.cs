@@ -1,6 +1,10 @@
 ﻿using GameEngine.ResourceLoad;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
+
+using Assimp.Configs;
+using Assimp;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,45 +15,103 @@ namespace GameEngine
 {
     public class Model
     {
-        private string name;
+        private Scene scene;
+        protected Shader shader;
+        protected List<Texture> textures =new List<Texture>();
 
-        private Vector3 position;
-        private Vector3 rotation;
-        private float scale;
+        private Vector3 position = new Vector3(10, 20, 10);
+        private Vector3 rotation;// = new Vector3(0,0,00);
+        private float scale = 1;
 
-        private Texture txDeff;
-        private Texture txSpec;
-        private Mesh mesh;
 
-        public Model(string name, bool ebo, Vector3 position, Vector3 rotation, float scale, Texture txDeff, Texture txSpec, Shader shader, Mesh mesh)
+        protected OpenTK.Graphics.OpenGL4.PrimitiveType faceMode = OpenTK.Graphics.OpenGL4.PrimitiveType.Triangles;
+
+        protected List<Mesh> meshs = new List<Mesh>();
+        private List<Vertex> vertices = new List<Vertex>();
+        private List<uint> indices = new List<uint>();
+
+        protected Vertex vertex = new Vertex();
+        public Model(string path, Shader shader)
         {
-            this.name = name;
-            this.position = position;
-            this.rotation = rotation;
-            this.scale = scale;
-            this.txDeff = txDeff;
-            this.txSpec = txSpec;
-            this.mesh = mesh;
+            this.shader = shader;
 
-            if (!ebo)
-                mesh.Init(shader);
-            else
-                mesh.InitEBO(shader);
+            textures.Add(Texture.LoadFromFile(@"C:\Users\gaste\source\repos\Nikolas3208\GameEngine\Content\Textures\aerial_rocks_04_diff_2k.jpg"));
+            textures.Add(Texture.LoadFromFile(@"C:\Users\gaste\source\repos\Nikolas3208\GameEngine\Content\Textures\aerial_rocks_04_disp_2k.png"));
+            textures.Add(Texture.LoadFromFile(@"C:\Users\gaste\source\repos\Nikolas3208\GameEngine\Content\Textures\Stone.jpg"));
+
+            LoadModel(path);
         }
 
-        public void UpdateShader(Shader shader)
+        private void LoadModel(string path)
         {
-            // Here we specify to the shaders what textures they should refer to when we want to get the positions.
-            shader.SetInt("material.diffuse", 0);
-            shader.SetInt("material.specular", 1);
-            shader.SetVector3("material.specular", new Vector3(0.5f, 0.5f, 0.5f));
-            shader.SetFloat("material.shininess", 32.0f);
+            AssimpContext importer = new AssimpContext();
+            importer.SetConfig(new NormalSmoothingAngleConfig(0));
 
-            shader.SetVector3("light.position", new Vector3(1.2f, 1.0f, 2.0f));
-            shader.SetVector3("light.ambient", new Vector3(0.2f));
-            shader.SetVector3("light.diffuse", new Vector3(0.5f));
-            shader.SetVector3("light.specular", new Vector3(1.0f));
+            scene = importer.ImportFile(path, PostProcessSteps.Triangulate);
+            {
+                for (int iM = 0; iM < scene.Meshes.Count; iM++)
+                {
+                    Assimp.Mesh mesh = scene.Meshes[iM];
+
+                    foreach (Face face in mesh.Faces)
+                    {
+                        switch (face.IndexCount)
+                        {
+                            case 1:
+                                faceMode = OpenTK.Graphics.OpenGL4.PrimitiveType.Points;
+                                break;
+                            case 2:
+                                faceMode = OpenTK.Graphics.OpenGL4.PrimitiveType.Lines;
+                                break;
+                            case 3:
+                                faceMode = OpenTK.Graphics.OpenGL4.PrimitiveType.Triangles;
+                                break;
+                        }
+                        for (int i = 0; i < face.IndexCount; i++)
+                        {
+                            int indics = face.Indices[i];
+
+                            vertex.Position = FromVector(mesh.Vertices[indics]);
+                            vertex.TexCoords = FromVector2D(mesh.TextureCoordinateChannels[0][indics]);
+                            vertex.Normal = FromVector(mesh.Normals[indics]);
+
+                            vertices.Add(vertex);
+
+                        }
+                        for (int i = 0; i < face.IndexCount; i++)
+                        {
+                            indices.Add((uint)face.Indices[i]);
+                        }
+
+                    }
+                    AddMesh(new Mesh(vertices, indices, this.shader));
+
+                    vertices = new List<Vertex>();
+                    indices = new List<uint>();
+                }
+            }
         }
+
+        protected void AddMesh(Mesh mesh) => meshs.Add(mesh);
+
+        private Vector3 FromVector(Vector3D vec)
+        {
+            Vector3 v;
+            v.X = vec.X;
+            v.Y = vec.Y;
+            v.Z = vec.Z;
+            return v;
+        }
+
+        private Vector2 FromVector2D(Vector3D vec)
+        {
+            Vector2 v;
+            v.X = vec.X;
+            v.Y = vec.Y;
+            return v;
+        }
+
+        public void SetPosition(Vector3 position) => this.position = position;
 
         private void UniformUpdate(Shader shader)
         {
@@ -63,17 +125,34 @@ namespace GameEngine
             shader.SetMatrix4("model", matrix);
         }
 
-        public void RenderModel(Shader shader)
+        public void UpdateShader(Shader shader, Vector3 lightPos)
         {
-            UniformUpdate(shader);
-            UpdateShader(shader);
+            // Here we specify to the shaders what textures they should refer to when we want to get the positions.
+            shader.SetInt("material.diffuse", 0);
+            shader.SetInt("material.specular", 1);
+            shader.SetVector3("material.specular", new Vector3(0.5f, 0.5f, 0.5f));
+            shader.SetFloat("material.shininess", 32.0f);
 
-            GL.BindVertexArray(mesh.VAO);
+            shader.SetVector3("light.position", lightPos);
+            shader.SetVector3("light.ambient", new Vector3(0.2f));
+            shader.SetVector3("light.diffuse", new Vector3(0.5f));
+            shader.SetVector3("light.specular", new Vector3(1.0f));
+        }
 
-            txDeff.Use(TextureUnit.Texture0);
-            txSpec.Use(TextureUnit.Texture1);
+        public void Render(Shader shader, Vector3 lightPos)
+        {
+            UniformUpdate(this.shader);
+            UpdateShader(this.shader, lightPos);
 
-            mesh.Render();
+            for (int i = 0; i < meshs.Count; i++)
+            {
+                textures[0].Use(TextureUnit.Texture6);
+                textures[1].Use(TextureUnit.Texture7);
+
+
+                meshs[i].Draw(this.shader, faceMode);
+            }
+
         }
     }
 }

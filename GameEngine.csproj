@@ -5,15 +5,18 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OpenTK" Version="4.7.5" />
+    <PackageReference Include="AssimpNet" Version="4.1.0" />
+    <PackageReference Include="OpenTK" Version="4.8.0" />
+    <PackageReference Include="SFML.Graphics" Version="2.5.1" />
     <PackageReference Include="StbImageSharp" Version="2.27.13" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Content\Textures\" />
+    <Folder Include="Content\HeightMap\" />
   </ItemGroup>
 
 </Project>

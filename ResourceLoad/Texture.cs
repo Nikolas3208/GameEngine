@@ -12,6 +12,9 @@ namespace GameEngine.ResourceLoad
     {
         public readonly int Handle;
 
+        public int Width { get; set; }
+        public int Height { get; set; }
+
         public static Texture LoadFromFile(string path)
         {
             // Generate handle
@@ -20,6 +23,8 @@ namespace GameEngine.ResourceLoad
             // Bind the handle
             GL.ActiveTexture(TextureUnit.Texture0);
             GL.BindTexture(TextureTarget.Texture2D, handle);
+
+            int width, height;
 
             // For this example, we're going to use .NET's built-in System.Drawing library to load textures.
 
@@ -31,7 +36,8 @@ namespace GameEngine.ResourceLoad
             using (Stream stream = File.OpenRead(path))
             {
                 ImageResult image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
-
+                width = image.Width;
+                height = image.Height;
                 // Now that our pixels are prepared, it's time to generate a texture. We do this with GL.TexImage2D.
                 // Arguments:
                 //   The type of texture we're generating. There are various different types of textures, but the only one we need right now is Texture2D.
@@ -70,11 +76,13 @@ namespace GameEngine.ResourceLoad
             // Here is an example of mips in action https://en.wikipedia.org/wiki/File:Mipmap_Aliasing_Comparison.png
             GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 
-            return new Texture(handle);
+            return new Texture(handle, width, height);
         }
 
-        public Texture(int glHandle)
+        public Texture(int glHandle, int width, int height)
         {
+            Width = width;
+            Height = height;
             Handle = glHandle;
         }
 

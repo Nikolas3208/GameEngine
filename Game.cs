@@ -1,107 +1,67 @@
-﻿using GameEngine.ResourceLoad;
+﻿using Assimp;
+using GameEngine.ResourceLoad;
+using GameEngine.Terrain;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
+using System.Reflection.Emit;
 
 namespace GameEngine
 {
     public class Game : GameWindow
     {
+        public List<Shader> shaders = new List<Shader>();
+
         private Camera camera;
-        private Shader shader;
-
-        private Texture txDiffuseCube;
-        private Texture txSpecularCube;
-
-        private Texture txDiffuseHome;
-        private Texture txSpecularHome;
-
-        private Model ModelCube;
         private Model ModelHouse;
+        private Model ModelLight;
+        private Player Player;
 
-        private bool _firstMove = true;
+        private Vector3 lightPos = new Vector3(10, 30, 10);
 
-        private Vector2 _lastPos;
+        public BaseTerrain Terrain;
+
+        public float Delta;
 
         public Game(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(gameWindowSettings, nativeWindowSettings)
         {
         }
 
-        private readonly float[] _vertices =
-        {
-            // Positions          Normals              Texture coords
-            -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
-             0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 0.0f,
-             0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
-             0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
-            -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 1.0f,
-            -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
-
-            -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f, 0.0f,
-             0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f, 0.0f,
-             0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f, 1.0f,
-             0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f, 1.0f,
-            -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f, 1.0f,
-            -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f, 0.0f,
-
-            -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-            -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
-            -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-            -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-            -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
-            -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-
-             0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-             0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
-             0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-             0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-             0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
-             0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-
-            -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
-             0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 1.0f,
-             0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
-             0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
-            -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 0.0f,
-            -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
-
-            -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
-             0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 1.0f,
-             0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
-             0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
-            -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
-            -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
-        };
-
         protected override void OnLoad()
         {
             base.OnLoad();
 
+            VSync = VSyncMode.On;
+
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
             GL.Enable(EnableCap.DepthTest);
+            GL.Enable(EnableCap.CullFace);
+            GL.CullFace(CullFaceMode.Front);
 
-            shader = new Shader("..\\..\\..\\Shaders\\shader.vert", "..\\..\\..\\Shaders\\shader.frag");
+            Shader shader1 = new Shader("C:\\Users\\gaste\\source\\repos\\Nikolas3208\\GameEngine\\Shaders\\shader.vert", "C:\\Users\\gaste\\source\\repos\\Nikolas3208\\GameEngine\\Shaders\\shader.frag");
 
-            txDiffuseCube = Texture.LoadFromFile("..\\..\\..\\Content\\Textures\\container2.png");
-            txSpecularCube = Texture.LoadFromFile("..\\..\\..\\Content\\Textures\\container2_specular.png");
+            shaders.Add(shader1);
+            shaders.Add(shader1);
 
-            txDiffuseHome = Texture.LoadFromFile("..\\..\\..\\Content\\Textures\\cottage_diffuse.png");
-            txSpecularHome = Texture.LoadFromFile("..\\..\\..\\Content\\Textures\\cottage_normal.png");
+            ModelHouse = new Model("C:\\Users\\gaste\\source\\repos\\Nikolas3208\\GameEngine\\Content\\Models\\Cube.obj", shaders[0]);
+            ModelLight = new Model("C:\\Users\\gaste\\source\\repos\\Nikolas3208\\GameEngine\\Content\\Models\\Cube.obj", shaders[0]);
+            ModelLight.SetPosition(lightPos);
 
-            Mesh Cube = new Mesh(_vertices);
-            Mesh Home = LoadObj.Load("..\\..\\..\\Content\\Models\\cottage_obj.obj");
-
-            ModelCube = new Model("Cube", false, new Vector3(1.2f, 1.0f, 2.0f), new Vector3(), 1, txDiffuseCube, txSpecularCube, shader, Cube);
-
-            ModelHouse = new Model("Home", true, new Vector3(), new Vector3(), 1, txDiffuseHome, txSpecularHome, shader, Home);
-
-            shader.Use();
+            //Terrain = new BaseTerrain("C:\\Users\\gaste\\source\\repos\\Nikolas3208\\GameEngine\\Content\\Textures\\TerrainTextures\\blendMap.png", shaders[1]);
+            Terrain = TerrainHeightMap.InitTerrain(Content.HEIGHTMAP_PATH + "Heightmap.png");
+            Terrain = TerrainNoisePerlin.InitTerrain(256);
 
             camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
+
+            Player = new Player(camera);
+
+            foreach (var shader in shaders)
+                shader.Use();
+
 
             CursorState = CursorState.Grabbed;
         }
@@ -112,25 +72,45 @@ namespace GameEngine
 
             Title = ((int)(1 / args.Time)).ToString();
 
+            Delta = (float)args.Time;
+
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            updateShader(shader);
+            GL.Enable(EnableCap.Texture2D);
+            GL.Enable(EnableCap.DepthTest);
 
-            ModelCube.RenderModel(shader);
+            //ModelLight.SetPosition(Player.GetPositionPlayer());
 
-            ModelHouse.RenderModel(shader);
+            updateShader(shaders);
+
+            float i = 0;
+
+            lightPos.X += lightPos.X * 50 * (float)Math.Cos(i) + 0;
+            lightPos.Y += 50 * (float)Math.Sin(i) + 20;
+
+            i += 1;
+
+            Terrain.RenderMesh(camera);
+            //Player.Draw(shaders[2]);
+            ModelHouse.Render(shaders[0], lightPos);
+            ModelLight.Render(shaders[0], lightPos);
 
             SwapBuffers();
         }
 
-        private void updateShader(Shader shader)
+        private void updateShader(List<Shader> shaders)
         {
-            shader.Use();
+            for (int i = 0; i < shaders.Count; i++)
+            {
+                shaders[i].Use();
 
-            shader.SetMatrix4("view", camera.GetViewMatrix());
-            shader.SetMatrix4("projection", camera.GetProjectionMatrix());
+                shaders[i].SetMatrix4("view", camera.GetViewMatrix());
+                shaders[i].SetMatrix4("projection", camera.GetProjectionMatrix());
+                
+                if (shaders[i].GetAttribLocation("viewPos") != -1)
+                    shaders[i].SetVector3("viewPos", camera.Position);
+            }
 
-            shader.SetVector3("viewPos", camera.Position);
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
@@ -142,57 +122,18 @@ namespace GameEngine
                 return;
             }
 
-            var input = KeyboardState;
+            var key = KeyboardState;
 
-            if (input.IsKeyDown(Keys.Escape))
+            if (key.IsKeyDown(Keys.Escape))
             {
                 Close();
             }
 
-            const float cameraSpeed = 1.5f;
-            const float sensitivity = 0.2f;
-
-            if (input.IsKeyDown(Keys.W))
-            {
-                camera.Position += camera.Front * cameraSpeed * (float)e.Time; // Forward
-            }
-            if (input.IsKeyDown(Keys.S))
-            {
-                camera.Position -= camera.Front * cameraSpeed * (float)e.Time; // Backwards
-            }
-            if (input.IsKeyDown(Keys.A))
-            {
-                camera.Position -= camera.Right * cameraSpeed * (float)e.Time; // Left
-            }
-            if (input.IsKeyDown(Keys.D))
-            {
-                camera.Position += camera.Right * cameraSpeed * (float)e.Time; // Right
-            }
-            if (input.IsKeyDown(Keys.Space))
-            {
-                camera.Position += camera.Up * cameraSpeed * (float)e.Time; // Up
-            }
-            if (input.IsKeyDown(Keys.LeftShift))
-            {
-                camera.Position -= camera.Up * cameraSpeed * (float)e.Time; // Down
-            }
+            Player.KeyUpdate(key);
 
             var mouse = MouseState;
 
-            if (_firstMove)
-            {
-                _lastPos = new Vector2(mouse.X, mouse.Y);
-                _firstMove = false;
-            }
-            else
-            {
-                var deltaX = mouse.X - _lastPos.X;
-                var deltaY = mouse.Y - _lastPos.Y;
-                _lastPos = new Vector2(mouse.X, mouse.Y);
-
-                camera.Yaw += deltaX * sensitivity;
-                camera.Pitch -= deltaY * sensitivity;
-            }
+            Player.MouseUpdate(mouse);
         }
 
         protected override void OnMouseWheel(MouseWheelEventArgs e)

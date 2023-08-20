@@ -10,34 +10,52 @@ using static OpenTK.Graphics.OpenGL.GL;
 
 namespace GameEngine
 {
+    public struct Vertex
+    {
+        public Vector3 Position = new Vector3();
+        public Vector3 Normal = new Vector3(0, 0, 0);
+        public Vector2 TexCoords = new Vector2();
+
+        public Vertex(Vector3  pos)
+        {
+            Position = pos;
+        }
+
+        public Vertex(Vector3 pos,  Vector2 texCoord)
+        {
+            Position = pos;
+            TexCoords = texCoord;
+        }
+
+        public Vertex(Vector3 pos, Vector3 normal)
+        {
+            Position = pos;
+            Normal = normal;
+        }
+
+        public Vertex(Vector3 pos, Vector2 texCoord,  Vector3 normal)
+        {
+            Position = pos;
+            TexCoords = texCoord;
+            Normal = normal;
+        }
+    }
 
     public class Mesh
     {
-        public int VAO;
-        public int ebo;
-        public int eboTexture;
+        private int VAO;
+        private int VBO;
+        private int EBO;
 
-        public float[] vertices;
-        public float[] textureVertices;
-        public float[] normals;
-        public uint[] vertexIndices;
-        public uint[] textureIndices;
-        public uint[] normalIndices;
+        public Vertex[] Vertices;
+        public uint[] indices;
 
-        public Mesh(List<float> vertices, List<float> textureVertices, List<float> normals,
-                    List<uint> vertexIndices, List<uint> textureIndices, List<uint> normalIndices)
+        public Mesh(List<Vertex> vertices, List<uint> indices, Shader shader)
         {
-            this.vertices = vertices.ToArray();
-            this.textureVertices = textureVertices.ToArray();
-            this.normals = normals.ToArray();
-            this.vertexIndices = vertexIndices.ToArray();
-            this.textureIndices = textureIndices.ToArray();
-            this.normalIndices = normalIndices.ToArray();
-        }
+            this.Vertices = vertices.ToArray();
+            this.indices = indices.ToArray();
 
-        public Mesh(float[] vertices)
-        {
-            this.vertices = vertices;
+            InitEBO(shader);
         }
 
         public void Init(Shader shader)
@@ -45,7 +63,9 @@ namespace GameEngine
             VAO = GL.GenVertexArray();
             GL.BindVertexArray(VAO);
 
-            int vboVerices = CreateVBO(vertices);
+            int size = System.Runtime.InteropServices.Marshal.SizeOf(typeof(Vertex));
+
+            int vboVerices = CreateVBO(Vertices);
 
             var vertexLocation = shader.GetAttribLocation("aPos");
             var normalLocation = shader.GetAttribLocation("aNormal");
@@ -58,16 +78,16 @@ namespace GameEngine
             GL.BindBuffer(BufferTarget.ArrayBuffer, vboVerices);
 
             //Vertices
-            GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
+            GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, size, 0 * System.Runtime.InteropServices.Marshal.SizeOf(typeof(Vector3)));
 
             //Normals
-            GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 3 * sizeof(float));
+            GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, size, 3 * System.Runtime.InteropServices.Marshal.SizeOf(typeof(Vector3)));
 
             //TexCoords
-            GL.VertexAttribPointer(textureLocation, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float), 6 * sizeof(float));
+            GL.VertexAttribPointer(textureLocation, 2, VertexAttribPointerType.Float, false, size, 6 * System.Runtime.InteropServices.Marshal.SizeOf(typeof(Vector3)));
 
-            GL.BindVertexArray(0);
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            GL.BindVertexArray(0);
 
             GL.DisableVertexAttribArray(vertexLocation);
             GL.DisableVertexAttribArray(normalLocation);
@@ -79,40 +99,35 @@ namespace GameEngine
         public void InitEBO(Shader shader)
         {   
             VAO = GL.GenVertexArray();
+
             GL.BindVertexArray(VAO);
 
-            int vboVerices = CreateVBO(vertices);
-            int vboTexture = CreateVBO(textureVertices);
-            int vboNormal = CreateVBO(normals);
+            int size = System.Runtime.InteropServices.Marshal.SizeOf(typeof(Vertex));
 
-            ebo = CreateEBO(vertexIndices.ToArray());
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, ebo);
+            VBO = CreateVBO(Vertices);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, VBO);
 
-            var vertexLocation = shader.GetAttribLocation("aPos");
-            var normalLocation = shader.GetAttribLocation("aNormal");
-            var textureLocation = shader.GetAttribLocation("aTexCoords");
-
-            GL.EnableVertexAttribArray(vertexLocation);
-            GL.EnableVertexAttribArray(normalLocation);
-            GL.EnableVertexAttribArray(textureLocation);
-
-            GL.BindBuffer(BufferTarget.ArrayBuffer, vboVerices);
+            EBO = CreateEBO(indices);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, EBO);
 
             //Vertices
-            GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
-
-            GL.BindBuffer(BufferTarget.ArrayBuffer, vboNormal);
+            var vertexLocation = shader.GetAttribLocation("aPos");
+            GL.EnableVertexAttribArray(vertexLocation);
+            GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, size, 0);
 
             //Normals
-            GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0 * sizeof(float));
+            var normalLocation = shader.GetAttribLocation("aNormal");
+            GL.EnableVertexAttribArray(normalLocation);
+            GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, size, 0 * System.Runtime.InteropServices.Marshal.SizeOf(typeof(Vector2)));
 
-            GL.BindBuffer(BufferTarget.ArrayBuffer, vboTexture);
-            
             //TexCoords
-            GL.VertexAttribPointer(textureLocation, 2, VertexAttribPointerType.Float, false, 2 * sizeof(float), 0 * sizeof(float));
+            var textureLocation = shader.GetAttribLocation("aTexCoords");
+            GL.EnableVertexAttribArray(textureLocation);
+            GL.VertexAttribPointer(textureLocation, 3, VertexAttribPointerType.Float, false, size, 3 * System.Runtime.InteropServices.Marshal.SizeOf(typeof(Vector2)));
 
-            GL.BindVertexArray(0);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            GL.BindVertexArray(0);
 
             GL.DisableVertexAttribArray(vertexLocation);
             GL.DisableVertexAttribArray(normalLocation);
@@ -121,11 +136,20 @@ namespace GameEngine
             shader.Use();
         }
 
-        private int CreateVBO(float[] date)
+        private int CreateVBO(Vector3[] date)
         {
             int vbo = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
-            GL.BufferData(BufferTarget.ArrayBuffer, date.Length * sizeof(float), date, BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ArrayBuffer, date.Length * System.Runtime.InteropServices.Marshal.SizeOf(typeof(Vector3)), date, BufferUsageHint.StaticDraw);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+
+            return vbo;
+        }
+        private int CreateVBO(Vertex[] date)
+        {
+            int vbo = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
+            GL.BufferData(BufferTarget.ArrayBuffer, date.Length * System.Runtime.InteropServices.Marshal.SizeOf(typeof(Vertex)), date, BufferUsageHint.StaticDraw);
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
 
             return vbo;
@@ -139,13 +163,13 @@ namespace GameEngine
 
             return ebo;
         }
-
-        public void Render()
+        public void Draw(Shader shader, PrimitiveType mode)
         {
-            if (vertexIndices == null)
-                GL.DrawArrays(PrimitiveType.Triangles, 0, vertices.Length);
-            else
-                GL.DrawElements(PrimitiveType.Triangles, vertexIndices.Length, DrawElementsType.UnsignedInt, 0);
+            GL.BindVertexArray(VAO);
+
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, EBO);
+
+            GL.DrawElements(mode, indices.Length, DrawElementsType.UnsignedInt, sizeof(int) * 0);
         }
     }
 }
