@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "GameEngin.Example": {
+      "commandName": "Project",
+      "commandLineArgs": "--config config.conf"
+    }
+  }
+}
