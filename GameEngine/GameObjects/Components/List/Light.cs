@@ -23,7 +23,7 @@ namespace GameEngine.GameObjects.Components.List
 
         public override void Start()
         {
-            
+            Name = "Light";
         }
 
         public override void Update(BaseShader shader, float deltaTime)

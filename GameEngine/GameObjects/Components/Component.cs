@@ -12,6 +12,8 @@ namespace GameEngine.GameObjects.Components
     {
         public GameObject gameObject;
 
+        public string Name;
+
         public virtual void Start()
         {
 

@@ -20,6 +20,8 @@ namespace GameEngine.GameObjects.Components.List
 
         public override void Start()
         {
+            Name = "Mesh render";
+
             if(meshes == null)
                 meshes = new List<BaseMesh>();
             if (materials == null)

@@ -65,6 +65,8 @@ namespace GameEngine.GameObjects
 
             return null;
         }
+
+        public List<Component> GetComponents() => components;
         public void RemoveComponent(Component component) => components.Remove(component);
     }
 }

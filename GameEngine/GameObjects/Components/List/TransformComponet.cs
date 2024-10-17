@@ -33,6 +33,8 @@ namespace GameEngine.GameObjects.Components.List
         public override void Start()
         {
             base.Start();
+
+            Name = "Transform";
         }
 
         public override void Draw(BaseShader shader)

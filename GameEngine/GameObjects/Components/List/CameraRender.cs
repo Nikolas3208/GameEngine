@@ -130,6 +130,8 @@ namespace GameEngine.GameObjects.Components.List
             }
         }
 
+        public bool IsSkyBox = true;
+
         public Vector3 Position;
 
         public ProjectionType ProjectionType = ProjectionType.Perspective;
@@ -140,9 +142,14 @@ namespace GameEngine.GameObjects.Components.List
             Aspect = aspect;
         }
 
+        public CameraRender()
+        {
 
+        }
         public override void Start()
         {
+            Name = "Camera render";
+
             projection = Matrix4.Identity;
 
             shader = ShaderLoad.Load(AssetManager.GetShader("skybox"));
@@ -200,24 +207,26 @@ namespace GameEngine.GameObjects.Components.List
         {
             base.Draw(shader);
 
-            GL.CullFace(CullFaceMode.Front);
-            GL.FrontFace(FrontFaceDirection.Ccw);
-            GL.DepthFunc(DepthFunction.Lequal);
+            if (IsSkyBox)
+            {
+                GL.CullFace(CullFaceMode.Front);
+                GL.FrontFace(FrontFaceDirection.Ccw);
+                GL.DepthFunc(DepthFunction.Lequal);
 
-            this.shader.Use();
+                this.shader.Use();
 
-            this.shader.SetMatrix4("projection", GetProjectionMatrix());
-            this.shader.SetMatrix4("view", GetViewMatrix());
-            this.shader.SetInt("skybox", 0);
-            texture.Use(TextureUnit.Texture0);
+                this.shader.SetMatrix4("projection", GetProjectionMatrix());
+                this.shader.SetMatrix4("view", GetViewMatrix());
+                this.shader.SetInt("skybox", 0);
+                texture.Use(TextureUnit.Texture0);
 
-            mesh.Draw(PrimitiveType.Triangles);
+                mesh.Draw(PrimitiveType.Triangles);
 
 
-            GL.DepthFunc(DepthFunction.Less);
+                GL.DepthFunc(DepthFunction.Less);
 
-            GL.CullFace(CullFaceMode.Back);
-
+                GL.CullFace(CullFaceMode.Back);
+            }
             shader.Use();
 
             shader.SetMatrix4("projection", GetProjectionMatrix());
