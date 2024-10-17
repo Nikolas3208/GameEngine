@@ -8,8 +8,8 @@ using GameEngine.Resources.Materials;
 using GameEngine.Resources.Meshes;
 using GameEngine.Resources.Shaders;
 using GameEngine.Resources.Textures;
+using GameEngine.Scens;
 using GameEngine.Windws;
-using GameEngine.Windws.Scens;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
@@ -19,12 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace GameEngine.LevelEditor
 {
-    public class MainScen : BaseScen
+    public class EditorScen : BaseScen
     {
         private BaseShader shader;
         private BaseShader pickingShader;
@@ -38,15 +39,15 @@ namespace GameEngine.LevelEditor
         Camera camera;
         pickingBuffer pickingBuffer;
 
-        public MainScen()
+        public EditorScen()
         {
-            gameObjects = new Dictionary<string, GameObject>();
-            Name = "Main scen";
+            gameObjects = new List<GameObject>();
+            AssetManager = new AssetManager("Assets\\");
+            ScenName = "Main scen";
         }
 
         public override void Start(BaseWindow window)
         {
-            base.Start(window);
 
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.Texture2D);
@@ -60,7 +61,7 @@ namespace GameEngine.LevelEditor
             window.TextInput += Window_TextInput;
 
             shader = ShaderLoad.Load(AssetManager.GetShader("shader"));
-            pickingShader = ShaderLoad.Load(AssetManager.GetShader("picking"));
+            pickingShader = ShaderLoad.Load(AssetManager.GetShader("base"));
             bufferManager = new BufferManager();
             bufferManager.Init(window.Size.X, window.Size.Y);
             pickingBuffer = new pickingBuffer();
@@ -77,20 +78,17 @@ namespace GameEngine.LevelEditor
             meshRender.AddMeshRange(MeshLoader.LoadMesh(AssetManager.GetMesh("house2"), shader));
             meshRender.AddMaterialRange(MaterialLoader.LoadMaterial(AssetManager.GetMesh("house2")));
             gameObject.AddComponent(meshRender);
-            gameObject.Position = new Vector3(0, 0, 0);
+            gameObject.GetComponent<TransformComponet>().Transform = new Vector3(0, 0, -3);
+
 
             AddGameObject(gameObject);
 
             gameObject2 = new GameObject { Name = "light" };
-            gameObject2.AddComponent(ComponentType.Light);
+            gameObject2.AddComponent(new Light());
 
             AddGameObject(gameObject2);
 
-            foreach (var item in gameObjects)
-            {
-                item.Value.Start();
-            }
-
+            base.Start(window);
         }
 
         public override void Update(BaseWindow window, float deltaTime)
@@ -101,13 +99,7 @@ namespace GameEngine.LevelEditor
 
             foreach (var obj in gameObjects)
             {
-                if (obj.Value.GetComponent(ComponentType.Light) != null)
-                {
-                    var light = (Light)obj.Value.GetComponent(ComponentType.Light);
-
-                    light.Position = obj.Value.Position;
-                }
-                obj.Value.Update(deltaTime, shader);
+                obj.Update(deltaTime, shader);
             }
         }
 
@@ -129,7 +121,7 @@ namespace GameEngine.LevelEditor
 
             if (keyboard.IsKeyDown(Keys.F))
             {
-                gameObject2.Position = camera.Position;
+                gameObject2.GetComponent<Light>().Position = camera.GetComponent<TransformComponet>().Transform;
             }
 
         }
@@ -166,18 +158,19 @@ namespace GameEngine.LevelEditor
                 }
             }
         }
-        nint data = 0;
-
 
         Vector4 id = new Vector4();
 
         public override void Render(BaseWindow window, float deltaTime)
         {
-            GL.ClearColor(Color.Black);
+            GL.ClearColor(Color4.Cyan);
+
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             GL.CullFace(CullFaceMode.Back);
+
+            // axisRender.SetModel(gameObject.Model);
 
             if (window.MouseState.IsButtonPressed(MouseButton.Left))
             {
@@ -187,12 +180,13 @@ namespace GameEngine.LevelEditor
                 pickingBuffer.Bind();
                 foreach (var obj in gameObjects)
                 {
-                    obj.Value.Draw(shader);
+                    obj.Draw(shader);
                 }
+
                 pickingBuffer.Unbind(window.Size.X, window.Size.Y);
 
-                float mouseX = (window.MouseState.Position.X - sizeMin.X - camera.Position.X);
-                float mouseY = (window.MouseState.Position.Y - sizeMin.Y - camera.Position.Y);
+                float mouseX = (window.MouseState.Position.X - sizeMin.X);
+                float mouseY = (window.MouseState.Position.Y - sizeMin.Y);
 
                 id = pickingBuffer.ReadPixel((int)mouseX, (int)mouseY, shader);
             }
@@ -203,12 +197,11 @@ namespace GameEngine.LevelEditor
             bufferManager.Bind();
             foreach (var obj in gameObjects)
             {
-                var render = (MeshRender)obj.Value.GetComponent(ComponentType.MeshRender);
+                var render = obj.GetComponent<MeshRender>();
 
                 if (window.MouseState.IsButtonDown(MouseButton.Left))
                 {
-
-                    if (id.X == obj.Value.Id)
+                    if (id.X == obj.Id)
                     {
                         if(scenSelect)
                             current_gameObject = (int)id.X;
@@ -236,7 +229,7 @@ namespace GameEngine.LevelEditor
                             mat.Value.color = new Vector3(1);
                     }
                 }
-                obj.Value.Draw(shader);
+                obj.Draw(shader);
             }
 
             bufferManager.Unbind();
@@ -280,13 +273,13 @@ namespace GameEngine.LevelEditor
         private void ListObjectView()
         {
             ImGui.Begin("List gameObjects");
-            if (ImGui.TreeNode(this.Name))
+            if (ImGui.TreeNode(this.ScenName))
             {
                 for (int i = 0; i < gameObjects.Count; i++)
                 {
                     var item = gameObjects.ToArray()[i];
 
-                    ImGui.Selectable(item.Key);
+                    ImGui.Selectable(item.Name);
                     {
                         if (ImGui.IsItemClicked(ImGuiMouseButton.Left))
                         {
@@ -311,8 +304,6 @@ namespace GameEngine.LevelEditor
             ImGui.SetWindowPos(menuPos);
             if (ImGui.BeginPopup("Add object", ImGuiWindowFlags.AlwaysAutoResize))
             {
-                string currentObjectName = gameObjects.ToArray()[current_gameObject].Key;
-
                 ImGui.Spacing();
                 ImGui.Separator();
                 if (ImGui.Selectable("Rename"))
@@ -325,7 +316,7 @@ namespace GameEngine.LevelEditor
                 }
                 else if (ImGui.Selectable("Delate"))
                 {
-                    RemoveGameObject(currentObjectName);
+                    RemoveGameObjectById(current_gameObject);
                     current_gameObject = 0;
                     ImGui.CloseCurrentPopup();
                 }
@@ -377,21 +368,24 @@ namespace GameEngine.LevelEditor
 
         private void PropertisObject()
         {
-            string key = GetNameGameObjects()[current_gameObject];
-            var gameObject = GetGameObject(key);
+            var gameObject = GetGameObjectById(current_gameObject);
+
+            
 
             ImGui.Begin("Propertis", ImGuiWindowFlags.HorizontalScrollbar);
+            if (gameObject == null)
+                return;
             ImGui.Spacing();
-            ImGui.Text(key);
+            ImGui.Text(gameObject.Name);
             ImGui.Spacing();
             TransformView(gameObject);
             ImGui.Separator();
             ImGui.Spacing();
-            VertexRenderView((MeshRender)gameObject.GetComponent(ComponentType.MeshRender));
+            VertexRenderView(gameObject.GetComponent<MeshRender>());
             ImGui.Spacing();
-            CameraView((CameraRender)gameObject.GetComponent(ComponentType.Camera));
+            CameraView(gameObject.GetComponent<CameraRender>());
             ImGui.Spacing();
-            LightView((Light)gameObject.GetComponent(ComponentType.Light));
+            LightView(gameObject.GetComponent<Light>());
             ImGui.SetCursorPos(new System.Numerics.Vector2(ImGui.GetWindowSize().X / 3, ImGui.GetCursorPosY()));
             if (ImGui.Button("Add component"))
             {
@@ -422,7 +416,7 @@ namespace GameEngine.LevelEditor
             if (cameraRender == null)
                 return;
 
-            if (ImGui.TreeNode(cameraRender.Type.ToString()))
+            if (ImGui.TreeNode("Camera"))
             {
                 ImGui.Combo("Projection", ref currentProjectionType, camProjections, camProjections.Length);
                 cameraRender.ProjectionType = (ProjectionType)Enum.Parse(typeof(ProjectionType), camProjections[currentProjectionType]);
@@ -453,7 +447,7 @@ namespace GameEngine.LevelEditor
             ImGui.Spacing();
         }
 
-        private string[] componentNames = ComponentList.GetComponentNameList();
+        private string[] componentNames = { "Camera", "Mesh Render", "Light" };
         private int currentComponent = 0;
 
 
@@ -464,9 +458,9 @@ namespace GameEngine.LevelEditor
             ImGui.Spacing();
             if (ImGui.Button("Add component"))
             {
-                ComponentType type = (ComponentType)Enum.Parse(typeof(ComponentType), componentNames[currentComponent]);
+                //ComponentType type = (ComponentType)Enum.Parse(typeof(ComponentType), componentNames[currentComponent]);
 
-                gameObject.AddComponent(type);
+                gameObject.AddComponent(new Component());
 
                 ImGui.CloseCurrentPopup();
             }
@@ -627,27 +621,30 @@ namespace GameEngine.LevelEditor
         {
             ImGui.LabelText("Transform", "");
 
-            pos = new System.Numerics.Vector3(gameObject.Position.X, gameObject.Position.Y, gameObject.Position.Z);
+            var transform = gameObject.GetComponent<TransformComponet>();
+
+            pos = new System.Numerics.Vector3(transform.Transform.X, transform.Transform.Y, transform.Transform.Z);
 
             ImGui.DragFloat3("Position", ref pos, 0.01f);
             ImGui.Spacing();
 
-            if (gameObject.Position != new Vector3(pos.X, pos.Y, pos.Z))
-                gameObject.Position = (new Vector3(pos.X, pos.Y, pos.Z));
 
-            rot = new System.Numerics.Vector3(gameObject.Rotation.X, gameObject.Rotation.Y, gameObject.Rotation.Z);
+            if (transform.Transform != new Vector3(pos.X, pos.Y, pos.Z))
+                transform.Transform = (new Vector3(pos.X, pos.Y, pos.Z));
+
+            rot = new System.Numerics.Vector3(transform.Rotation.X, transform.Rotation.Y, transform.Rotation.Z);
 
             ImGui.DragFloat3("Rotation", ref rot, 0.01f);
             ImGui.Spacing();
 
-            if (gameObject.Rotation != new Vector3(rot.X, rot.Y, rot.Z))
-                gameObject.Rotation = new Vector3(rot.X, rot.Y, rot.Z);
+            if (transform.Rotation != new Vector3(rot.X, rot.Y, rot.Z))
+                transform.Rotation = new Vector3(rot.X, rot.Y, rot.Z);
 
             ImGui.DragFloat("Scale", ref scale, 0.01f);
             ImGui.Spacing();
 
-            if (gameObject.Scale != scale)
-                gameObject.Scale = scale;
+            if (transform.Scale.X != scale)
+                transform.Scale = new Vector3(scale);
 
             gameObject.Update((float)window.UpdateTime, shader);
         }
@@ -664,7 +661,7 @@ namespace GameEngine.LevelEditor
             bufferManager.Init(window.ClientSize.X, window.ClientSize.Y);
             pickingBuffer.Init(window.ClientSize.X, window.ClientSize.Y);
 
-            var render = (CameraRender)camera.GetComponent(ComponentType.Camera);
+            var render = camera.GetComponent<CameraRender>();
 
             render.Aspect = window.ClientSize.X / (float)window.ClientSize.Y;
         }
@@ -678,7 +675,7 @@ namespace GameEngine.LevelEditor
         {
             controller.MouseScroll(obj.Offset);
 
-            var render = (CameraRender)camera.GetComponent(ComponentType.Camera);
+            var render = camera.GetComponent<CameraRender>();
 
             render.Fov -= obj.OffsetY;
         }

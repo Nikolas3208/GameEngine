@@ -22,6 +22,10 @@ namespace GameEngine.Bufers
         {
 
         }
+        public virtual void Init(BaseShader shader, float[] vertices)
+        {
+
+        }
         protected int CreateVBOBuffer(Vertex[] vertices)
         {
             int vbo = GL.GenBuffer();

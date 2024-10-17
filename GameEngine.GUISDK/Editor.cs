@@ -1,6 +1,6 @@
 ﻿using GameEngine.Resources;
+using GameEngine.Scens;
 using GameEngine.Windws;
-using GameEngine.Windws.Scens;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
@@ -25,7 +25,7 @@ namespace GameEngine.LevelEditor
 
             window = new BaseWindow(GameWindowSettings.Default, windowSettings);
 
-            scen = new MainScen();
+            scen = new EditorScen();
             window.AddScen(scen);
 
             using (window)

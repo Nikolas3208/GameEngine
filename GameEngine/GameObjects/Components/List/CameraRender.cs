@@ -138,13 +138,8 @@ namespace GameEngine.GameObjects.Components.List
         {
             Position = position;
             Aspect = aspect;
-            Type = ComponentType.Camera;
         }
 
-        public CameraRender()
-        {
-            Type = ComponentType.Camera;
-        }
 
         public override void Start()
         {
@@ -168,6 +163,8 @@ namespace GameEngine.GameObjects.Components.List
 
         public override void Update(BaseShader shader, float deltaTime)
         {
+            //Position = gameObject.GetComponent<TransformComponet>().Transform;
+
             switch (ProjectionType)
             {
                 case ProjectionType.Perspective:
@@ -201,6 +198,8 @@ namespace GameEngine.GameObjects.Components.List
         }
         public override void Draw(BaseShader shader)
         {
+            base.Draw(shader);
+
             GL.CullFace(CullFaceMode.Front);
             GL.FrontFace(FrontFaceDirection.Ccw);
             GL.DepthFunc(DepthFunction.Lequal);

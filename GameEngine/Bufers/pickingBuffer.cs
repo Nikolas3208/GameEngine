@@ -42,12 +42,12 @@ namespace GameEngine.Bufers
 
         public override void Init(BaseShader shader, Vertex[] vertices)
         {
-            throw new NotImplementedException();
+            
         }
 
         public override void Init(BaseShader shader, Vertex[] vertices, uint[] indices)
         {
-            throw new NotImplementedException();
+            
         }
 
         public override void Bind()

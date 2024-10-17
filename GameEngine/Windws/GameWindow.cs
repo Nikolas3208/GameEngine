@@ -1,5 +1,5 @@
 ﻿using Assimp;
-using GameEngine.Windws.Scens;
+using GameEngine.Scens;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;

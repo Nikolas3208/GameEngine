@@ -21,10 +21,6 @@ namespace GameEngine.GameObjects.Components.List
         public Vector3 Position { get; set; }
         public Vector3 Direction { get; set; }
 
-        public Light() 
-        {
-            Type = ComponentType.Light;
-        }
         public override void Start()
         {
             
@@ -42,6 +38,7 @@ namespace GameEngine.GameObjects.Components.List
 
         public override void Draw(BaseShader shader)
         {
+            base.Draw(shader);
             shader.Use();
 
             shader.SetVector3("light.position", Position);

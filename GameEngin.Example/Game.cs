@@ -14,7 +14,7 @@ namespace GameEngine.Example
     public class Game
     {
         private BaseWindow window;
-        private MainScen mainScen;
+        private EditorScen mainScen;
 
         public Game(string name = "")
         {
@@ -32,7 +32,7 @@ namespace GameEngine.Example
             windowSettings.Size = new OpenTK.Mathematics.Vector2i(1920, 1080);
 
             window = new BaseWindow(GameWindowSettings.Default, windowSettings);
-            window.AddScen(new MainScen());
+            window.AddScen(new EditorScen());
 
             using (window)
             {

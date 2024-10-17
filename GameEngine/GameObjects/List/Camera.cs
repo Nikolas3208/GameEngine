@@ -64,7 +64,7 @@ namespace GameEngine.GameObjects.List
                     break;
             }
 
-            Position = render.Position;
+            GetComponent<TransformComponet>().Transform = render.Position;
         }
 
         public Vector3 GetPosition()

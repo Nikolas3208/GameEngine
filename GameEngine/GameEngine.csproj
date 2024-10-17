@@ -24,4 +24,9 @@
     <PackageReference Include="StbImageSharp" Version="2.30.15" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Core\" />
+    <Folder Include="Renders\" />
+  </ItemGroup>
+
 </Project>

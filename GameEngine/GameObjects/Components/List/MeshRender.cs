@@ -20,8 +20,6 @@ namespace GameEngine.GameObjects.Components.List
 
         public override void Start()
         {
-            Type = ComponentType.MeshRender;
-
             if(meshes == null)
                 meshes = new List<BaseMesh>();
             if (materials == null)
@@ -45,6 +43,7 @@ namespace GameEngine.GameObjects.Components.List
 
         public override void Draw(BaseShader shader)
         {
+            base.Draw(shader);
             if (meshes != null)
                 for (int i = 0; i < meshes.Count; i++)
                 {

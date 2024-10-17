@@ -1,4 +1,5 @@
-﻿using GameEngine.Resources.Shaders;
+﻿using GameEngine.GameObjects.Components.List;
+using GameEngine.Resources.Shaders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,17 +8,21 @@ using System.Threading.Tasks;
 
 namespace GameEngine.GameObjects.Components
 {
-    public enum ComponentType
+    public  class Component
     {
-        MeshRender = 0,
-        Camera = 1,
-        Light = 2,
-    }
-    public abstract class Component
-    {
-        public ComponentType Type { get; set; }
-        public abstract void Start();
-        public abstract void Update(BaseShader shader, float deltaTime);
-        public abstract void Draw(BaseShader shader);
+        public GameObject gameObject;
+
+        public virtual void Start()
+        {
+
+        }
+        public virtual void Update(BaseShader shader, float deltaTime)
+        {
+
+        }
+        public virtual void Draw(BaseShader shader)
+        {
+
+        }
     }
 }
