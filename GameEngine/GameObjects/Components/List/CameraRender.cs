@@ -1,4 +1,5 @@
 ﻿using GameEngine.Bufers;
+using GameEngine.Core.Structs;
 using GameEngine.Resources;
 using GameEngine.Resources.Meshes;
 using GameEngine.Resources.Shaders;
@@ -27,7 +28,7 @@ namespace GameEngine.GameObjects.Components.List
         private skyboxMesh mesh;
         private BaseShader shader;
 
-        private Matrix4 projection;
+        private Matrix4 projection = Matrix4.Identity;
         private float fov = MathHelper.PiOver2;
         private float aspect = 0;
         private float yaw = -MathHelper.PiOver2;
@@ -170,8 +171,6 @@ namespace GameEngine.GameObjects.Components.List
 
         public override void Update(BaseShader shader, float deltaTime)
         {
-            //Position = gameObject.GetComponent<TransformComponet>().Transform;
-
             switch (ProjectionType)
             {
                 case ProjectionType.Perspective:
@@ -203,6 +202,7 @@ namespace GameEngine.GameObjects.Components.List
         {
             return projection;
         }
+
         public override void Draw(BaseShader shader)
         {
             base.Draw(shader);
@@ -227,6 +227,7 @@ namespace GameEngine.GameObjects.Components.List
 
                 GL.CullFace(CullFaceMode.Back);
             }
+
             shader.Use();
 
             shader.SetMatrix4("projection", GetProjectionMatrix());

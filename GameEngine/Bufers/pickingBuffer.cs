@@ -1,4 +1,4 @@
-﻿using GameEngine.Resources.Meshes;
+﻿using GameEngine.Core.Structs;
 using GameEngine.Resources.Shaders;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
@@ -24,20 +24,28 @@ namespace GameEngine.Bufers
 
             GL.GenTextures(1, out pickingTex);
             GL.BindTexture(TextureTarget.Texture2D, pickingTex);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb32i, width, height, 0, PixelFormat.RgbInteger, PixelType.Int, IntPtr.Zero);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Nearest);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)All.Nearest);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb32f, width, height, 0, PixelFormat.Rgba, PixelType.Float, IntPtr.Zero);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Linear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)All.Linear);
 
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapR, (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapR, (uint)All.ClampToEdge);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (uint)All.ClampToEdge);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (uint)All.ClampToEdge);
+
 
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, pickingTex, 0);
 
+            GL.CreateTextures(TextureTarget.Texture2D, 1, out depthTex);
+            GL.BindTexture(TextureTarget.Texture2D, depthTex);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent, width, height, 0, PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
+            GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, TextureTarget.Texture2D, depthTex, 0);
+            
             var status = GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
 
-            GL.BindTexture(TextureTarget.Texture2D, 0);
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+            //DrawBuffersEnum[] draws = { DrawBuffersEnum.ColorAttachment0 };
+            //GL.DrawBuffers(pickingTex, draws);
+
+            Unbind();
         }
 
         public override void Init(BaseShader shader, Vertex[] vertices)
@@ -77,16 +85,15 @@ namespace GameEngine.Bufers
         public Vector4 ReadPixel(int x, int y, BaseShader shader)
         {
             Vector4 id = new Vector4(-1);
-
             shader.Use();
-            shader.SetInt("useFbo", 1);
+
 
             GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, fbo);
 
             GL.ReadBuffer(ReadBufferMode.ColorAttachment0);
 
 
-            GL.ReadPixels(x, y, 1, 1, PixelFormat.RgbInteger, PixelType.Int, ref id);
+            GL.ReadPixels(x, y, 1, 1, PixelFormat.Rgba, PixelType.Float, ref id);
             GL.ReadBuffer(ReadBufferMode.None);
 
             GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, 0);

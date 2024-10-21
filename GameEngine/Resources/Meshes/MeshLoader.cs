@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GameEngine.Resources.Shaders;
+using GameEngine.Resources.Textures;
+using GameEngine.Core.Structs;
 
 namespace GameEngine.Resources.Meshes
 {
@@ -64,11 +66,20 @@ namespace GameEngine.Resources.Meshes
                         {
                             indices.Add((uint)face.Indices[i]);
                         }
-
                     }
 
-                    DefaultMesh defaultMesh = new DefaultMesh(shader, vertices.ToArray(), indices.ToArray(), mesh.Name);
-                    defaultMesh.MaterialName = scene.Materials[mesh.MaterialIndex].Name;
+
+                    Core.Structs.Material material = new Core.Structs.Material();
+                    if (scene.Materials[mesh.MaterialIndex].TextureDiffuse.FilePath != null && scene.Materials[mesh.MaterialIndex].TextureDiffuse.FilePath != "")
+                        material.DiffuseTexture = TextureLoader.LoadTexture(scene.Materials[mesh.MaterialIndex].TextureDiffuse.FilePath);
+                    if (scene.Materials[mesh.MaterialIndex].TextureSpecular.FilePath != null && scene.Materials[mesh.MaterialIndex].TextureSpecular.FilePath != "")
+                        material.SpecularTexture = TextureLoader.LoadTexture(scene.Materials[mesh.MaterialIndex].TextureSpecular.FilePath);
+
+                    material.Id = mesh.MaterialIndex;
+
+                    //defaultMesh.material = material;
+
+                    DefaultMesh defaultMesh = new DefaultMesh(shader, vertices.ToArray(), material, indices.ToArray(), mesh.Name);
 
                     meshs.Add(defaultMesh);
 

@@ -1,4 +1,4 @@
-﻿using GameEngine.Resources.Meshes;
+﻿using GameEngine.Core.Structs;
 using GameEngine.Resources.Shaders;
 using OpenTK.Graphics.OpenGL4;
 using System;
@@ -28,7 +28,11 @@ namespace GameEngine.Bufers
 
             var vertexLocation = shader.GetAttribLocation("aPos");
             GL.EnableVertexAttribArray(vertexLocation);
-            GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 3 * sizeVertex, 0);
+            GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeVertex, 0);
+
+            var colorLocation = shader.GetAttribLocation("aColor");
+            GL.EnableVertexAttribArray(colorLocation);
+            GL.VertexAttribPointer(colorLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeVertex, 3 * sizeVertex);
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             GL.BindVertexArray(0);
@@ -48,11 +52,7 @@ namespace GameEngine.Bufers
         {
             Bind();
 
-            GL.Enable(EnableCap.LineSmooth);
-            GL.LineWidth(100);
             GL.DrawArrays(type, 0, count);
-            GL.LineWidth(100);
-
 
             Unbind();
         }

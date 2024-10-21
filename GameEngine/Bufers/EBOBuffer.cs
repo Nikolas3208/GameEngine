@@ -1,4 +1,4 @@
-﻿using GameEngine.Resources.Meshes;
+﻿using GameEngine.Core.Structs;
 using GameEngine.Resources.Shaders;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;

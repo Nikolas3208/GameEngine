@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameEngine.Resources.Meshes
+namespace GameEngine.Core.Structs
 {
     public struct Vertex
     {

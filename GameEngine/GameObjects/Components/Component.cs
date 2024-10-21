@@ -12,7 +12,7 @@ namespace GameEngine.GameObjects.Components
     {
         public GameObject gameObject;
 
-        public string Name;
+        public string Name = "Component";
 
         public virtual void Start()
         {

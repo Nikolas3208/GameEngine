@@ -18,7 +18,7 @@ namespace GameEngine.GameObjects.Components
                 case 1:
                     return new CameraRender();
                 case 2:
-                    return new Light();
+                    return new LightRender();
                 case 3:
                     return new MeshRender();
             }

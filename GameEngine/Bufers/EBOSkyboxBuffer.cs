@@ -1,4 +1,4 @@
-﻿using GameEngine.Resources.Meshes;
+﻿using GameEngine.Core.Structs;
 using GameEngine.Resources.Shaders;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
@@ -74,7 +74,7 @@ namespace GameEngine.Bufers
             GL.BindVertexArray(0);
         }
 
-        public override void Draw(PrimitiveType type)
+        public override void Draw(PrimitiveType type = PrimitiveType.Triangles)
         {
             Bind();
 

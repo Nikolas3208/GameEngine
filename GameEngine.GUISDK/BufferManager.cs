@@ -1,4 +1,6 @@
-﻿using OpenTK.Graphics.OpenGL4;
+﻿using GameEngine.Resources.Shaders;
+using OpenTK.Graphics.OpenGL4;
+using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +24,7 @@ namespace GameEngine.LevelEditor
             GL.CreateTextures(TextureTarget.Texture2D, 1, out mTexId);
             GL.BindTexture(TextureTarget.Texture2D, mTexId);
 
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, width, height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, IntPtr.Zero);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, width, height, 0, PixelFormat.Rgba, PixelType.Float, IntPtr.Zero);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)All.Linear);
 
@@ -36,7 +38,7 @@ namespace GameEngine.LevelEditor
             GL.BindTexture(TextureTarget.Texture2D, mDepthId);
             GL.TexStorage2D(TextureTarget2d.Texture2D, 1, SizedInternalFormat.Depth24Stencil8, width, height);
 
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, width, height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, IntPtr.Zero);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, width, height, 0, PixelFormat.Rgba, PixelType.Float, IntPtr.Zero);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)All.Linear);
 
@@ -46,8 +48,8 @@ namespace GameEngine.LevelEditor
 
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthStencilAttachment, TextureTarget.Texture2D, mDepthId, 0);
 
-            //DrawBuffersEnum[] bufers = { DrawBuffersEnum.ColorAttachment0, DrawBuffersEnum.ColorAttachment0, DrawBuffersEnum.ColorAttachment0, DrawBuffersEnum.ColorAttachment0 };
-            //GL.DrawBuffers(mTexId, bufers);
+            DrawBuffersEnum[] bufers = { DrawBuffersEnum.ColorAttachment0, DrawBuffersEnum.ColorAttachment0, DrawBuffersEnum.ColorAttachment0, DrawBuffersEnum.ColorAttachment0 };
+            GL.DrawBuffers(mTexId, bufers);
 
             Unbind();
         }
@@ -70,6 +72,25 @@ namespace GameEngine.LevelEditor
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         }
 
+        public Vector4 ReadPixel(int x, int y, BaseShader shader)
+        {
+            Vector4 id = new Vector4(-1);
+
+            shader.Use();
+            shader.SetInt("useFbo", 1);
+
+            GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, mFbo);
+
+            GL.ReadBuffer(ReadBufferMode.ColorAttachment0);
+
+
+            GL.ReadPixels(x, y, 1, 1, PixelFormat.Rgba, PixelType.Float, ref id);
+            GL.ReadBuffer(ReadBufferMode.None);
+
+            GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, 0);
+
+            return id;
+        }
         public int GetTexture()
         {
             return mTexId;

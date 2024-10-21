@@ -1,4 +1,5 @@
 ﻿using GameEngine.Bufers;
+using GameEngine.Core.Structs;
 using GameEngine.Resources.Shaders;
 using OpenTK.Graphics.OpenGL4;
 using System;
@@ -33,9 +34,19 @@ namespace GameEngine.Resources.Meshes
             buffers.Init(shader, vertices, indices);
         }
 
-        public override void Draw(PrimitiveType type)
+        public void Draw(PrimitiveType type)
         {
-            base.Draw(type);
+            buffers.Draw(type);
+        }
+
+        public override void Draw(PrimitiveType type, BaseShader shader)
+        {
+            base.Draw(type, shader);
+        }
+
+        public override void Init(BaseShader shader, Material material, Vertex[] vertices, uint[] indices)
+        {
+            
         }
     }
 }

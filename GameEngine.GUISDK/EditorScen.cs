@@ -1,10 +1,10 @@
 ﻿using GameEngine.Bufers;
+using GameEngine.Gizmo;
 using GameEngine.GameObjects;
 using GameEngine.GameObjects.Components;
 using GameEngine.GameObjects.Components.List;
 using GameEngine.GameObjects.List;
 using GameEngine.Resources;
-using GameEngine.Resources.Materials;
 using GameEngine.Resources.Meshes;
 using GameEngine.Resources.Shaders;
 using GameEngine.Resources.Textures;
@@ -27,12 +27,13 @@ namespace GameEngine.LevelEditor
 {
     public class EditorScen : BaseScen
     {
-        private BaseShader shader;
+        public BaseShader shader;
         private BaseShader pickingShader;
         private BufferManager bufferManager;
         private BaseWindow window;
         private BaseTexture texture;
         private EditorInterface editorInterface;
+        private Gizmo.Gizmo gizmo;
         GameObject gameObject = new GameObject();
         GameObject gameObject2;
         MeshRender meshRender = new MeshRender();
@@ -60,14 +61,18 @@ namespace GameEngine.LevelEditor
             window.MouseWheel += Window_MouseWheel;
             window.TextInput += Window_TextInput;
 
-            shader = ShaderLoad.Load(AssetManager.GetShader("shader"));
-            pickingShader = ShaderLoad.Load(AssetManager.GetShader("base"));
+            shader = ShaderLoad.Load(AssetManager.GetShader("multipleLights"));
+            pickingShader = ShaderLoad.Load(AssetManager.GetShader("picking"));
             bufferManager = new BufferManager();
-            bufferManager.Init(window.Size.X, window.Size.Y);
+            bufferManager.Init(window.ClientSize.X, window.ClientSize.Y);
             pickingBuffer = new pickingBuffer();
-            pickingBuffer.Init(window.Size.X, window.Size.Y);
+            pickingBuffer.Init(window.ClientSize.X, window.ClientSize.Y);
 
-            editorInterface = new EditorInterface(window.Size.X, window.Size.Y);
+            editorInterface = new EditorInterface(window.ClientSize.X, window.ClientSize.Y, this);
+
+            gizmo = new Gizmo.Gizmo();
+            gizmo.Init(shader, GizmoType.Translation);
+            gizmo.Position = new Vector3(16, 0, 0);
 
             camera = new Camera(Vector3.UnitZ * 3, window.Size.X / (float)window.Size.Y);
             AddGameObject(camera);
@@ -77,15 +82,16 @@ namespace GameEngine.LevelEditor
             MeshRender meshRender = new MeshRender();
             meshRender.Start();
             meshRender.AddMeshRange(MeshLoader.LoadMesh(AssetManager.GetMesh("house2"), shader));
-            meshRender.AddMaterialRange(MaterialLoader.LoadMaterial(AssetManager.GetMesh("house2")));
             gameObject.AddComponent(meshRender);
             gameObject.GetComponent<TransformComponet>().Transform = new Vector3(0, 0, -3);
 
-
             AddGameObject(gameObject);
 
+            MeshRender meshRender2 = new MeshRender();
+            meshRender2.Start();
+            meshRender2.AddMeshRange(MeshLoader.LoadMesh(AssetManager.GetMesh("Cube"), shader));
             gameObject2 = new GameObject { Name = "light" };
-            gameObject2.AddComponent(new Light());
+            gameObject2.AddComponent(new LightRender());
 
             AddGameObject(gameObject2);
 
@@ -96,6 +102,12 @@ namespace GameEngine.LevelEditor
         {
             base.Update(window, deltaTime);
             editorInterface.Update(window, deltaTime);  
+
+            if(pickingBuffer.Width != editorInterface.Size.X && pickingBuffer.Height != editorInterface.Size.Y)
+                pickingBuffer.Init((int)editorInterface.Size.X, (int)editorInterface.Size.Y);
+
+            if(camera.GetComponent<CameraRender>().Aspect != editorInterface.Size.X / editorInterface.Size.Y)
+                camera.GetComponent<CameraRender>().Aspect = editorInterface.Size.X / editorInterface.Size.Y;
 
             foreach (var obj in gameObjects)
             {
@@ -123,9 +135,10 @@ namespace GameEngine.LevelEditor
 
 
             }
-            if (keyboard.IsKeyDown(Keys.F) && editorInterface.IsScenViewSelected)
+            if (keyboard.IsKeyDown(Keys.F))
             {
-                gameObject2.GetComponent<Light>().Position = camera.GetComponent<TransformComponet>().Transform;
+                gameObject2.GetComponent<TransformComponet>().Transform = camera.GetComponent<TransformComponet>().Transform;
+                gameObject2.GetComponent<LightRender>().Light.Direction = camera.GetComponent<CameraRender>().Front;
             }
 
         }
@@ -157,86 +170,77 @@ namespace GameEngine.LevelEditor
                         camera.CameraRotation(new Vector2(deltaX, deltaY) * 0.4f);
                     }
                     else
-                        window.CursorState = CursorState.Normal;
+                       window.CursorState = CursorState.Normal;
                 }
             }
         }
 
-        Vector4 id = new Vector4();
+        Vector4 id = new Vector4(-1);
 
         public override void Render(BaseWindow window, float deltaTime)
         {
             GL.ClearColor(Color4.Black);
 
-
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             GL.CullFace(CullFaceMode.Back);
 
-            if (window.MouseState.IsButtonPressed(MouseButton.Left))
+            if (window.MouseState.IsButtonDown(MouseButton.Left))
             {
-                shader.Use();
-                shader.SetInt("useFbo", 1);
-
                 pickingBuffer.Bind();
+                pickingShader.Use();
+
                 foreach (var obj in gameObjects)
-                {
-                    obj.Draw(shader);
+                { 
+                    pickingShader.SetInt("gameObjectId", obj.Id);
+                    obj.Draw(pickingShader);
+                    if (obj.IsSelected)
+                    {
+                        //gizmo.Position = obj.GetComponent<TransformComponet>().Transform;
+                        //gizmo.Draw(pickingShader);
+                    }
                 }
 
-                pickingBuffer.Unbind(window.Size.X, window.Size.Y);
+                pickingBuffer.Unbind(window.ClientSize.X, window.ClientSize.Y);
 
-                float mouseX = (window.MouseState.Position.X);
-                float mouseY = (window.MouseState.Position.Y);
+                float mouseX = (window.MouseState.Position.X - editorInterface.SizeMin.X);
+                float mouseY = (window.ClientSize.Y) - (window.MouseState.Position.Y + (window.ClientSize.Y - editorInterface.Size.Y) - editorInterface.SizeMin.Y);
 
-                id = pickingBuffer.ReadPixel((int)mouseX, (int)mouseY, shader);
+                id = pickingBuffer.ReadPixel((int)mouseX, (int)mouseY, pickingShader);
             }
-
-            shader.Use();
-            shader.SetInt("useFbo", 0);
 
             bufferManager.Bind();
-            foreach (var obj in gameObjects)
-            {
-                var render = obj.GetComponent<MeshRender>();
 
-                if (window.MouseState.IsButtonDown(MouseButton.Left))
-                {
-                    if (id.X == obj.Id)
-                    {
-                        if (render != null)
-                        {
-                            foreach (var mat in render.materials)
-                                mat.Value.color = new Vector3(Color.Yellow.R, Color.Yellow.G, Color.Yellow.B);
-                        }
+            DrawGameObject();
 
-                    }
-                    else
-                    {
-                        if (render != null)
-                        {
-                            foreach (var mat in render.materials)
-                                mat.Value.color = new Vector3(1);
-                        }
-                    }
-                }
-                else
-                {
-                    if (render != null)
-                    {
-                        foreach (var mat in render.materials)
-                            mat.Value.color = new Vector3(1);
-                    }
-                }
-                obj.Draw(shader);
-            }
-
-            bufferManager.Unbind();
+            bufferManager.Unbind(window.ClientSize.X, window.ClientSize.Y);
 
             ImGui.DockSpaceOverViewport();
 
             editorInterface.SetTextureScenView(bufferManager.GetTexture());
             editorInterface.Draw(gameObjects);
+        }
+
+        public void DrawGameObject()
+        {
+            foreach (var obj in gameObjects)
+            {
+                if (window.MouseState.IsButtonDown(MouseButton.Left))
+                {
+                    if (id.X == obj.Id)
+                    {
+                        editorInterface.currentGameObject = (int)id.X;
+                        obj.IsSelected = true;
+                    }
+                    else
+                    {
+                        obj.IsSelected = false;
+                    }
+                }
+
+                obj.Draw(shader);
+            }
+
 
         }
 

@@ -1,4 +1,5 @@
 ﻿using GameEngine.Bufers;
+using GameEngine.Core.Structs;
 using GameEngine.Resources.Shaders;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,11 @@ namespace GameEngine.Resources.Meshes
         }
 
         public override void Init(BaseShader shader, Vertex[] vertices, uint[] indices)
+        {
+            
+        }
+
+        public override void Init(BaseShader shader, Material material, Vertex[] vertices, uint[] indices)
         {
             
         }
