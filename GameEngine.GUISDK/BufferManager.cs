@@ -72,7 +72,7 @@ namespace GameEngine.LevelEditor
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         }
 
-        public Vector4 ReadPixel(int x, int y, BaseShader shader)
+        public Vector4 ReadPixel(int x, int y, Shader shader)
         {
             Vector4 id = new Vector4(-1);
 

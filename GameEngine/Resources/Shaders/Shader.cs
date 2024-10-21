@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace GameEngine.Resources.Shaders
 {
-    public class BaseShader
+    public class Shader
     {
         protected int Handle;
 
         protected Dictionary<string, int> uniformLocations;
 
-        public BaseShader(string vertPath, string fragPath, string geomPath = "")
+        public Shader(string vertPath, string fragPath, string geomPath = "")
         {
             Handle = GL.CreateProgram();
 

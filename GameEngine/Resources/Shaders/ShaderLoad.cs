@@ -8,15 +8,15 @@ namespace GameEngine.Resources.Shaders
 {
     public static class ShaderLoad
     {
-        public static BaseShader Load(string path)
+        public static Shader Load(string path)
         {
             if (File.Exists(path + ".geom"))
             {
-                return new BaseShader(path + ".vert", path + ".frag", path + ".geom");
+                return new Shader(path + ".vert", path + ".frag", path + ".geom");
             }
             else
             {
-                return new BaseShader(path + ".vert", path + ".frag");
+                return new Shader(path + ".vert", path + ".frag");
             }
         }
     }

@@ -33,7 +33,7 @@ namespace GameEngine.GameObjects
             }
         }
 
-        public virtual void Update(float deltaTime, BaseShader shader = null)
+        public virtual void Update(float deltaTime, Shader shader = null)
         {
             foreach (var component in components)
             {
@@ -41,7 +41,7 @@ namespace GameEngine.GameObjects
             }
         }
 
-        public virtual void Draw(BaseShader shader = null)
+        public virtual void Draw(Shader shader = null)
         {
             foreach (var component in components)
             {

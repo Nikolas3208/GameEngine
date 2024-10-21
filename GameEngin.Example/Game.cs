@@ -1,5 +1,4 @@
-﻿using GameEngine.Windws;
-using OpenTK.Windowing.Desktop;
+﻿using OpenTK.Windowing.Desktop;
 using System.Configuration;
 using System.Collections.Specialized;
 using System;
@@ -8,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GameEngine.LevelEditor;
+using GameEngine.Core.Renders;
 
 namespace GameEngine.Example
 {

@@ -1,5 +1,4 @@
-﻿using GameEngine.Bufers;
-using GameEngine.Gizmo;
+﻿using GameEngine.Gizmo;
 using GameEngine.GameObjects;
 using GameEngine.GameObjects.Components;
 using GameEngine.GameObjects.Components.List;
@@ -9,7 +8,6 @@ using GameEngine.Resources.Meshes;
 using GameEngine.Resources.Shaders;
 using GameEngine.Resources.Textures;
 using GameEngine.Scens;
-using GameEngine.Windws;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
@@ -22,13 +20,15 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using GameEngine.Core.Renders.Bufers;
+using GameEngine.Core.Renders;
 
 namespace GameEngine.LevelEditor
 {
     public class EditorScen : BaseScen
     {
-        public BaseShader shader;
-        private BaseShader pickingShader;
+        public Shader shader;
+        private Shader pickingShader;
         private BufferManager bufferManager;
         private BaseWindow window;
         private BaseTexture texture;
@@ -38,7 +38,8 @@ namespace GameEngine.LevelEditor
         GameObject gameObject2;
         MeshRender meshRender = new MeshRender();
         Camera camera;
-        pickingBuffer pickingBuffer;
+        Grid Grid;
+        PickingFBOBuffer pickingBuffer;
 
         public EditorScen()
         {
@@ -65,8 +66,10 @@ namespace GameEngine.LevelEditor
             pickingShader = ShaderLoad.Load(AssetManager.GetShader("picking"));
             bufferManager = new BufferManager();
             bufferManager.Init(window.ClientSize.X, window.ClientSize.Y);
-            pickingBuffer = new pickingBuffer();
+            pickingBuffer = new PickingFBOBuffer();
             pickingBuffer.Init(window.ClientSize.X, window.ClientSize.Y);
+            Grid = new Grid(AssetManager.GetShader("grid"));
+
 
             editorInterface = new EditorInterface(window.ClientSize.X, window.ClientSize.Y, this);
 
@@ -179,7 +182,7 @@ namespace GameEngine.LevelEditor
 
         public override void Render(BaseWindow window, float deltaTime)
         {
-            GL.ClearColor(Color4.Black);
+            GL.ClearColor(Color4.White);
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
@@ -212,7 +215,7 @@ namespace GameEngine.LevelEditor
             bufferManager.Bind();
 
             DrawGameObject();
-
+            Grid.Draw(camera.GetComponent<CameraRender>());
             bufferManager.Unbind(window.ClientSize.X, window.ClientSize.Y);
 
             ImGui.DockSpaceOverViewport();

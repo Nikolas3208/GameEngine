@@ -67,12 +67,12 @@ namespace GameEngine.GameObjects.List
             GetComponent<TransformComponet>().Transform = render.Position;
         }
 
-        public override void Update(float deltaTime, BaseShader shader)
+        public override void Update(float deltaTime, Shader shader)
         {
             base.Update(deltaTime, shader);
         }
 
-        public override void Draw(BaseShader shader)
+        public override void Draw(Shader shader)
         {
             //render.Draw(shader);
             base.Draw(shader);

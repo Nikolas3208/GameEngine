@@ -37,7 +37,7 @@ namespace GameEngine.GameObjects.Components.List
             Name = "Transform";
         }
 
-        public override void Draw(BaseShader shader)
+        public override void Draw(Shader shader)
         {
             base.Draw(shader);
 

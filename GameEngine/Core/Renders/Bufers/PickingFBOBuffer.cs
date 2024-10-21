@@ -8,9 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameEngine.Bufers
+namespace GameEngine.Core.Renders.Bufers
 {
-    public class pickingBuffer : BaseBuffer
+    public class PickingFBOBuffer : BaseBuffer
     {
         private int pickingTex, depthTex;
         public int Width, Height;
@@ -24,7 +24,7 @@ namespace GameEngine.Bufers
 
             GL.GenTextures(1, out pickingTex);
             GL.BindTexture(TextureTarget.Texture2D, pickingTex);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb32f, width, height, 0, PixelFormat.Rgba, PixelType.Float, IntPtr.Zero);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb32f, width, height, 0, PixelFormat.Rgba, PixelType.Float, nint.Zero);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)All.Linear);
 
@@ -37,9 +37,9 @@ namespace GameEngine.Bufers
 
             GL.CreateTextures(TextureTarget.Texture2D, 1, out depthTex);
             GL.BindTexture(TextureTarget.Texture2D, depthTex);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent, width, height, 0, PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent, width, height, 0, PixelFormat.DepthComponent, PixelType.Float, nint.Zero);
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, TextureTarget.Texture2D, depthTex, 0);
-            
+
             var status = GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
 
             //DrawBuffersEnum[] draws = { DrawBuffersEnum.ColorAttachment0 };
@@ -48,19 +48,19 @@ namespace GameEngine.Bufers
             Unbind();
         }
 
-        public override void Init(BaseShader shader, Vertex[] vertices)
+        public override void Init(Shader shader, Vertex[] vertices)
         {
-            
+
         }
 
-        public override void Init(BaseShader shader, Vertex[] vertices, uint[] indices)
+        public override void Init(Shader shader, Vertex[] vertices, uint[] indices)
         {
-            
+
         }
 
         public override void Bind()
         {
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo); 
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo);
             GL.Viewport(0, 0, Width, Height);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         }
@@ -82,7 +82,7 @@ namespace GameEngine.Bufers
             return pickingTex;
         }
 
-        public Vector4 ReadPixel(int x, int y, BaseShader shader)
+        public Vector4 ReadPixel(int x, int y, Shader shader)
         {
             Vector4 id = new Vector4(-1);
             shader.Use();

@@ -23,14 +23,14 @@ namespace GameEngine.GameObjects.Components.List
         public void SetLight(Light light) => Light = light;
         public Light GetLight() => Light;
 
-        public override void Update(BaseShader shader, float deltaTime)
+        public override void Update(Shader shader, float deltaTime)
         {
             base.Update(shader, deltaTime);
 
             Light.Position = gameObject.GetComponent<TransformComponet>().Transform;
         }
 
-        public override void Draw(BaseShader shader)
+        public override void Draw(Shader shader)
         {
             base.Draw(shader);
 
@@ -50,7 +50,7 @@ namespace GameEngine.GameObjects.Components.List
             shader.SetInt("lightType", (int)Light.Type);
         }
 
-        private void SpotLightUse(BaseShader shader)
+        private void SpotLightUse(Shader shader)
         {
             shader.Use();
 
@@ -68,7 +68,7 @@ namespace GameEngine.GameObjects.Components.List
             shader.SetFloat("spotLight.outerCutOff", Light.OuterCutOff);
         }
 
-        private void DirectionLightUse(BaseShader shader)
+        private void DirectionLightUse(Shader shader)
         {
             shader.Use();
 
@@ -80,7 +80,7 @@ namespace GameEngine.GameObjects.Components.List
 
         }
 
-        private void PointLightUse(BaseShader shader)
+        private void PointLightUse(Shader shader)
         {
             shader.Use();
 

@@ -1,4 +1,4 @@
-﻿using GameEngine.Bufers;
+﻿using GameEngine.Core.Renders;
 using GameEngine.Resources;
 using GameEngine.Resources.Meshes;
 using GameEngine.Resources.Shaders;
@@ -37,14 +37,14 @@ namespace GameEngine.Gizmo
         private Matrix4 rotation = Matrix4.Identity;
         private Vector3 position;
 
-        private BaseMesh meshX;
-        private BaseMesh meshY;
-        private BaseMesh meshZ;
+        private Mesh meshX;
+        private Mesh meshY;
+        private Mesh meshZ;
 
         public GizmoType type;
         public Vector3 Position { get => position; set { position = value; model = Matrix4.CreateTranslation(value); } }
 
-        public void Init(BaseShader shader, GizmoType type)
+        public void Init(Shader shader, GizmoType type)
         {
             meshX = MeshLoader.LoadMesh(AssetManager.GetMesh("axesX"), shader).ToArray()[0];
             meshY = MeshLoader.LoadMesh(AssetManager.GetMesh("axesY"), shader).ToArray()[0];
@@ -52,7 +52,7 @@ namespace GameEngine.Gizmo
             //material = MaterialLoader.LoadMaterial(AssetManager.GetMesh("axesX")).Values.ToArray()[0];
         }
 
-        public void Draw(BaseShader shader)
+        public void Draw(Shader shader)
         {
             GL.Disable(EnableCap.DepthTest);
 

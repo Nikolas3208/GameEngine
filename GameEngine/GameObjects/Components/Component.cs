@@ -18,11 +18,11 @@ namespace GameEngine.GameObjects.Components
         {
 
         }
-        public virtual void Update(BaseShader shader, float deltaTime)
+        public virtual void Update(Shader shader, float deltaTime)
         {
 
         }
-        public virtual void Draw(BaseShader shader)
+        public virtual void Draw(Shader shader)
         {
 
         }

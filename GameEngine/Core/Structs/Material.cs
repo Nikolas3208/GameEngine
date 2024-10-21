@@ -13,17 +13,13 @@ namespace GameEngine.Core.Structs
         public int Id;
         public float Shininess = 32.0f;
 
-        public int Diffuse = 0;
-        public int Specular = 1;
+        public List<BaseTexture> textures;
 
-        public BaseTexture DiffuseTexture;
-        public BaseTexture SpecularTexture;
-
-        public Vector3 Color = new Vector3(1, 1, 1);
+        public Vector3 Color = Vector3.One;
 
         public Material()
         {
-
+            textures = new List<BaseTexture>();
         }
     }
 }

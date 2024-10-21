@@ -1,6 +1,6 @@
-﻿using GameEngine.Resources;
+﻿using GameEngine.Core.Renders;
+using GameEngine.Resources;
 using GameEngine.Scens;
-using GameEngine.Windws;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;

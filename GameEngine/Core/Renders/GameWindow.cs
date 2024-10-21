@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameEngine.Windws
+namespace GameEngine.Core.Renders
 {
     public class BaseWindow : GameWindow
     {
@@ -39,7 +39,7 @@ namespace GameEngine.Windws
 
             if (scen != null)
             {
-                scen.Update(this, (float)(args.Time));
+                scen.Update(this, (float)args.Time);
             }
         }
 
@@ -49,7 +49,7 @@ namespace GameEngine.Windws
 
             if (scen != null)
             {
-                scen.Render(this, (float)(args.Time));
+                scen.Render(this, (float)args.Time);
             }
 
             SwapBuffers();

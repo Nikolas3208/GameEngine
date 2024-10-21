@@ -1,4 +1,4 @@
-﻿using GameEngine.Bufers;
+﻿using GameEngine.Core.Renders;
 using GameEngine.Core.Structs;
 using GameEngine.Resources;
 using GameEngine.Resources.Meshes;
@@ -25,8 +25,8 @@ namespace GameEngine.GameObjects.Components.List
     public class CameraRender : Component
     {
         private CubemapTexture texture;
-        private skyboxMesh mesh;
-        private BaseShader shader;
+        private Mesh mesh;
+        private Shader shader;
 
         private Matrix4 projection = Matrix4.Identity;
         private float fov = MathHelper.PiOver2;
@@ -46,7 +46,7 @@ namespace GameEngine.GameObjects.Components.List
         private Vector3 right = Vector3.UnitX;
 
         private Vertex[] skyboxVertices =
-        {
+         {
 	        //   Coordinates
 	        new Vertex(new Vector3(-1.0f, -1.0f,  1.0f)),//        7--------6
 	        new Vertex(new Vector3( 1.0f, -1.0f,  1.0f)),//       /|       /|
@@ -56,19 +56,6 @@ namespace GameEngine.GameObjects.Components.List
 	        new Vertex(new Vector3(1.0f, 1.0f,  1.0f)),//      |/       |/
 	        new Vertex(new Vector3(1.0f, 1.0f,  -1.0f)),//      0--------1
 	        new Vertex(new Vector3(-1.0f, 1.0f,  -1.0f))
-        };
-
-        float[] skyboxVerticesFloat =
-        {
-	        //   Coordinates
-	        -1.0f, -1.0f,  1.0f,//        7--------6
-	         1.0f, -1.0f,  1.0f,//       /|       /|
-	         1.0f, -1.0f, -1.0f,//      4--------5 |
-	        -1.0f, -1.0f, -1.0f,//      | |      | |
-	        -1.0f,  1.0f,  1.0f,//      | 3------|-2
-	         1.0f,  1.0f,  1.0f,//      |/       |/
-	         1.0f,  1.0f, -1.0f,//      0--------1
-	        -1.0f,  1.0f, -1.0f
         };
 
         private uint[] skyboxIndices =
@@ -155,9 +142,7 @@ namespace GameEngine.GameObjects.Components.List
 
             shader = ShaderLoad.Load(AssetManager.GetShader("skybox"));
 
-            mesh = new skyboxMesh(shader, skyboxVerticesFloat, skyboxIndices);
-
-            string[] paths = { 
+            string[] paths = {
                 AssetManager.GetTexture("right"),
                 AssetManager.GetTexture("left"),
                 AssetManager.GetTexture("top"),
@@ -167,9 +152,11 @@ namespace GameEngine.GameObjects.Components.List
             };
 
             texture = CubemapTexture.LoadFromFile(paths);
+
+            mesh = new Mesh(shader, skyboxVertices, skyboxIndices);
         }
 
-        public override void Update(BaseShader shader, float deltaTime)
+        public override void Update(Shader shader, float deltaTime)
         {
             switch (ProjectionType)
             {
@@ -203,7 +190,7 @@ namespace GameEngine.GameObjects.Components.List
             return projection;
         }
 
-        public override void Draw(BaseShader shader)
+        public override void Draw(Shader shader)
         {
             base.Draw(shader);
 
@@ -221,7 +208,6 @@ namespace GameEngine.GameObjects.Components.List
                 texture.Use(TextureUnit.Texture0);
 
                 mesh.Draw(PrimitiveType.Triangles);
-
 
                 GL.DepthFunc(DepthFunction.Less);
 

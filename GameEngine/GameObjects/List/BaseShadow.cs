@@ -31,8 +31,8 @@ namespace GameEngine.GameObjects.List
 
         public abstract void Init(int width, int height);
 
-        public abstract void UseDepthShader(BaseShader shader, Vector3 lightDir);
+        public abstract void UseDepthShader(Shader shader, Vector3 lightDir);
 
-        public abstract void UseShader(BaseShader shader, TextureUnit unit = TextureUnit.Texture3);
+        public abstract void UseShader(Shader shader, TextureUnit unit = TextureUnit.Texture3);
     }
 }

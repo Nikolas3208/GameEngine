@@ -7,22 +7,31 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameEngine.Bufers
+namespace GameEngine.Core.Renders.Bufers
 {
     public abstract class BaseBuffer
     {
         protected int vao, vbo, ebo, fbo;
-        protected int sizeVertex;
+        protected int verticesSize;
         protected int count;
 
-        public abstract void Init(int width, int height);
-        public abstract void Init(BaseShader shader, Vertex[] vertices);
-        public abstract void Init(BaseShader shader, Vertex[] vertices, uint[] indices);
-        public virtual void Init(BaseShader shader, float[] vertices, uint[] indices)
+        public virtual void Init(int width, int height)
         {
 
         }
-        public virtual void Init(BaseShader shader, float[] vertices)
+        public virtual void Init(Shader shader, Vertex[] vertices)
+        {
+
+        }
+        public virtual void Init(Shader shader, Vertex[] vertices, uint[] indices)
+        {
+
+        }
+        public virtual void Init(Shader shader, float[] vertices, uint[] indices)
+        {
+
+        }
+        public virtual void Init(Shader shader, float[] vertices)
         {
 
         }
@@ -30,7 +39,7 @@ namespace GameEngine.Bufers
         {
             int vbo = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
-            GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeVertex, vertices, BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * verticesSize, vertices, BufferUsageHint.StaticDraw);
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
 
             return vbo;
@@ -40,7 +49,7 @@ namespace GameEngine.Bufers
         {
             int vbo = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
-            GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeVertex, vertices, BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * verticesSize, vertices, BufferUsageHint.StaticDraw);
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
 
             return vbo;
@@ -64,12 +73,21 @@ namespace GameEngine.Bufers
             return ebo;
         }
 
-        public abstract void Bind();
-        public abstract void Unbind();
+        public virtual void Bind()
+        {
+
+        }
+        public virtual void Unbind()
+        {
+
+        }
         public virtual void Unbind(int width, int height)
         {
 
         }
-        public abstract void Draw(PrimitiveType type);
+        public virtual void Draw(PrimitiveType type)
+        {
+            
+        }
     }
 }

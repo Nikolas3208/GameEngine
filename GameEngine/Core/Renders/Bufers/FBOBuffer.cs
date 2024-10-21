@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameEngine.Bufers
+namespace GameEngine.Core.Renders.Bufers
 {
     public class FBOBuffer : BaseBuffer
     {
@@ -23,7 +23,7 @@ namespace GameEngine.Bufers
             GL.CreateTextures(TextureTarget.Texture2D, 1, out texId);
             GL.BindTexture(TextureTarget.Texture2D, texId);
 
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, width, height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, IntPtr.Zero);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, width, height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, nint.Zero);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)All.Linear);
 
@@ -37,7 +37,7 @@ namespace GameEngine.Bufers
             GL.BindTexture(TextureTarget.Texture2D, depthId);
             GL.TexStorage2D(TextureTarget2d.Texture2D, 1, SizedInternalFormat.Depth24Stencil8, width, height);
 
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, width, height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, IntPtr.Zero);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, width, height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, nint.Zero);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)All.Linear);
 
@@ -72,17 +72,17 @@ namespace GameEngine.Bufers
 
         public override void Draw(PrimitiveType type)
         {
-            
+
         }
 
-        public override void Init(BaseShader shader, Vertex[] vertices)
+        public override void Init(Shader shader, Vertex[] vertices)
         {
-            
+
         }
 
-        public override void Init(BaseShader shader, Vertex[] vertices, uint[] indices)
+        public override void Init(Shader shader, Vertex[] vertices, uint[] indices)
         {
-            
+
         }
     }
 }

@@ -17,7 +17,7 @@ namespace GameEngine.Resources.Meshes
     {
         private static Scene scene;
 
-        private static List<BaseMesh> meshs = new List<BaseMesh>();
+        private static List<Core.Renders.Mesh> meshs = new List<Core.Renders.Mesh>();
         private static List<Vertex> vertices = new List<Vertex>();
         private static List<uint> indices = new List<uint>();
 
@@ -25,9 +25,9 @@ namespace GameEngine.Resources.Meshes
 
         private static Vertex vertex = new Vertex();
 
-        public static List<BaseMesh> LoadMesh(string path, BaseShader shader)
+        public static List<Core.Renders.Mesh> LoadMesh(string path, Shader shader)
         {
-            meshs = new List<BaseMesh>();
+            meshs = new List<Core.Renders.Mesh>();
             AssimpContext importer = new AssimpContext();
             importer.SetConfig(new NormalSmoothingAngleConfig(0));
 
@@ -71,15 +71,13 @@ namespace GameEngine.Resources.Meshes
 
                     Core.Structs.Material material = new Core.Structs.Material();
                     if (scene.Materials[mesh.MaterialIndex].TextureDiffuse.FilePath != null && scene.Materials[mesh.MaterialIndex].TextureDiffuse.FilePath != "")
-                        material.DiffuseTexture = TextureLoader.LoadTexture(scene.Materials[mesh.MaterialIndex].TextureDiffuse.FilePath);
+                        material.textures.Add(TextureLoader.LoadTexture(scene.Materials[mesh.MaterialIndex].TextureDiffuse.FilePath));
                     if (scene.Materials[mesh.MaterialIndex].TextureSpecular.FilePath != null && scene.Materials[mesh.MaterialIndex].TextureSpecular.FilePath != "")
-                        material.SpecularTexture = TextureLoader.LoadTexture(scene.Materials[mesh.MaterialIndex].TextureSpecular.FilePath);
+                        material.textures.Add(TextureLoader.LoadTexture(scene.Materials[mesh.MaterialIndex].TextureSpecular.FilePath));
 
                     material.Id = mesh.MaterialIndex;
 
-                    //defaultMesh.material = material;
-
-                    DefaultMesh defaultMesh = new DefaultMesh(shader, vertices.ToArray(), material, indices.ToArray(), mesh.Name);
+                    Core.Renders.Mesh defaultMesh = new Core.Renders.Mesh(shader, vertices.ToArray(), material, indices.ToArray());
 
                     meshs.Add(defaultMesh);
 
