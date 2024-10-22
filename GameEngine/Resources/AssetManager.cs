@@ -183,5 +183,9 @@ namespace GameEngine.Resources
             return null;
         }
 
+        public static Dictionary<string, string> GetMeshes()
+        {
+            return meshes;
+        }
     }
 }

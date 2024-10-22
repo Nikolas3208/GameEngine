@@ -78,6 +78,7 @@ namespace GameEngine.Resources.Meshes
                     material.Id = mesh.MaterialIndex;
 
                     Core.Renders.Mesh defaultMesh = new Core.Renders.Mesh(shader, vertices.ToArray(), material, indices.ToArray());
+                    defaultMesh.Id = meshs.Count;
 
                     meshs.Add(defaultMesh);
 

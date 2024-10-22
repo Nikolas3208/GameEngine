@@ -195,13 +195,7 @@ namespace GameEngine.LevelEditor
 
                 foreach (var obj in gameObjects)
                 { 
-                    pickingShader.SetInt("gameObjectId", obj.Id);
                     obj.Draw(pickingShader);
-                    if (obj.IsSelected)
-                    {
-                        //gizmo.Position = obj.GetComponent<TransformComponet>().Transform;
-                        //gizmo.Draw(pickingShader);
-                    }
                 }
 
                 pickingBuffer.Unbind(window.ClientSize.X, window.ClientSize.Y);
@@ -211,6 +205,8 @@ namespace GameEngine.LevelEditor
 
                 id = pickingBuffer.ReadPixel((int)mouseX, (int)mouseY, pickingShader);
             }
+
+            ImGui.Text(id.ToString());
 
             bufferManager.Bind();
 

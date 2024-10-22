@@ -15,6 +15,8 @@ namespace GameEngine.Core.Renders
         private BaseBuffer buffer;
         private Material material;
 
+        public int Id = 0;
+
         public Mesh() { }
 
         public Mesh(BaseBuffer buffer, Material material)

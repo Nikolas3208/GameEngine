@@ -32,16 +32,12 @@ namespace GameEngine.GameObjects.Components.List
 
         public override void Draw(Shader shader)
         {
+            shader.SetInt("material.diffuse", 0);
+            shader.SetInt("material.specular", 1);
+            shader.SetInt("gameObjectId", gameObject.Id);
             foreach (var mesh in meshes)
             {
-                //for (var i = 0; i < mesh.GetMaterial().textures.Count; i++)
-                {
-                    if (shader.ContainsKey("material.diffuse"))
-                        shader.SetInt("material.diffuse", 0);
-                    if (shader.ContainsKey("material.specular"))
-                        shader.SetInt("material.specular", 1);
-                }
-
+                shader.SetInt("meshId", mesh.Id);
                 mesh.Draw(PrimitiveType.Triangles, shader);
             }
             base.Draw(shader);

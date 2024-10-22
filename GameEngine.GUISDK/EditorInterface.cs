@@ -30,6 +30,7 @@ namespace GameEngine.LevelEditor
         private int currentProjection = 0;
         private int currentComponent = 0;
         private int currendLightType = 0;
+        private int currentSelectMesh = 0;
 
         private float cutOff = 12.5f;
         private float outCutOff = 17.5f;
@@ -277,6 +278,27 @@ namespace GameEngine.LevelEditor
 
                         lightRender.SetLight(light);
                     }
+                    else if(component.GetType() == typeof(MeshRender))
+                    {
+                        var meshRender = gameObject.GetComponent<MeshRender>();
+
+                        ImGui.Text("Mesh");
+                        if(ImGui.ArrowButton("Button", ImGuiDir.Right))
+                        {
+                            ImGui.OpenPopup("Select mesh");
+                        }
+
+                        if (ImGui.BeginPopup("Select mesh"))
+                        {
+                            if(ImGui.Combo("Meshes", ref currentSelectMesh, AssetManager.GetMeshes().Values.ToArray(), AssetManager.GetMeshes().Count))
+                            {
+                                meshRender.meshes = new List<Mesh>();
+                                meshRender.AddMeshRange(MeshLoader.LoadMesh(AssetManager.GetMeshes().Values.ToArray()[currentSelectMesh], scen.shader));
+
+                                ImGui.CloseCurrentPopup();
+                            }
+                        }
+                    }
                     ImGui.Spacing();
                     ImGui.Separator();
                     ImGui.Spacing();
@@ -301,6 +323,7 @@ namespace GameEngine.LevelEditor
                     ImGui.CloseCurrentPopup();
                 }
             }
+            
             ImGui.End();
         }
 
