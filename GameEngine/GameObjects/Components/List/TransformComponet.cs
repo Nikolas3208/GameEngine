@@ -27,8 +27,17 @@ namespace GameEngine.GameObjects.Components.List
                 tranfsormMatrix = Matrix4.CreateTranslation(value); 
             } 
         }
-        public Vector3 Rotation { get => rotation; set { rotation = value; rotationMatrix *= Matrix4.CreateRotationX(value.X); rotationMatrix *= Matrix4.CreateRotationY(value.Y); rotationMatrix *= Matrix4.CreateRotationZ(value.Z); } }
+        public Vector3 Rotation { get => rotation; set { rotation = value; rotateMatrix(value); } }
         public Vector3 Scale { get => scale; set { scale = value; scaleMatrix = Matrix4.CreateScale(value.X); } }
+
+        private void rotateMatrix(Vector3 value)
+        {
+            rotationMatrix = Matrix4.Identity;
+
+            rotationMatrix *= Matrix4.CreateRotationX(MathHelper.DegreesToRadians(value.X));
+            rotationMatrix *= Matrix4.CreateRotationY(MathHelper.DegreesToRadians(value.Y));
+            rotationMatrix *= Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(value.Z));
+        }
 
         public override void Start()
         {

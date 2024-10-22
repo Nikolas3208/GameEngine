@@ -35,7 +35,7 @@ namespace GameEngine.GameObjects.Components.List
         private float pitch;
 
         public float depthNear = 0.01f;
-        public float depthFar = 50f;
+        public float depthFar = 100f;
         public float size = 10;
 
 
