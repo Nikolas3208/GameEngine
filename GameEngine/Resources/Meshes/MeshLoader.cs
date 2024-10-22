@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using GameEngine.Resources.Shaders;
 using GameEngine.Resources.Textures;
 using GameEngine.Core.Structs;
+using System.Xml.Linq;
 
 namespace GameEngine.Resources.Meshes
 {
@@ -27,6 +28,24 @@ namespace GameEngine.Resources.Meshes
 
         public static List<Core.Renders.Mesh> LoadMesh(string path, Shader shader)
         {
+            string name = "";
+            int end = path.IndexOf(".");
+            for (int j = end - 1; j > 0; j--)
+            {
+                char[] args;
+                if (path.ToArray()[j] != '\\')
+                {
+                    name += path.ToArray()[j];
+                }
+                else
+                {
+                    args = name.ToCharArray();
+                    Array.Reverse(args);
+                    name = new string(args);
+                    break;
+                }
+            }
+
             meshs = new List<Core.Renders.Mesh>();
             AssimpContext importer = new AssimpContext();
             importer.SetConfig(new NormalSmoothingAngleConfig(0));
@@ -70,14 +89,17 @@ namespace GameEngine.Resources.Meshes
 
 
                     Core.Structs.Material material = new Core.Structs.Material();
+
                     if (scene.Materials[mesh.MaterialIndex].TextureDiffuse.FilePath != null && scene.Materials[mesh.MaterialIndex].TextureDiffuse.FilePath != "")
                         material.textures.Add(TextureLoader.LoadTexture(scene.Materials[mesh.MaterialIndex].TextureDiffuse.FilePath));
                     if (scene.Materials[mesh.MaterialIndex].TextureSpecular.FilePath != null && scene.Materials[mesh.MaterialIndex].TextureSpecular.FilePath != "")
                         material.textures.Add(TextureLoader.LoadTexture(scene.Materials[mesh.MaterialIndex].TextureSpecular.FilePath));
 
                     material.Id = mesh.MaterialIndex;
+                    material.Name = scene.Materials[mesh.MaterialIndex].Name;
 
                     Core.Renders.Mesh defaultMesh = new Core.Renders.Mesh(shader, vertices.ToArray(), material, indices.ToArray());
+                    defaultMesh.Name = name;
                     defaultMesh.Id = meshs.Count;
 
                     meshs.Add(defaultMesh);

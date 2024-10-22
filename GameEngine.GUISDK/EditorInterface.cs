@@ -145,6 +145,7 @@ namespace GameEngine.LevelEditor
         public void PropertisObjectView(List<GameObject> gameObjects)
         {
             ImGui.Begin("Propertis");
+            var size = ImGui.GetWindowSize();
 
             if (currentGameObject == -1)
                 return;
@@ -277,20 +278,36 @@ namespace GameEngine.LevelEditor
                         }
 
                         lightRender.SetLight(light);
+                        ImGui.Spacing();
+                        ImGui.Checkbox("Shadow", ref lightRender.IsShadowUse);
+                        ImGui.Spacing();
+                        ImGui.SliderFloat("size", ref lightRender.shadowBuffer.size, 0, 100);
+                        ImGui.Spacing();
+                        ImGui.SliderFloat("depthNear", ref lightRender.shadowBuffer.dpthNear, -100, 100);
+                        ImGui.Spacing();
+                        ImGui.SliderFloat("depthFar", ref lightRender.shadowBuffer.depthFar, -100, 100);
+                        ImGui.Spacing();
+
                     }
-                    else if(component.GetType() == typeof(MeshRender))
+                    else if (component.GetType() == typeof(MeshRender))
                     {
                         var meshRender = gameObject.GetComponent<MeshRender>();
 
                         ImGui.Text("Mesh");
-                        if(ImGui.ArrowButton("Button", ImGuiDir.Right))
+                        var buttonPos = ImGui.GetCursorPos();
+                        if (ImGui.ArrowButton("Select meshs", ImGuiDir.Right))
                         {
                             ImGui.OpenPopup("Select mesh");
                         }
 
+                        var cursorPos = ImGui.GetCursorPos();
+
+                        ImGui.SetCursorPos(CreateVector2(size.X - 75, buttonPos.Y));
+                        ImGui.Text(meshRender.MeshName);
+
                         if (ImGui.BeginPopup("Select mesh"))
                         {
-                            if(ImGui.Combo("Meshes", ref currentSelectMesh, AssetManager.GetMeshes().Values.ToArray(), AssetManager.GetMeshes().Count))
+                            if (ImGui.Combo("Meshes", ref currentSelectMesh, AssetManager.GetMeshes().Values.ToArray(), AssetManager.GetMeshes().Count))
                             {
                                 meshRender.meshes = new List<Mesh>();
                                 meshRender.AddMeshRange(MeshLoader.LoadMesh(AssetManager.GetMeshes().Values.ToArray()[currentSelectMesh], scen.shader));
@@ -298,6 +315,24 @@ namespace GameEngine.LevelEditor
                                 ImGui.CloseCurrentPopup();
                             }
                         }
+                        ImGui.Spacing();
+                        ImGui.Separator();
+                        /*if (ImGui.TreeNodeEx("Materials"))
+                            foreach (var mesh in meshRender.meshes)
+                            {
+                                buttonPos = ImGui.GetCursorPos();
+                                if (ImGui.ArrowButton("Select materials", ImGuiDir.Right))
+                                {
+                                    ImGui.OpenPopup("Select mesh");
+                                }
+
+                                cursorPos = ImGui.GetCursorPos();
+                                ImGui.SetCursorPos(CreateVector2(size.X - 75, buttonPos.Y));
+                                if(ImGui.Selectable(mesh.GetMaterial().Name))
+                                {
+
+                                }
+                            }*/
                     }
                     ImGui.Spacing();
                     ImGui.Separator();

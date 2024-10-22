@@ -9,7 +9,6 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 3
-map_Kd C:/Users/pc/Downloads/source/repos/Nikolas3208/GameEngine.GUISDK/bin/Debug/net8.0/Assets/Textures/container2.png
 
 newmtl Material.001
 Ns 250.000000
@@ -19,4 +18,3 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.500000
 d 1.000000
 illum 2
-map_Kd C:/Users/pc/Downloads/source/repos/Nikolas3208/GameEngine.GUISDK/bin/Debug/net8.0/Assets/Textures/bricks2.jpg

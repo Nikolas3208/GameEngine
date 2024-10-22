@@ -16,6 +16,7 @@ namespace GameEngine.GameObjects.Components.List
     public class MeshRender : Component
     {
         public List<Mesh> meshes;
+        public string MeshName = "Mesh";
 
         public override void Start()
         {
@@ -51,8 +52,11 @@ namespace GameEngine.GameObjects.Components.List
 
         public void AddMeshRange(List<Mesh> meshes)
         {
-            if(this.meshes != null)
+            if (this.meshes != null)
+            {
                 this.meshes.AddRange(meshes);
+                MeshName = meshes[0].Name;
+            }
         }
     }
 }

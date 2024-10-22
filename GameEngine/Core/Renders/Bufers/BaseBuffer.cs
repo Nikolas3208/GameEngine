@@ -14,6 +14,7 @@ namespace GameEngine.Core.Renders.Bufers
         protected int vao, vbo, ebo, fbo;
         protected int verticesSize;
         protected int count;
+        protected int Width, Height;
 
         public virtual void Init(int width, int height)
         {

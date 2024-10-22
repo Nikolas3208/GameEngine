@@ -11,6 +11,7 @@ namespace GameEngine.Core.Structs
     public struct Material
     {
         public int Id;
+        public string Name;
         public float Shininess = 32.0f;
 
         public List<BaseTexture> textures;

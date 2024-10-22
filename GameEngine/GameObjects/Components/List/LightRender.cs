@@ -1,4 +1,5 @@
-﻿using GameEngine.Core.Structs;
+﻿using GameEngine.Core.Renders.Bufers;
+using GameEngine.Core.Structs;
 using GameEngine.Resources.Shaders;
 using OpenTK.Mathematics;
 using System;
@@ -12,12 +13,18 @@ namespace GameEngine.GameObjects.Components.List
 {
     public class LightRender : Component
     {
+        public ShadowBuffer shadowBuffer;
+
         public Light Light;
+
+        public bool IsShadowUse = true;
 
         public override void Start()
         {
             Name = "Light";
-            Light = new Light(gameObject.GetComponent<TransformComponet>().Transform, new Vector3(0.5f), new Vector3(0.5f), new Vector3(0.5f), true);
+            Light = new Light(gameObject.GetComponent<TransformComponet>().Transform, new Vector3(0.5f), new Vector3(0.5f), new Vector3(0.5f), false);
+            shadowBuffer = new ShadowBuffer();
+            shadowBuffer.Init(2048 * 4, 2048 * 4);
         }
 
         public void SetLight(Light light) => Light = light;

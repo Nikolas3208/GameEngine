@@ -118,7 +118,7 @@ namespace GameEngine.GameObjects.Components.List
             }
         }
 
-        public bool IsSkyBox = true;
+        public bool IsSkyBox = false;
 
         public Vector3 Position;
 

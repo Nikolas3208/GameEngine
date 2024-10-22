@@ -72,25 +72,6 @@ namespace GameEngine.LevelEditor
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         }
 
-        public Vector4 ReadPixel(int x, int y, Shader shader)
-        {
-            Vector4 id = new Vector4(-1);
-
-            shader.Use();
-            shader.SetInt("useFbo", 1);
-
-            GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, mFbo);
-
-            GL.ReadBuffer(ReadBufferMode.ColorAttachment0);
-
-
-            GL.ReadPixels(x, y, 1, 1, PixelFormat.Rgba, PixelType.Float, ref id);
-            GL.ReadBuffer(ReadBufferMode.None);
-
-            GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, 0);
-
-            return id;
-        }
         public int GetTexture()
         {
             return mTexId;

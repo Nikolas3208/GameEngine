@@ -2,6 +2,7 @@
 using GameEngine.Core.Structs;
 using GameEngine.Resources.Shaders;
 using OpenTK.Graphics.OpenGL4;
+using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace GameEngine.Core.Renders
         private Material material;
 
         public int Id = 0;
+        public string Name = "Mesh";
 
         public Mesh() { }
 
@@ -84,12 +86,17 @@ namespace GameEngine.Core.Renders
             {
                 shader.Use();
 
-                if (material.textures != null)
+                if (material.textures != null && material.textures.Count > 0)
                 {
+                    shader.SetInt("material.useTexture", 1);
                     for (int i = 0; i < material.textures.Count; i++)
                     {
                         material.textures[i].Use(TextureUnit.Texture0 + i);
                     }
+                }
+                else
+                {
+                    shader.SetInt("material.useTexture", 0);
                 }
 
                 shader.SetVector3("material.color", material.Color);

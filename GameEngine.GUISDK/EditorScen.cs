@@ -28,6 +28,7 @@ namespace GameEngine.LevelEditor
     public class EditorScen : BaseScen
     {
         public Shader shader;
+        public Shader depthShader;
         private Shader pickingShader;
         private BufferManager bufferManager;
         private BaseWindow window;
@@ -63,6 +64,7 @@ namespace GameEngine.LevelEditor
             window.TextInput += Window_TextInput;
 
             shader = ShaderLoad.Load(AssetManager.GetShader("multipleLights"));
+            depthShader = ShaderLoad.Load(AssetManager.GetShader("depth"));
             pickingShader = ShaderLoad.Load(AssetManager.GetShader("picking"));
             bufferManager = new BufferManager();
             bufferManager.Init(window.ClientSize.X, window.ClientSize.Y);
@@ -84,15 +86,23 @@ namespace GameEngine.LevelEditor
 
             MeshRender meshRender = new MeshRender();
             meshRender.Start();
-            meshRender.AddMeshRange(MeshLoader.LoadMesh(AssetManager.GetMesh("house2"), shader));
+            meshRender.AddMeshRange(MeshLoader.LoadMesh(AssetManager.GetMesh("Cube"), shader));
             gameObject.AddComponent(meshRender);
-            gameObject.GetComponent<TransformComponet>().Transform = new Vector3(0, 0, -3);
+            gameObject.GetComponent<TransformComponet>().Transform = new Vector3(0, 2, 0);
 
             AddGameObject(gameObject);
 
+            GameObject gameObject3 = new GameObject();
             MeshRender meshRender2 = new MeshRender();
             meshRender2.Start();
-            meshRender2.AddMeshRange(MeshLoader.LoadMesh(AssetManager.GetMesh("Cube"), shader));
+            meshRender2.AddMeshRange(MeshLoader.LoadMesh(AssetManager.GetMesh("Plane"), shader));
+            gameObject3.AddComponent(meshRender2);
+            gameObject3.GetComponent<TransformComponet>().Scale = new Vector3(30, 0, 0);
+            gameObject3.GetComponent<TransformComponet>().Transform = new Vector3(0, 0.01f, 0);
+
+
+            AddGameObject(gameObject3);
+
             gameObject2 = new GameObject { Name = "light" };
             gameObject2.AddComponent(new LightRender());
 
@@ -179,6 +189,7 @@ namespace GameEngine.LevelEditor
         }
 
         Vector4 id = new Vector4(-1);
+        float i = 0;
 
         public override void Render(BaseWindow window, float deltaTime)
         {
@@ -187,6 +198,17 @@ namespace GameEngine.LevelEditor
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             GL.CullFace(CullFaceMode.Back);
+
+            var light = gameObject2.GetComponent<LightRender>();
+
+            if (light.IsShadowUse)
+            {
+                GL.CullFace(CullFaceMode.Back);
+                light.shadowBuffer.EnableWriting(depthShader, light.Light.Position, light.Light.Direction);
+                DrawGameObject(depthShader);
+                light.shadowBuffer.Unbind(window.ClientSize.X, window.ClientSize.Y);
+                GL.CullFace(CullFaceMode.Back);
+            }
 
             if (window.MouseState.IsButtonDown(MouseButton.Left))
             {
@@ -209,8 +231,10 @@ namespace GameEngine.LevelEditor
             ImGui.Text(id.ToString());
 
             bufferManager.Bind();
-
-            DrawGameObject();
+            light.shadowBuffer.EnableReading(shader);
+            light.shadowBuffer.TextureUse(TextureUnit.Texture3);
+            shader.SetInt("material.shadowMap", 3);
+            DrawGameObject(shader);
             Grid.Draw(camera.GetComponent<CameraRender>());
             bufferManager.Unbind(window.ClientSize.X, window.ClientSize.Y);
 
@@ -220,7 +244,7 @@ namespace GameEngine.LevelEditor
             editorInterface.Draw(gameObjects);
         }
 
-        public void DrawGameObject()
+        public void DrawGameObject(Shader shader)
         {
             foreach (var obj in gameObjects)
             {
