@@ -1,7 +1,7 @@
-﻿using GameEngine.Core.Renders;
+﻿using GameEngine.Core;
+using GameEngine.Renders;
 using GameEngine.Resources;
 using GameEngine.Resources.Meshes;
-using GameEngine.Resources.Shaders;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using System;
@@ -46,9 +46,9 @@ namespace GameEngine.Gizmo
 
         public void Init(Shader shader, GizmoType type)
         {
-            meshX = MeshLoader.LoadMesh(AssetManager.GetMesh("axesX"), shader).ToArray()[0];
-            meshY = MeshLoader.LoadMesh(AssetManager.GetMesh("axesY"), shader).ToArray()[0];
-            meshZ = MeshLoader.LoadMesh(AssetManager.GetMesh("axesZ"), shader).ToArray()[0];
+            meshX = MeshLoader.LoadMesh(AssetManager.GetMesh("axesX")).ToArray()[0];
+            meshY = MeshLoader.LoadMesh(AssetManager.GetMesh("axesY")).ToArray()[0];
+            meshZ = MeshLoader.LoadMesh(AssetManager.GetMesh("axesZ")).ToArray()[0];
             //material = MaterialLoader.LoadMaterial(AssetManager.GetMesh("axesX")).Values.ToArray()[0];
         }
 

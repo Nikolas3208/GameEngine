@@ -1,9 +1,9 @@
-﻿using GameEngine.GameObjects;
+﻿using GameEngine.Core;
+using GameEngine.GameObjects;
 using GameEngine.GameObjects.Components;
 using GameEngine.GameObjects.Components.List;
 using GameEngine.ResourceLoad;
 using GameEngine.Resources;
-using GameEngine.Resources.Shaders;
 using GameEngine.Resources.Textures;
 using System;
 using System.Collections.Generic;

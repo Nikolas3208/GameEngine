@@ -1,4 +1,4 @@
-﻿using GameEngine.Resources.Shaders;
+﻿using GameEngine.Core;
 using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
@@ -10,27 +10,27 @@ namespace GameEngine.GameObjects.Components.List
 {
     public class TransformComponet : Component
     {
-        public Matrix4 tranfsormMatrix = Matrix4.Identity;
-        public Matrix4 rotationMatrix = Matrix4.Identity;
-        public Matrix4 scaleMatrix = Matrix4.Identity;
+        private Matrix4 positionMatrix = Matrix4.Identity;
+        private Matrix4 rotationMatrix = Matrix4.Identity;
+        private Matrix4 scaleMatrix = Matrix4.Identity;
 
-        private Vector3 transform;
+        private Vector3 position;
         private Vector3 rotation;
         private Vector3 scale;
 
-        public Vector3 Transform 
+        public Vector3 Position 
         {  
-            get => transform;
+            get => position;
             set 
-            { 
-                transform = value;
-                tranfsormMatrix = Matrix4.CreateTranslation(value); 
+            {
+                position = value;
+                positionMatrix = Matrix4.CreateTranslation(value); 
             } 
         }
-        public Vector3 Rotation { get => rotation; set { rotation = value; rotateMatrix(value); } }
+        public Vector3 Rotation { get => rotation; set { rotation = value; RotateMatrix(value); } }
         public Vector3 Scale { get => scale; set { scale = value; scaleMatrix = Matrix4.CreateScale(value.X); } }
 
-        private void rotateMatrix(Vector3 value)
+        private void RotateMatrix(Vector3 value)
         {
             rotationMatrix = Matrix4.Identity;
 
@@ -51,7 +51,7 @@ namespace GameEngine.GameObjects.Components.List
             base.Draw(shader);
 
             shader.Use();
-            shader.SetMatrix4("model", tranfsormMatrix);
+            shader.SetMatrix4("model", positionMatrix);
             shader.SetMatrix4("scale", scaleMatrix);
             shader.SetMatrix4("rotation", rotationMatrix);
         }

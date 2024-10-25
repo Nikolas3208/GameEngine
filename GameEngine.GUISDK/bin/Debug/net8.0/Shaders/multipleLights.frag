@@ -64,8 +64,52 @@ struct SpotLight {
 uniform SpotLight spotLight;
 
 uniform vec3 viewPos;
+uniform float far_plane;
+uniform samplerCube depthMap;
+uniform int useShadow;
+uniform vec3 lightPos;
 
 out vec4 FragColor;
+
+float shadow;
+
+// array of offset direction for sampling
+vec3 gridSamplingDisk[20] = vec3[]
+(
+   vec3(1, 1,  1), vec3( 1, -1,  1), vec3(-1, -1,  1), vec3(-1, 1,  1), 
+   vec3(1, 1, -1), vec3( 1, -1, -1), vec3(-1, -1, -1), vec3(-1, 1, -1),
+   vec3(1, 1,  0), vec3( 1, -1,  0), vec3(-1, -1,  0), vec3(-1, 1,  0),
+   vec3(1, 0,  1), vec3(-1,  0,  1), vec3( 1,  0, -1), vec3(-1, 0, -1),
+   vec3(0, 1,  1), vec3( 0, -1,  1), vec3( 0, -1, -1), vec3( 0, 1, -1)
+);
+
+float ShadowCalculation(vec3 fragPos)
+{
+    // get vector between fragment position and light position
+    vec3 fragToLight = fragPos - lightPos;
+
+    float currentDepth = length(fragToLight);
+
+    float shadow = 0.0;
+    float bias = 0.15;
+    int samples = 20;
+    float viewDistance = length(viewPos - fragPos);
+    float diskRadius = (1.0 + (viewDistance / far_plane)) / 25.0;
+    for(int i = 0; i < samples; ++i)
+    {
+        float closestDepth = texture(depthMap, fragToLight + gridSamplingDisk[i] * diskRadius).r;
+        closestDepth *= far_plane;   // undo mapping [0;1]
+        if(currentDepth - bias > closestDepth)
+            shadow += 1.0;
+    }
+    shadow /= float(samples);
+        
+    // display closestDepth as debug (to visualize depth cubemap)
+    // FragColor = vec4(vec3(closestDepth / far_plane), 1.0);    
+        
+    return shadow;
+}
+
 
 float ShadowCalculation(vec4 lightSpacePos,vec3 norm, vec3 lightDir)
 {
@@ -117,10 +161,13 @@ vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewD
     vec3 diffuse  = light.diffuse  * diff * attenuation;
     vec3 specular = light.specular * spec * attenuation;
 
+    if(useShadow == 1)
+        shadow = ShadowCalculation(FragPos);
+
     if(material.useTexture == 1)
         return (ambient * vec3(texture(material.diffuse, TexCoords)) + diffuse * vec3(texture(material.diffuse, TexCoords)) + specular * vec3(texture(material.specular, TexCoords)));
     else
-        return (ambient + diffuse + specular);
+        return (ambient + ((1 - shadow) * diffuse + specular));
         
 }
 
@@ -137,10 +184,13 @@ vec3 CalculateDirLight(DirLight light, vec3 normal, vec3 viewDir)
     vec3 diffuse  = light.diffuse  * diff;
     vec3 specular = light.specular * spec;
 
+    if(useShadow == 1)
+        shadow = ShadowCalculation(LightSpacePos, normalize(Normal), normalize(dirLight.direction - FragPos));
+
    if(material.useTexture == 1)
         return (ambient * vec3(texture(material.diffuse, TexCoords)) + diffuse * vec3(texture(material.diffuse, TexCoords)) + specular * vec3(texture(material.specular, TexCoords)));
     else
-        return (ambient + diffuse + specular);
+        return (ambient + ((1 - shadow) * diffuse + specular));
 }
 
 vec3 CalculateSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
@@ -174,27 +224,26 @@ vec3 CalculateSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir
     if(material.useTexture == 1)
         return (ambient * vec3(texture(material.diffuse, TexCoords)) + diffuse * vec3(texture(material.diffuse, TexCoords)) + specular * vec3(texture(material.specular, TexCoords)));
     else
-        return (ambient + diffuse + specular);
+        return (ambient + ((1 - shadow) * diffuse + specular));
 }
 
 void main()
 {
     vec4 result = vec4(1);
 
+    if(useShadow == 0)
+        shadow  = 0;
+
     if(lightType == 1)
-    {
-        result = vec4(CalculatePointLight(pointLight, normalize(Normal), FragPos, normalize(viewPos - FragPos)) * material.color, 1.0);
+    {        
+        result = vec4(CalculatePointLight(pointLight, normalize(Normal), FragPos, normalize(viewPos - FragPos)) * material.color * (1 - shadow), 1.0);
     }
     if(lightType == 2)
     {
-        float shadow = ShadowCalculation(LightSpacePos, normalize(Normal), normalize(dirLight.direction - FragPos));
-
-        result = vec4(CalculateDirLight(dirLight, normalize(Normal), normalize(dirLight.direction - FragPos)) * material.color * (1 - shadow), 1.0);
+        result = vec4(CalculateDirLight(dirLight, normalize(Normal), normalize(dirLight.direction - FragPos)) * material.color, 1.0);
     }
     if(lightType == 3)
     {
-        float shadow = ShadowCalculation(LightSpacePos, normalize(Normal), normalize(dirLight.direction - FragPos));
-
         result = vec4(CalculateSpotLight(spotLight, normalize(Normal), FragPos, normalize(viewPos - FragPos)) * (1 - shadow) * material.color, 1.0);
     }
 

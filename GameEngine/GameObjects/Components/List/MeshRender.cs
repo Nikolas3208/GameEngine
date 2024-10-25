@@ -1,7 +1,7 @@
-﻿using GameEngine.Core.Renders;
+﻿using GameEngine.Core;
+using GameEngine.Renders;
 using GameEngine.Resources;
 using GameEngine.Resources.Meshes;
-using GameEngine.Resources.Shaders;
 using GameEngine.Resources.Textures;
 using OpenTK.Graphics.OpenGL4;
 using System;

@@ -1,6 +1,6 @@
-﻿using GameEngine.GameObjects.Components;
+﻿using GameEngine.Core;
+using GameEngine.GameObjects.Components;
 using GameEngine.GameObjects.Components.List;
-using GameEngine.Resources.Shaders;
 using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;

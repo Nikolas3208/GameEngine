@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameEngine.Resources.Shaders
+namespace GameEngine.Core
 {
     public class Shader
     {
@@ -26,7 +26,7 @@ namespace GameEngine.Resources.Shaders
             int shaderFrag = CreateShader(ShaderType.FragmentShader, shaderSource);
 
             int shaderGeom = -1;
-            if(geomPath != "")
+            if (geomPath != "")
             {
                 shaderSource = File.ReadAllText(geomPath);
                 shaderGeom = CreateShader(ShaderType.GeometryShader, shaderSource);

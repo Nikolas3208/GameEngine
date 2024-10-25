@@ -6,13 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameEngine.Resources.Textures
+namespace GameEngine.Core
 {
-    public class BaseTexture
+    public class Texture
     {
         public readonly int Handle;
 
-        public static BaseTexture LoadFromFile(string path)
+        public static Texture LoadFromFile(string path)
         {
             int handle = GL.GenTexture();
 
@@ -34,10 +34,10 @@ namespace GameEngine.Resources.Textures
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
             GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 
-            return new BaseTexture(handle);
+            return new Texture(handle);
         }
 
-        public BaseTexture(int handle)
+        public Texture(int handle)
         {
             Handle = handle;
         }

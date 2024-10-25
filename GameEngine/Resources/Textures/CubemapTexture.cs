@@ -1,4 +1,5 @@
-﻿using OpenTK.Graphics.OpenGL4;
+﻿using GameEngine.Core;
+using OpenTK.Graphics.OpenGL4;
 using StbImageSharp;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace GameEngine.Resources.Textures
 {
-    public class CubemapTexture : BaseTexture
+    public class CubemapTexture : Texture
     {
         private static int textureId;
         public static CubemapTexture LoadFromFile(string[] paths)

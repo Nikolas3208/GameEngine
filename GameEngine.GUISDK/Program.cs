@@ -1,5 +1,7 @@
 ﻿using GameEngine.LevelEditor;
 using GameEngine.Core;
+using OpenTK.Windowing.Desktop;
+using OpenTK.Mathematics;
 
 namespace GameEngin.LevelEditor
 {
@@ -7,7 +9,9 @@ namespace GameEngin.LevelEditor
     {
         public static void Main(string[] args)
         {
-            Editor editor = new Editor();
+            EditorApplication editor = EditorApplication.CreateApplication(new NativeWindowSettings { Title = "Editor", ClientSize = new Vector2i(1920, 1080) });
+            editor.AddLayer(new EditorLayer());
+            editor.Run();
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using GameEngine.Resources.Textures;
-using OpenTK.Mathematics;
+﻿using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,13 +13,13 @@ namespace GameEngine.Core.Structs
         public string Name;
         public float Shininess = 32.0f;
 
-        public List<BaseTexture> textures;
+        public List<Texture> textures;
 
         public Vector3 Color = Vector3.One;
 
         public Material()
         {
-            textures = new List<BaseTexture>();
+            textures = new List<Texture>();
         }
     }
 }

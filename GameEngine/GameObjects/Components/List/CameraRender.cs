@@ -1,8 +1,8 @@
-﻿using GameEngine.Core.Renders;
+﻿using GameEngine.Core;
 using GameEngine.Core.Structs;
+using GameEngine.Renders;
 using GameEngine.Resources;
 using GameEngine.Resources.Meshes;
-using GameEngine.Resources.Shaders;
 using GameEngine.Resources.Textures;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
@@ -118,7 +118,7 @@ namespace GameEngine.GameObjects.Components.List
             }
         }
 
-        public bool IsSkyBox = false;
+        public bool IsSkyBox = true;
 
         public Vector3 Position;
 
@@ -140,7 +140,7 @@ namespace GameEngine.GameObjects.Components.List
 
             projection = Matrix4.Identity;
 
-            shader = ShaderLoad.Load(AssetManager.GetShader("skybox"));
+            //shader = ShaderLoad.Load(AssetManager.GetShader("skybox"));
 
             string[] paths = {
                 AssetManager.GetTexture("right"),
@@ -153,7 +153,7 @@ namespace GameEngine.GameObjects.Components.List
 
             texture = CubemapTexture.LoadFromFile(paths);
 
-            mesh = new Mesh(shader, skyboxVertices, skyboxIndices);
+            mesh = new Mesh();
         }
 
         public override void Update(Shader shader, float deltaTime)

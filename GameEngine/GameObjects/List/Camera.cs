@@ -1,7 +1,7 @@
 ﻿using Assimp;
+using GameEngine.Core;
 using GameEngine.GameObjects.Components.List;
 using GameEngine.Resources;
-using GameEngine.Resources.Shaders;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
@@ -64,7 +64,7 @@ namespace GameEngine.GameObjects.List
                     break;
             }
 
-            GetComponent<TransformComponet>().Transform = render.Position;
+            GetComponent<TransformComponet>().Position = render.Position;
         }
 
         public override void Update(float deltaTime, Shader shader)

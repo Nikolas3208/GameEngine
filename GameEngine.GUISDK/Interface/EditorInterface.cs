@@ -11,18 +11,20 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GameEngine.Scens;
 using GameEngine.Widgets;
+using GameEngine.Core;
 using GameEngine.Core.Structs;
-using GameEngine.Core.Renders;
+using GameEngine.Renders;
+using OpenTK.Windowing.Desktop;
+using GameEngine.Scenes;
 
-namespace GameEngine.LevelEditor
+namespace GameEngine.LevelEditor.Interface
 {
     public class EditorInterface
     {
         public ImGuiController _controller;
 
-        private EditorScen scen;
+        private Scene scene;
 
         private int textureScenView = 0;
 
@@ -47,22 +49,22 @@ namespace GameEngine.LevelEditor
         public System.Numerics.Vector2 SizeMin;
 
 
-        public EditorInterface(int width, int height, EditorScen scen) 
+        public EditorInterface(int width, int height, Scene scene)
         {
             _controller = new ImGuiController(width, height);
-            this.scen = scen;
+            this.scene = scene;
         }
 
-        public void Update(BaseWindow baseWindow, float deltaTime)
+        public void Update(GameWindow baseWindow, float deltaTime)
         {
             _controller.Update(baseWindow, deltaTime);
         }
 
-        public void Draw(List<GameObject> gameObjects)
+        public void Draw()
         {
-            GameObjectsListView(gameObjects);
+            GameObjectsListView(scene.GetGameObjects());
             ScenView();
-            PropertisObjectView(gameObjects);
+            PropertisObjectView(scene.GetGameObjects());
             AssetView();
 
             _controller.Render();
@@ -70,7 +72,7 @@ namespace GameEngine.LevelEditor
 
         private void AssetView()
         {
-            ImGui.Begin("Asset");
+            ImGui.Begin("Assets viwer");
             ImGui.End();
         }
 
@@ -78,7 +80,10 @@ namespace GameEngine.LevelEditor
         {
             ImGui.Begin("List object");
 
-            if(ImGui.TreeNodeEx("Gameobjects", ImGuiTreeNodeFlags.DefaultOpen))
+            if (gameObjects == null)
+                return;
+
+            if (ImGui.TreeNodeEx("Gameobjects", ImGuiTreeNodeFlags.DefaultOpen))
             {
                 foreach (var gameObject in gameObjects)
                 {
@@ -90,16 +95,16 @@ namespace GameEngine.LevelEditor
             }
 
             IsListObjectsSelected = ImGui.IsWindowFocused();
-            if(ImGui.IsMouseClicked(ImGuiMouseButton.Right) && IsListObjectsSelected)
+            if (ImGui.IsMouseClicked(ImGuiMouseButton.Right) && IsListObjectsSelected)
             {
                 ImGui.OpenPopup("Add object");
             }
-            if(ImGui.BeginPopup("Add object"))
+            if (ImGui.BeginPopup("Add object"))
             {
                 GameObject gameObject = new GameObject();
                 if (ImGui.Selectable("Add empty object"))
                 {
-                    scen.AddGameObject(gameObject);
+                    scene.AddGameObject(gameObject);
 
                     ImGui.CloseCurrentPopup();
                 }
@@ -114,11 +119,11 @@ namespace GameEngine.LevelEditor
                     {
                         if (ImGui.MenuItem(meshs3dObject[i]))
                         {
-                            meshRender.AddMeshRange(MeshLoader.LoadMesh(AssetManager.GetMesh(meshs3dObject[i]), scen.shader));
+                            meshRender.AddMeshRange(MeshLoader.LoadMesh(AssetManager.GetMesh(meshs3dObject[i])));
                             gameObject.AddComponent(meshRender);
                             gameObject.Name = meshs3dObject[i];
 
-                            scen.AddGameObject(gameObject);
+                            scene.AddGameObject(gameObject);
                         }
                     }
                 }
@@ -160,10 +165,10 @@ namespace GameEngine.LevelEditor
                     {
                         var transform = gameObject.GetComponent<TransformComponet>();
 
-                        Vector3 translate = CreateImGuiDragFloat3("Position", transform.Transform);
+                        Vector3 translate = CreateImGuiDragFloat3("Position", transform.Position);
 
-                        if (transform.Transform != translate)
-                            transform.Transform = translate;
+                        if (transform.Position != translate)
+                            transform.Position = translate;
 
                         Vector3 rotation = CreateImGuiDragFloat3("Rotation", transform.Rotation);
                         if (rotation != transform.Rotation)
@@ -228,6 +233,19 @@ namespace GameEngine.LevelEditor
                             light.Linear = CreateImGuiSloderFloat("Linear", light.Linear, 0, 1);
                             ImGui.Spacing();
                             light.Quadratic = CreateImGuiSloderFloat("Quadratic", light.Quadratic, 0, 1);
+
+                            ImGui.Spacing();
+                            ImGui.Checkbox("Shadow", ref lightRender.IsShadowUse);
+                            ImGui.Spacing();
+                            //ImGui.Checkbox("Perspective", ref lightRender.pointShadowBuffer.IsPerspective);
+                            {
+                            }
+                            // ImGui.SliderFloat("Angle", ref lightRender.pointShadowBuffer.angle, 3, 179);
+                            ImGui.Spacing();
+                            // ImGui.SliderFloat("depthNear", ref lightRender.pointShadowBuffer.depthNear, 1, lightRender.pointShadowBuffer.depthFar - 1);
+                            ImGui.Spacing();
+                            // ImGui.SliderFloat("depthFar", ref lightRender.pointShadowBuffer.depthFar, lightRender.pointShadowBuffer.depthNear + 1, 100);
+                            ImGui.Spacing();
                         }
                         else if (currendLightType + 1 == (int)LightType.Directional)
                         {
@@ -243,6 +261,16 @@ namespace GameEngine.LevelEditor
                             light.Diffuse = new Vector3(CreateImGuiSloderFloat("Diffuse", light.Diffuse.X, 0, 1));
                             ImGui.Spacing();
                             light.Specular = new Vector3(CreateImGuiSloderFloat("Specular", light.Specular.X, 0, 1));
+                            ImGui.Spacing();
+
+                            ImGui.Spacing();
+                            ImGui.Checkbox("Shadow", ref lightRender.IsShadowUse);
+                            ImGui.Spacing();
+                            //ImGui.SliderFloat("size", ref lightRender.shadowBuffer.size, 0, 8000);
+                            ImGui.Spacing();
+                            //ImGui.SliderFloat("depthNear", ref lightRender.shadowBuffer.dpthNear, -100, 100);
+                            ImGui.Spacing();
+                            //ImGui.SliderFloat("depthFar", ref lightRender.shadowBuffer.depthFar, -100, 100);
                             ImGui.Spacing();
                         }
                         else if (currendLightType + 1 == (int)LightType.Spot)
@@ -275,19 +303,19 @@ namespace GameEngine.LevelEditor
                             ImGui.Spacing();
                             outCutOff = CreateImGuiSloderFloat("OuterCutOff", outCutOff, 0, 100);
                             light.OuterCutOff = MathF.Cos(MathHelper.DegreesToRadians(outCutOff));
+
+                            ImGui.Spacing();
+                            ImGui.Checkbox("Shadow", ref lightRender.IsShadowUse);
+                            ImGui.Spacing();
+                            //ImGui.SliderFloat("size", ref lightRender.shadowBuffer.size, 0, 8000);
+                            ImGui.Spacing();
+                            //ImGui.SliderFloat("depthNear", ref lightRender.shadowBuffer.dpthNear, -100, 100);
+                            ImGui.Spacing();
+                            //ImGui.SliderFloat("depthFar", ref lightRender.shadowBuffer.depthFar, -100, 100);
+                            ImGui.Spacing();
                         }
 
                         lightRender.SetLight(light);
-                        ImGui.Spacing();
-                        ImGui.Checkbox("Shadow", ref lightRender.IsShadowUse);
-                        ImGui.Spacing();
-                        ImGui.SliderFloat("size", ref lightRender.shadowBuffer.size, 0, 100);
-                        ImGui.Spacing();
-                        ImGui.SliderFloat("depthNear", ref lightRender.shadowBuffer.dpthNear, -100, 100);
-                        ImGui.Spacing();
-                        ImGui.SliderFloat("depthFar", ref lightRender.shadowBuffer.depthFar, -100, 100);
-                        ImGui.Spacing();
-
                     }
                     else if (component.GetType() == typeof(MeshRender))
                     {
@@ -310,7 +338,7 @@ namespace GameEngine.LevelEditor
                             if (ImGui.Combo("Meshes", ref currentSelectMesh, AssetManager.GetMeshes().Values.ToArray(), AssetManager.GetMeshes().Count))
                             {
                                 meshRender.meshes = new List<Mesh>();
-                                meshRender.AddMeshRange(MeshLoader.LoadMesh(AssetManager.GetMeshes().Values.ToArray()[currentSelectMesh], scen.shader));
+                                meshRender.AddMeshRange(MeshLoader.LoadMesh(AssetManager.GetMeshes().Values.ToArray()[currentSelectMesh]));
 
                                 ImGui.CloseCurrentPopup();
                             }
@@ -341,12 +369,12 @@ namespace GameEngine.LevelEditor
                 }
 
             }
-            if(ImGui.Button("Add component"))
+            if (ImGui.Button("Add component"))
             {
                 ImGui.OpenPopup("Add component");
             }
 
-            if(ImGui.BeginPopup("Add component"))
+            if (ImGui.BeginPopup("Add component"))
             {
                 if (ImGui.Combo("", ref currentComponent, gameObjectComponents, gameObjectComponents.Length))
                 {
@@ -358,7 +386,7 @@ namespace GameEngine.LevelEditor
                     ImGui.CloseCurrentPopup();
                 }
             }
-            
+
             ImGui.End();
         }
 

@@ -1,5 +1,5 @@
-﻿using GameEngine.GameObjects.Components.List;
-using GameEngine.Resources.Shaders;
+﻿using GameEngine.Core;
+using GameEngine.GameObjects.Components.List;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,24 +1,41 @@
-﻿using Assimp.Configs;
-using Assimp;
-using GameEngine.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GameEngine.Resources.Shaders;
-using GameEngine.Resources.Textures;
 using GameEngine.Core.Structs;
 using System.Xml.Linq;
+using OpenTK.Mathematics;
+using Assimp;
+using Assimp.Configs;
+using GameEngine.Core;
+using GameEngine.Renders;
 
 namespace GameEngine.Resources.Meshes
 {
     public class MeshLoader
     {
+        public static Vector3 FromVector(Vector3D vec)
+        {
+            Vector3 v;
+            v.X = vec.X;
+            v.Y = vec.Y;
+            v.Z = vec.Z;
+            return v;
+        }
+
+        public static Vector2 FromVector2D(Vector3D vec)
+        {
+            Vector2 v;
+            v.X = vec.X;
+            v.Y = vec.Y;
+            return v;
+        }
+
         private static Scene scene;
 
-        private static List<Core.Renders.Mesh> meshs = new List<Core.Renders.Mesh>();
+        private static List<Renders.Mesh> meshs = new List<Renders.Mesh>();
         private static List<Vertex> vertices = new List<Vertex>();
         private static List<uint> indices = new List<uint>();
 
@@ -26,7 +43,7 @@ namespace GameEngine.Resources.Meshes
 
         private static Vertex vertex = new Vertex();
 
-        public static List<Core.Renders.Mesh> LoadMesh(string path, Shader shader)
+        public static List<Renders.Mesh> LoadMesh(string path)
         {
             string name = "";
             int end = path.IndexOf(".");
@@ -46,7 +63,7 @@ namespace GameEngine.Resources.Meshes
                 }
             }
 
-            meshs = new List<Core.Renders.Mesh>();
+            meshs = new List<Renders.Mesh>();
             AssimpContext importer = new AssimpContext();
             importer.SetConfig(new NormalSmoothingAngleConfig(0));
 
@@ -74,9 +91,9 @@ namespace GameEngine.Resources.Meshes
                         {
                             int indics = face.Indices[i];
 
-                            vertex.Position = MathHelper.FromVector(mesh.Vertices[indics]);
-                            vertex.TexCoords = MathHelper.FromVector2D(mesh.TextureCoordinateChannels[0][indics]);
-                            vertex.Normal = MathHelper.FromVector(mesh.Normals[indics]);
+                            vertex.Position = FromVector(mesh.Vertices[indics]);
+                            vertex.TexCoords = FromVector2D(mesh.TextureCoordinateChannels[0][indics]);
+                            vertex.Normal = FromVector(mesh.Normals[indics]);
 
                             vertices.Add(vertex);
 
@@ -91,14 +108,18 @@ namespace GameEngine.Resources.Meshes
                     Core.Structs.Material material = new Core.Structs.Material();
 
                     if (scene.Materials[mesh.MaterialIndex].TextureDiffuse.FilePath != null && scene.Materials[mesh.MaterialIndex].TextureDiffuse.FilePath != "")
-                        material.textures.Add(TextureLoader.LoadTexture(scene.Materials[mesh.MaterialIndex].TextureDiffuse.FilePath));
+                        material.textures.Add(Texture.LoadFromFile(scene.Materials[mesh.MaterialIndex].TextureDiffuse.FilePath));
                     if (scene.Materials[mesh.MaterialIndex].TextureSpecular.FilePath != null && scene.Materials[mesh.MaterialIndex].TextureSpecular.FilePath != "")
-                        material.textures.Add(TextureLoader.LoadTexture(scene.Materials[mesh.MaterialIndex].TextureSpecular.FilePath));
+                        material.textures.Add(Texture.LoadFromFile(scene.Materials[mesh.MaterialIndex].TextureSpecular.FilePath));
 
                     material.Id = mesh.MaterialIndex;
                     material.Name = scene.Materials[mesh.MaterialIndex].Name;
 
-                    Core.Renders.Mesh defaultMesh = new Core.Renders.Mesh(shader, vertices.ToArray(), material, indices.ToArray());
+                    VertexArray vertexArray = new VertexArray();
+                    vertexArray.SetVertexBuffer(new Renders.Bufers.VertexBuffer(vertices.ToArray()));
+                    vertexArray.SetIndexBuffer(new Renders.Bufers.IndexBuffer(indices.ToArray()));
+
+                    Renders.Mesh defaultMesh = new Renders.Mesh(vertexArray, material);
                     defaultMesh.Name = name;
                     defaultMesh.Id = meshs.Count;
 
