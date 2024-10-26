@@ -8,23 +8,14 @@ using System.Threading.Tasks;
 
 namespace GameEngine.GameObjects.Components
 {
-    public  class Component
+    public abstract class Component
     {
         public GameObject gameObject;
 
         public string Name = "Component";
 
-        public virtual void Start()
-        {
-
-        }
-        public virtual void Update(Shader shader, float deltaTime)
-        {
-
-        }
-        public virtual void Draw(Shader shader)
-        {
-
-        }
+        public abstract void Start();
+        public abstract void Update(float deltaTime);
+        public abstract void Draw(Shader shader);
     }
 }

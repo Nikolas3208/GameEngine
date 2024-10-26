@@ -18,6 +18,8 @@ namespace GameEngine.Renders.Bufers
         {
             this.indices = indices;
             Count = indices.Length;
+
+            Init();
         }
 
         public void Init()

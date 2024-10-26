@@ -1,4 +1,5 @@
 ﻿using GameEngine.GameObjects;
+using GameEngine.GameObjects.Components.List;
 using GameEngine.GameObjects.List;
 using GameEngine.Renders;
 using GameEngine.Resources;
@@ -14,12 +15,17 @@ namespace GameEngine.Scenes
     public class Scene
     {
         private List<GameObject> gameObjects;
+
+        private Camera ScenCamera;
         public string Name { get; set; } = "MainScen";
 
         public Scene()
         {
             gameObjects = new List<GameObject>();
         }
+
+        public void SetCamera(Camera camera) { ScenCamera = camera; AddGameObject(ScenCamera); }
+        public Camera GetCamera() => ScenCamera;
 
         public void AddGameObject(GameObject gameObject)
         {
@@ -57,15 +63,23 @@ namespace GameEngine.Scenes
 
         public void Start()
         {
+            //ScenCamera.Start();
             foreach (var gameObject in gameObjects)
             {
                 gameObject.Start();
             }
         }
+
+        public GameObject light = null;
         public void Update(float deltaTime)
         {
+            //ScenCamera.Update(deltaTime);
             foreach (var gameObject in gameObjects)
             {
+                if(gameObject.GetComponent<LightRender>() != null && light == null)
+                {
+                    light = gameObject;
+                }
                 gameObject.Update(deltaTime);
             }
         }
@@ -74,6 +88,9 @@ namespace GameEngine.Scenes
         {
             foreach (var gameObject in gameObjects)
             {
+                ScenCamera.GetComponent<CameraRender>().Draw(gameObject.GetShader());
+                light.GetComponent<LightRender>().Draw(gameObject.GetShader());
+                gameObject.GetShader().SetInt("useShadow", 0);
                 gameObject.Draw();
             }
         }

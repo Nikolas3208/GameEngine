@@ -1,6 +1,7 @@
 ﻿using GameEngine.Core;
 using GameEngine.GameObjects.Components;
 using GameEngine.GameObjects.Components.List;
+using GameEngine.Resources;
 using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,8 @@ namespace GameEngine.GameObjects
     {
         private List<Component> components;
 
+        protected Shader shader;
+
         public string Name { get; set; } = "GameObject";
         public int Id { get; set; }
 
@@ -21,6 +24,9 @@ namespace GameEngine.GameObjects
 
         public GameObject()
         {
+            if(shader == null)
+                shader = Shader.LoadFromFile(AssetManager.GetShader("multipleLights"));
+
             components = new List<Component>();
             AddComponent(new TransformComponet());
         }
@@ -33,21 +39,24 @@ namespace GameEngine.GameObjects
             }
         }
 
-        public virtual void Update(float deltaTime, Shader shader = null)
+        public virtual void Update(float deltaTime)
         {
             foreach (var component in components)
             {
-                component.Update(shader, deltaTime);
+                component.Update(deltaTime);
             }
         }
 
-        public virtual void Draw(Shader shader = null)
+        public virtual void Draw()
         {
             foreach (var component in components)
             {
                 component.Draw(shader);
             }
         }
+
+        public Shader GetShader() { return shader; }
+        public void SetShader(Shader shader) { this.shader = shader; }
 
         public void AddComponent(Component component)
         {

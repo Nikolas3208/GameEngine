@@ -41,15 +41,16 @@ namespace GameEngine.GameObjects.Components.List
 
         public override void Start()
         {
-            base.Start();
-
             Name = "Transform";
+        }
+
+        public override void Update(float deltaTime)
+        {
+            
         }
 
         public override void Draw(Shader shader)
         {
-            base.Draw(shader);
-
             shader.Use();
             shader.SetMatrix4("model", positionMatrix);
             shader.SetMatrix4("scale", scaleMatrix);

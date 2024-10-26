@@ -19,15 +19,13 @@ namespace GameEngine.GameObjects.List
         Left, Right, Up, Down, Breack, Front
     }
 
-
     public class Camera : GameObject
     {
         private CameraRender render;
         public Camera(Vector3 position, float aspect)
         {
-            render = new CameraRender(position, aspect);
-            AddComponent(render);
-
+            AddComponent(new CameraRender(position, aspect));
+            render = GetComponent<CameraRender>();
             Name = "Main camera";
         }
 
@@ -67,15 +65,14 @@ namespace GameEngine.GameObjects.List
             GetComponent<TransformComponet>().Position = render.Position;
         }
 
-        public override void Update(float deltaTime, Shader shader)
+        public override void Update(float deltaTime)
         {
-            base.Update(deltaTime, shader);
+            base.Update(deltaTime);
         }
 
-        public override void Draw(Shader shader)
+        public override void Draw()
         {
-            //render.Draw(shader);
-            base.Draw(shader);
+            base.Draw();
         }
     }
 }

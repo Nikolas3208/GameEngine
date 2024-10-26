@@ -1,6 +1,7 @@
 ﻿using GameEngine.Core;
 using GameEngine.Core.Structs;
 using GameEngine.Renders;
+using GameEngine.Renders.Bufers;
 using GameEngine.Resources;
 using GameEngine.Resources.Meshes;
 using GameEngine.Resources.Textures;
@@ -26,7 +27,7 @@ namespace GameEngine.GameObjects.Components.List
     {
         private CubemapTexture texture;
         private Mesh mesh;
-        private Shader shader;
+        private Shader scyBoxShader;
 
         private Matrix4 projection = Matrix4.Identity;
         private float fov = MathHelper.PiOver2;
@@ -35,7 +36,7 @@ namespace GameEngine.GameObjects.Components.List
         private float pitch;
 
         public float depthNear = 0.01f;
-        public float depthFar = 100f;
+        public float depthFar = 1000f;
         public float size = 10;
 
 
@@ -140,7 +141,7 @@ namespace GameEngine.GameObjects.Components.List
 
             projection = Matrix4.Identity;
 
-            //shader = ShaderLoad.Load(AssetManager.GetShader("skybox"));
+            scyBoxShader = Shader.LoadFromFile(AssetManager.GetShader("skybox"));
 
             string[] paths = {
                 AssetManager.GetTexture("right"),
@@ -153,10 +154,14 @@ namespace GameEngine.GameObjects.Components.List
 
             texture = CubemapTexture.LoadFromFile(paths);
 
-            mesh = new Mesh();
+            VertexArray vertexArray = new VertexArray(new VertexBuffer(skyboxVertices), new IndexBuffer(skyboxIndices), scyBoxShader);
+
+            mesh = new Mesh(vertexArray);
+
+            scyBoxShader.Use();
         }
 
-        public override void Update(Shader shader, float deltaTime)
+        public override void Update(float deltaTime)
         {
             switch (ProjectionType)
             {
@@ -192,19 +197,17 @@ namespace GameEngine.GameObjects.Components.List
 
         public override void Draw(Shader shader)
         {
-            base.Draw(shader);
-
             if (IsSkyBox)
             {
                 GL.CullFace(CullFaceMode.Front);
                 GL.FrontFace(FrontFaceDirection.Ccw);
                 GL.DepthFunc(DepthFunction.Lequal);
 
-                this.shader.Use();
+                this.scyBoxShader.Use();
 
-                this.shader.SetMatrix4("projection", GetProjectionMatrix());
-                this.shader.SetMatrix4("view", GetViewMatrix());
-                this.shader.SetInt("skybox", 0);
+                this.scyBoxShader.SetMatrix4("projection", GetProjectionMatrix());
+                this.scyBoxShader.SetMatrix4("view", GetViewMatrix());
+                this.scyBoxShader.SetInt("skybox", 0);
                 texture.Use(TextureUnit.Texture0);
 
                 mesh.Draw(PrimitiveType.Triangles);

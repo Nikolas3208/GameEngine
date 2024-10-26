@@ -1,4 +1,5 @@
-﻿using GameEngine.Core.Structs;
+﻿using GameEngine.Core;
+using GameEngine.Core.Structs;
 using GameEngine.Renders.Bufers;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
@@ -20,13 +21,19 @@ namespace GameEngine.Renders
 
         public VertexArray() { }
 
-        public VertexArray(VertexBuffer vertexBuffer, IndexBuffer indexBuffer)
+        public VertexArray(VertexBuffer vertexBuffer, IndexBuffer indexBuffer, Shader shader = null)
         {
             this.vertexBuffer = vertexBuffer;
             this.indexBuffer = indexBuffer;
+
+            Init(shader);
         }
 
-        public void Init()
+        private int vertexLocation = 0;
+        private int normalLocation = 1;
+        private int textureLocation = 2;
+
+        public void Init(Shader shader)
         {
             int size = Marshal.SizeOf(typeof(Vertex));
 
@@ -36,14 +43,21 @@ namespace GameEngine.Renders
             vertexBuffer!.Bind();
             indexBuffer!.Bind();
 
-            GL.EnableVertexAttribArray(0);
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, size, 0);
+            if(shader != null)
+            {
+                vertexLocation = shader.GetAttribLocation("aPos");
+                normalLocation = shader.GetAttribLocation("aNormal");
+                textureLocation = shader.GetAttribLocation("aTexCoords");
+            }
 
-            GL.EnableVertexAttribArray(1);
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, size, 0);
+            GL.EnableVertexAttribArray(vertexLocation);
+            GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, size, 0);
 
-            GL.EnableVertexAttribArray(2);
-            GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, size, 3 * Marshal.SizeOf(typeof(Vector2)));
+            GL.EnableVertexAttribArray(normalLocation);
+            GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, size, 0 * Marshal.SizeOf(typeof(Vector2)));
+
+            GL.EnableVertexAttribArray(textureLocation);
+            GL.VertexAttribPointer(textureLocation, 3, VertexAttribPointerType.Float, false, size, 3 * Marshal.SizeOf(typeof(Vector2)));
 
             indexBuffer!.Unbind();
             vertexBuffer!.Unbind();
@@ -52,16 +66,22 @@ namespace GameEngine.Renders
             GL.DisableVertexAttribArray(0);
             GL.DisableVertexAttribArray(1);
             GL.DisableVertexAttribArray(2);
+
+            if (shader != null)
+                shader.Use();
         }
 
         public void Bind()
         {
             GL.BindVertexArray(VertexArrayId);
+            indexBuffer!.Bind();
         }
 
         public void Unbind()
         {
+            indexBuffer!.Unbind();
             GL.BindVertexArray(0);
+
         }
 
         public void Draw(PrimitiveType type)

@@ -18,15 +18,20 @@ namespace GameEngine.GameObjects.Components.List
         public List<Mesh> meshes;
         public string MeshName = "Mesh";
 
-        public override void Start()
+        public MeshRender()
         {
             Name = "Mesh render";
 
-            if(meshes == null)
+            if (meshes == null)
                 meshes = new List<Mesh>();
         }
 
-        public override void Update(Shader shader, float deltaTime)
+        public override void Start()
+        {
+
+        }
+
+        public override void Update(float deltaTime)
         {
             
         }
@@ -41,7 +46,6 @@ namespace GameEngine.GameObjects.Components.List
                 shader.SetInt("meshId", mesh.Id);
                 mesh.Draw(PrimitiveType.Triangles, shader);
             }
-            base.Draw(shader);
         }
 
         public void AddMesh(Mesh mesh)

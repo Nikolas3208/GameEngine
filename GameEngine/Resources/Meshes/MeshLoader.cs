@@ -115,9 +115,7 @@ namespace GameEngine.Resources.Meshes
                     material.Id = mesh.MaterialIndex;
                     material.Name = scene.Materials[mesh.MaterialIndex].Name;
 
-                    VertexArray vertexArray = new VertexArray();
-                    vertexArray.SetVertexBuffer(new Renders.Bufers.VertexBuffer(vertices.ToArray()));
-                    vertexArray.SetIndexBuffer(new Renders.Bufers.IndexBuffer(indices.ToArray()));
+                    VertexArray vertexArray = new VertexArray(new Renders.Bufers.VertexBuffer(vertices.ToArray()), new Renders.Bufers.IndexBuffer(indices.ToArray()));
 
                     Renders.Mesh defaultMesh = new Renders.Mesh(vertexArray, material);
                     defaultMesh.Name = name;

@@ -17,5 +17,7 @@ namespace GameEngine.Core
         public abstract void Update(float deltaTime);
         public abstract void ImGuiDraw(GameWindow window, float deltaTime);
         public abstract void Draw();
+
+        public abstract void Resize(int width, int height);
     }
 }

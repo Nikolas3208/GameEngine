@@ -18,6 +18,8 @@ namespace GameEngine.Renders.Bufers
         public VertexBuffer(Vertex[] vertices)
         {
             this.vertices = vertices;
+
+            Init();
         }
 
         public void Init()

@@ -15,6 +15,18 @@ namespace GameEngine.Core
 
         protected Dictionary<string, int> uniformLocations;
 
+        public static Shader LoadFromFile(string path)
+        {
+            if (File.Exists(path + ".geom"))
+            {
+                return new Shader(path + ".vert", path + ".frag", path + ".geom");
+            }
+            else
+            {
+                return new Shader(path + ".vert", path + ".frag");
+            }
+        }
+
         public Shader(string vertPath, string fragPath, string geomPath = "")
         {
             Handle = GL.CreateProgram();

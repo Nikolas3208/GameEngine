@@ -26,17 +26,13 @@ namespace GameEngine.GameObjects.Components.List
         public void SetLight(Light light) => Light = light;
         public Light GetLight() => Light;
 
-        public override void Update(Shader shader, float deltaTime)
+        public override void Update(float deltaTime)
         {
-            base.Update(shader, deltaTime);
-
             Light.Position = gameObject.GetComponent<TransformComponet>().Position;
         }
 
         public override void Draw(Shader shader)
         {
-            base.Draw(shader);
-
             switch(Light.Type)
             {
                 case LightType.Point:

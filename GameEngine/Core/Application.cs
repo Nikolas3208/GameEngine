@@ -74,6 +74,8 @@ namespace GameEngine.Core
         private void Window_Resize(OpenTK.Windowing.Common.ResizeEventArgs obj)
         {
             GL.Viewport(0, 0, obj.Width, obj.Height);
+
+            layer.Resize(window.ClientSize.X, window.ClientSize.Y);
         }
     }
 }
