@@ -1,5 +1,6 @@
 ﻿using Assimp;
 using GameEngine.Core;
+using GameEngine.Core.Structs;
 using GameEngine.GameObjects.Components.List;
 using GameEngine.Resources;
 using OpenTK.Mathematics;
@@ -9,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace GameEngine.GameObjects.List
@@ -21,8 +23,9 @@ namespace GameEngine.GameObjects.List
 
     public class Camera : GameObject
     {
+        [JsonIgnore]
         private CameraRender render;
-        public Camera(Vector3 position, float aspect)
+        public Camera(Vector3f position, float aspect)
         {
             AddComponent(new CameraRender(position, aspect));
             render = GetComponent<CameraRender>();

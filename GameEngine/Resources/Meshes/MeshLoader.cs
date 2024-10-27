@@ -43,7 +43,7 @@ namespace GameEngine.Resources.Meshes
 
         private static Vertex vertex = new Vertex();
 
-        public static List<Renders.Mesh> LoadMesh(string path)
+        public static List<Renders.Mesh> LoadMesh(string path, Shader shader = null)
         {
             string name = "";
             int end = path.IndexOf(".");
@@ -115,7 +115,7 @@ namespace GameEngine.Resources.Meshes
                     material.Id = mesh.MaterialIndex;
                     material.Name = scene.Materials[mesh.MaterialIndex].Name;
 
-                    VertexArray vertexArray = new VertexArray(new Renders.Bufers.VertexBuffer(vertices.ToArray()), new Renders.Bufers.IndexBuffer(indices.ToArray()));
+                    VertexArray vertexArray = new VertexArray(new Renders.Bufers.VertexBuffer(vertices.ToArray()), new Renders.Bufers.IndexBuffer(indices.ToArray()), shader);
 
                     Renders.Mesh defaultMesh = new Renders.Mesh(vertexArray, material);
                     defaultMesh.Name = name;

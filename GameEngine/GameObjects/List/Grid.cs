@@ -4,6 +4,7 @@ using GameEngine.GameObjects.Components.List;
 using GameEngine.Renders;
 using GameEngine.Renders.Bufers;
 using GameEngine.Resources;
+using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
@@ -43,6 +44,13 @@ namespace GameEngine.GameObjects.List
             Name = "Grid";
 
             base.Start();
+        }
+
+        public override void Draw()
+        {
+            GL.Disable(EnableCap.CullFace);
+            base.Draw();
+            GL.Enable(EnableCap.CullFace);
         }
     }
 }

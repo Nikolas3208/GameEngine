@@ -8,7 +8,7 @@ namespace GameEngine.Resources
 {
     public class AssetManager
     {
-        public string basePath {  get; set; }
+        public static string basePath {  get; set; }
 
         private static Dictionary<string, string> textures;
         private static Dictionary<string, string> meshes;
@@ -19,8 +19,6 @@ namespace GameEngine.Resources
             textures = new Dictionary<string, string>();
             meshes = new Dictionary<string, string>();
             shaders = new Dictionary<string, string>();
-
-            this.basePath = basePath;
 
             Init(basePath);
         }
@@ -176,7 +174,7 @@ namespace GameEngine.Resources
 
         public static string GetShader(string key)
         {
-            if (shaders.ContainsKey(key))
+            if (shaders != null && shaders.ContainsKey(key))
                 return shaders[key];
 
             return null;

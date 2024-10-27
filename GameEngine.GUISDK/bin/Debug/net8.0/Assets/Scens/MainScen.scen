@@ -1,0 +1,372 @@
+{
+  "$id": "1",
+  "Name": "MainScen",
+  "gameObjects": {
+    "$id": "2",
+    "$values": [
+      {
+        "$id": "3",
+        "Name": "Main camera",
+        "Id": 0,
+        "components": {
+          "$id": "4",
+          "$values": [
+            {
+              "$id": "5",
+              "$type": 1,
+              "Position": {
+                "X": -0.44780338,
+                "Y": 13.203488,
+                "Z": 16.57996
+              },
+              "Rotation": {
+                "X": 0,
+                "Y": 0,
+                "Z": 0
+              },
+              "Scale": {
+                "X": 0,
+                "Y": 0,
+                "Z": 0
+              },
+              "gameObject": {
+                "$ref": "3"
+              },
+              "Name": "Transform"
+            },
+            {
+              "$id": "6",
+              "$type": 0,
+              "Aspect": 1,
+              "Front": {
+                "X": 0.045166947,
+                "Y": -0.5877803,
+                "Z": -0.80775875
+              },
+              "Up": {
+                "X": 0.03281529,
+                "Y": 0.80902064,
+                "Z": -0.58686364
+              },
+              "Right": {
+                "X": 0.9984403,
+                "Y": -0,
+                "Z": 0.05582917
+              },
+              "Pitch": -35.99965,
+              "Yaw": -86.79955,
+              "Fov": 90,
+              "depthNear": 0.01,
+              "depthFar": 1000,
+              "size": 10,
+              "IsSkyBox": true,
+              "Position": {
+                "X": -0.44780338,
+                "Y": 13.203488,
+                "Z": 16.57996
+              },
+              "ProjectionType": 0,
+              "gameObject": {
+                "$ref": "3"
+              },
+              "Name": "Camera render"
+            }
+          ]
+        },
+        "IsSelected": false
+      },
+      {
+        "$id": "7",
+        "Name": "Grid",
+        "Id": 1,
+        "components": {
+          "$id": "8",
+          "$values": [
+            {
+              "$id": "9",
+              "$type": 1,
+              "Position": {
+                "X": 0,
+                "Y": 0,
+                "Z": 0
+              },
+              "Rotation": {
+                "X": 0,
+                "Y": 0,
+                "Z": 0
+              },
+              "Scale": {
+                "X": 0,
+                "Y": 0,
+                "Z": 0
+              },
+              "gameObject": {
+                "$ref": "7"
+              },
+              "Name": "Transform"
+            },
+            {
+              "$id": "10",
+              "$type": 3,
+              "MeshName": "Mesh",
+              "gameObject": {
+                "$ref": "7"
+              },
+              "Name": "Mesh render"
+            }
+          ]
+        },
+        "IsSelected": false
+      },
+      {
+        "$id": "11",
+        "Name": "Light",
+        "Id": 2,
+        "components": {
+          "$id": "12",
+          "$values": [
+            {
+              "$id": "13",
+              "$type": 1,
+              "Position": {
+                "X": 0,
+                "Y": 0,
+                "Z": 0
+              },
+              "Rotation": {
+                "X": 0,
+                "Y": 0,
+                "Z": 0
+              },
+              "Scale": {
+                "X": 0,
+                "Y": 0,
+                "Z": 0
+              },
+              "gameObject": {
+                "$ref": "11"
+              },
+              "Name": "Transform"
+            },
+            {
+              "$id": "14",
+              "$type": 2,
+              "Light": {
+                "Id": 0,
+                "Type": 2,
+                "Position": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "Direction": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "Ambient": {
+                  "X": 0.5,
+                  "Y": 0.5,
+                  "Z": 0.5
+                },
+                "Diffuse": {
+                  "X": 0.5,
+                  "Y": 0.5,
+                  "Z": 0.5
+                },
+                "Specular": {
+                  "X": 0.5,
+                  "Y": 0.5,
+                  "Z": 0.5
+                },
+                "Constant": 1,
+                "Linear": 0.09,
+                "Quadratic": 0.032,
+                "CutOff": 12.5,
+                "OuterCutOff": 17.5
+              },
+              "IsShadowUse": false,
+              "gameObject": {
+                "$ref": "11"
+              },
+              "Name": "Light"
+            }
+          ]
+        },
+        "IsSelected": false
+      },
+      {
+        "$id": "15",
+        "Name": "Cube",
+        "Id": 3,
+        "components": {
+          "$id": "16",
+          "$values": [
+            {
+              "$id": "17",
+              "$type": 1,
+              "Position": {
+                "X": -1,
+                "Y": 0,
+                "Z": 0
+              },
+              "Rotation": {
+                "X": 0,
+                "Y": 0,
+                "Z": 0
+              },
+              "Scale": {
+                "X": 0,
+                "Y": 0,
+                "Z": 0
+              },
+              "gameObject": {
+                "$ref": "15"
+              },
+              "Name": "Component"
+            },
+            {
+              "$id": "18",
+              "$type": 3,
+              "MeshName": "Cube",
+              "gameObject": {
+                "$ref": "15"
+              },
+              "Name": "Mesh render"
+            }
+          ]
+        },
+        "IsSelected": false
+      },
+      {
+        "$id": "19",
+        "Name": "Sphere",
+        "Id": 4,
+        "components": {
+          "$id": "20",
+          "$values": [
+            {
+              "$id": "21",
+              "$type": 1,
+              "Position": {
+                "X": 5,
+                "Y": 0,
+                "Z": 0
+              },
+              "Rotation": {
+                "X": 0,
+                "Y": 0,
+                "Z": 0
+              },
+              "Scale": {
+                "X": 0,
+                "Y": 0,
+                "Z": 0
+              },
+              "gameObject": {
+                "$ref": "19"
+              },
+              "Name": "Component"
+            },
+            {
+              "$id": "22",
+              "$type": 3,
+              "MeshName": "Sphere",
+              "gameObject": {
+                "$ref": "19"
+              },
+              "Name": "Mesh render"
+            }
+          ]
+        },
+        "IsSelected": false
+      },
+      {
+        "$id": "23",
+        "Name": "Cylinder",
+        "Id": 5,
+        "components": {
+          "$id": "24",
+          "$values": [
+            {
+              "$id": "25",
+              "$type": 1,
+              "Position": {
+                "X": 0,
+                "Y": 7,
+                "Z": 0
+              },
+              "Rotation": {
+                "X": 0,
+                "Y": 0,
+                "Z": 0
+              },
+              "Scale": {
+                "X": 0,
+                "Y": 0,
+                "Z": 0
+              },
+              "gameObject": {
+                "$ref": "23"
+              },
+              "Name": "Component"
+            },
+            {
+              "$id": "26",
+              "$type": 3,
+              "MeshName": "Cylinder",
+              "gameObject": {
+                "$ref": "23"
+              },
+              "Name": "Mesh render"
+            }
+          ]
+        },
+        "IsSelected": false
+      },
+      {
+        "$id": "27",
+        "Name": "Plane",
+        "Id": 6,
+        "components": {
+          "$id": "28",
+          "$values": [
+            {
+              "$id": "29",
+              "$type": 1,
+              "Position": {
+                "X": 0,
+                "Y": 0,
+                "Z": 4
+              },
+              "Rotation": {
+                "X": 0,
+                "Y": 0,
+                "Z": 0
+              },
+              "Scale": {
+                "X": 0,
+                "Y": 0,
+                "Z": 0
+              },
+              "gameObject": {
+                "$ref": "27"
+              },
+              "Name": "Component"
+            },
+            {
+              "$id": "30",
+              "$type": 3,
+              "MeshName": "Plane",
+              "gameObject": {
+                "$ref": "27"
+              },
+              "Name": "Mesh render"
+            }
+          ]
+        },
+        "IsSelected": false
+      }
+    ]
+  }
+}

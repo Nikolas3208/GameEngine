@@ -4,18 +4,34 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace GameEngine.GameObjects.Components
 {
-    public abstract class Component
+    [JsonDerivedType(typeof(CameraRender), 0)]
+    [JsonDerivedType(typeof(TransformComponet), 1)]
+    [JsonDerivedType(typeof(LightRender), 2)]
+    [JsonDerivedType(typeof(MeshRender), 3)]
+    public class Component
     {
+        [JsonInclude]
         public GameObject gameObject;
 
+        [JsonInclude]
         public string Name = "Component";
 
-        public abstract void Start();
-        public abstract void Update(float deltaTime);
-        public abstract void Draw(Shader shader);
+        public virtual void Start()
+        {
+
+        }
+        public virtual void Update(float deltaTime)
+        {
+
+        }
+        public virtual void Draw(Shader shader)
+        {
+
+        }
     }
 }

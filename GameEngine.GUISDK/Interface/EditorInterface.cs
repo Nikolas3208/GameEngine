@@ -119,7 +119,7 @@ namespace GameEngine.LevelEditor.Interface
                     {
                         if (ImGui.MenuItem(meshs3dObject[i]))
                         {
-                            meshRender.AddMeshRange(MeshLoader.LoadMesh(AssetManager.GetMesh(meshs3dObject[i])));
+                            meshRender.AddMeshRange(MeshLoader.LoadMesh(AssetManager.GetMesh(meshs3dObject[i]), gameObject.GetShader()));
                             gameObject.AddComponent(meshRender);
                             gameObject.Name = meshs3dObject[i];
 
@@ -152,7 +152,7 @@ namespace GameEngine.LevelEditor.Interface
             ImGui.Begin("Propertis");
             var size = ImGui.GetWindowSize();
 
-            if (currentGameObject == -1)
+            if (currentGameObject == -1 || currentGameObject >= gameObjects.Count)
                 return;
 
             var gameObject = gameObjects[currentGameObject];
@@ -165,16 +165,16 @@ namespace GameEngine.LevelEditor.Interface
                     {
                         var transform = gameObject.GetComponent<TransformComponet>();
 
-                        Vector3 translate = CreateImGuiDragFloat3("Position", transform.Position);
+                        Vector3f translate = CreateImGuiDragFloat3("Position", transform.Position);
 
                         if (transform.Position != translate)
                             transform.Position = translate;
 
-                        Vector3 rotation = CreateImGuiDragFloat3("Rotation", transform.Rotation);
+                        Vector3f rotation = CreateImGuiDragFloat3("Rotation", transform.Rotation);
                         if (rotation != transform.Rotation)
                             transform.Rotation = rotation;
 
-                        Vector3 scale = CreateImGuiDragFloat3("Scale", transform.Scale);
+                        Vector3f scale = CreateImGuiDragFloat3("Scale", transform.Scale);
                         if (scale != transform.Scale)
                             transform.Scale = scale;
                     }
@@ -220,11 +220,11 @@ namespace GameEngine.LevelEditor.Interface
                             light.Position = CreateImGuiDragFloat3("Position", light.Position);
                             ImGui.Separator();
                             ImGui.Spacing();
-                            light.Ambient = new Vector3(CreateImGuiSloderFloat("Ambient", light.Ambient.X, 0, 1));
+                            light.Ambient = new Vector3f(CreateImGuiSloderFloat("Ambient", light.Ambient.X, 0, 1));
                             ImGui.Spacing();
-                            light.Diffuse = new Vector3(CreateImGuiSloderFloat("Diffuse", light.Diffuse.X, 0, 1));
+                            light.Diffuse = new Vector3f(CreateImGuiSloderFloat("Diffuse", light.Diffuse.X, 0, 1));
                             ImGui.Spacing();
-                            light.Specular = new Vector3(CreateImGuiSloderFloat("Specular", light.Specular.X, 0, 1));
+                            light.Specular = new Vector3f(CreateImGuiSloderFloat("Specular", light.Specular.X, 0, 1));
                             ImGui.Spacing();
                             ImGui.Separator();
 
@@ -256,11 +256,11 @@ namespace GameEngine.LevelEditor.Interface
                             ImGui.Separator();
 
                             ImGui.Spacing();
-                            light.Ambient = new Vector3(CreateImGuiSloderFloat("Ambient", light.Ambient.X, 0, 1));
+                            light.Ambient = new Vector3f(CreateImGuiSloderFloat("Ambient", light.Ambient.X, 0, 1));
                             ImGui.Spacing();
-                            light.Diffuse = new Vector3(CreateImGuiSloderFloat("Diffuse", light.Diffuse.X, 0, 1));
+                            light.Diffuse = new Vector3f(CreateImGuiSloderFloat("Diffuse", light.Diffuse.X, 0, 1));
                             ImGui.Spacing();
-                            light.Specular = new Vector3(CreateImGuiSloderFloat("Specular", light.Specular.X, 0, 1));
+                            light.Specular = new Vector3f(CreateImGuiSloderFloat("Specular", light.Specular.X, 0, 1));
                             ImGui.Spacing();
 
                             ImGui.Spacing();
@@ -284,11 +284,11 @@ namespace GameEngine.LevelEditor.Interface
                             ImGui.Separator();
 
                             ImGui.Spacing();
-                            light.Ambient = new Vector3(CreateImGuiSloderFloat("Ambient", light.Ambient.X, 0, 1));
+                            light.Ambient = new Vector3f(CreateImGuiSloderFloat("Ambient", light.Ambient.X, 0, 1));
                             ImGui.Spacing();
-                            light.Diffuse = new Vector3(CreateImGuiSloderFloat("Diffuse", light.Diffuse.X, 0, 1));
+                            light.Diffuse = new Vector3f(CreateImGuiSloderFloat("Diffuse", light.Diffuse.X, 0, 1));
                             ImGui.Spacing();
-                            light.Specular = new Vector3(CreateImGuiSloderFloat("Specular", light.Specular.X, 0, 1));
+                            light.Specular = new Vector3f(CreateImGuiSloderFloat("Specular", light.Specular.X, 0, 1));
                             ImGui.Spacing();
                             ImGui.Separator();
 
@@ -404,6 +404,15 @@ namespace GameEngine.LevelEditor.Interface
             return CreateVector3(vector2);
         }
 
+        public Vector3f CreateImGuiDragFloat3(string lable, Vector3f vector)
+        {
+            var vector2 = CreateVector3(vector);
+
+            ImGui.DragFloat3(lable, ref vector2);
+
+            return CreateVector3f(vector2);
+        }
+
         public float CreateImGuiSloderFloat(string lable, float value, float min = -1000, float max = 1000)
         {
             ImGui.SliderFloat(lable, ref value, min, max);
@@ -431,7 +440,12 @@ namespace GameEngine.LevelEditor.Interface
             return new System.Numerics.Vector3(x, y, z);
         }
 
+
         public System.Numerics.Vector3 CreateVector3(Vector3 vector3)
+        {
+            return new System.Numerics.Vector3(vector3.X, vector3.Y, vector3.Z);
+        }
+        public System.Numerics.Vector3 CreateVector3(Vector3f vector3)
         {
             return new System.Numerics.Vector3(vector3.X, vector3.Y, vector3.Z);
         }
@@ -439,6 +453,16 @@ namespace GameEngine.LevelEditor.Interface
         public Vector3 CreateVector3(System.Numerics.Vector3 vector3)
         {
             return new Vector3(vector3.X, vector3.Y, vector3.Z);
+        }
+
+        public Vector3f CreateVector3f(System.Numerics.Vector3 vector3)
+        {
+            return new Vector3f(vector3.X, vector3.Y, vector3.Z);
+        }
+
+        public void SetScene(Scene scene)
+        {
+            this.scene = scene;
         }
     }
 }

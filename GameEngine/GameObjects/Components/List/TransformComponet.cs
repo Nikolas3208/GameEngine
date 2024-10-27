@@ -1,9 +1,11 @@
 ﻿using GameEngine.Core;
+using GameEngine.Core.Structs;
 using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace GameEngine.GameObjects.Components.List
@@ -14,21 +16,21 @@ namespace GameEngine.GameObjects.Components.List
         private Matrix4 rotationMatrix = Matrix4.Identity;
         private Matrix4 scaleMatrix = Matrix4.Identity;
 
-        private Vector3 position;
-        private Vector3 rotation;
-        private Vector3 scale;
+        private Vector3f position;
+        private Vector3f rotation;
+        private Vector3f scale;
 
-        public Vector3 Position 
+        public Vector3f Position 
         {  
             get => position;
             set 
             {
                 position = value;
-                positionMatrix = Matrix4.CreateTranslation(value); 
+                positionMatrix = Matrix4.CreateTranslation(value.X, value.Y, value.Z);
             } 
         }
-        public Vector3 Rotation { get => rotation; set { rotation = value; RotateMatrix(value); } }
-        public Vector3 Scale { get => scale; set { scale = value; scaleMatrix = Matrix4.CreateScale(value.X); } }
+        public Vector3f Rotation { get => rotation; set { rotation = value; RotateMatrix(Vector3f.Vector3(value)); } }
+        public Vector3f Scale { get => scale; set { scale = value; scaleMatrix = Matrix4.CreateScale(value.X); } }
 
         private void RotateMatrix(Vector3 value)
         {

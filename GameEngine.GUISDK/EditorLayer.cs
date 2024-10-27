@@ -1,4 +1,5 @@
 ﻿using GameEngine.Core;
+using GameEngine.Core.Structs;
 using GameEngine.GameObjects;
 using GameEngine.GameObjects.Components.List;
 using GameEngine.GameObjects.List;
@@ -17,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace GameEngine.LevelEditor
@@ -25,6 +27,7 @@ namespace GameEngine.LevelEditor
     {
         private EditorInterface editorInterface;
         private FrameBuffer frameBuffer;
+        private FrameBuffer pickingBuffer;
         private Scene scene;
         private GameWindow Window;
         private Camera SceneCamera;
@@ -36,34 +39,34 @@ namespace GameEngine.LevelEditor
         public override void Init(GameWindow window)
         {
             Window = window;
-
             window.MouseWheel += Window_MouseWheel;
+
+            GL.Enable(EnableCap.DepthTest);
+            GL.Enable(EnableCap.Blend);
+            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+            GL.Enable(EnableCap.CullFace);
+            GL.CullFace(CullFaceMode.Back);
+            GL.Enable(EnableCap.Texture2D);
+
+            BufferInit();
+
+
+            AssetManager assetManager = new AssetManager("Assets\\");
+            AssetManager.basePath = "Assets\\";
 
             scene = new Scene();
 
-            AssetManager assetManager = new AssetManager("Assets\\");
-
             editorInterface = new EditorInterface(window.ClientSize.X, window.ClientSize.Y, scene);
 
-            var ColorTexture = new FrameBufferTextureSpecification { TextureTarget = TextureTarget.Texture2D, PixelInternalFormat = PixelInternalFormat.Rgb, PixelFormat = PixelFormat.Rgba, PixelType = PixelType.UnsignedByte, Attachment = FramebufferAttachment.ColorAttachment0 };
-            var DepthTexture = new FrameBufferTextureSpecification { TextureTarget = TextureTarget.Texture2D, SizedInternalFormat = SizedInternalFormat.Depth24Stencil8, Attachment = FramebufferAttachment.DepthStencilAttachment };
+            
 
-            var frameBufferSpecification = new FrameBufferSpecification();
-            frameBufferSpecification.textureSpecifications = new List<FrameBufferTextureSpecification>();
-            frameBufferSpecification.textureSpecifications.Add(ColorTexture);
-            frameBufferSpecification.textureSpecifications.Add(DepthTexture);
-            frameBufferSpecification.Width = window.ClientSize.X;
-            frameBufferSpecification.Height = window.ClientSize.Y;
-
-            frameBuffer = new FrameBuffer(frameBufferSpecification);
-            frameBuffer.Init();
-
-            SceneCamera = new Camera(Vector3.UnitZ * 3, window.ClientSize.X / window.ClientSize.Y);
+            SceneCamera = new Camera(Vector3f.UnitZ * 3, window.ClientSize.X / window.ClientSize.Y);
 
             scene.SetCamera(SceneCamera);
             scene.AddGameObject(new Grid());
-
+            
             GameObject gameObject = new GameObject();
+            gameObject.Name = "Light";
             LightRender lightRender = new LightRender();
             lightRender.IsShadowUse = false;
             gameObject.AddComponent(lightRender);
@@ -71,6 +74,37 @@ namespace GameEngine.LevelEditor
             scene.AddGameObject(gameObject);
 
             scene.Start();
+        }
+
+        private void BufferInit()
+        {
+            //Texture view scen
+            var ColorTexture = new FrameBufferTextureSpecification { TextureTarget = TextureTarget.Texture2D, PixelInternalFormat = PixelInternalFormat.Rgb, PixelFormat = PixelFormat.Rgba, PixelType = PixelType.UnsignedByte, Attachment = FramebufferAttachment.ColorAttachment0 };
+            var DepthTexture = new FrameBufferTextureSpecification { TextureTarget = TextureTarget.Texture2D, SizedInternalFormat = SizedInternalFormat.Depth24Stencil8, Attachment = FramebufferAttachment.DepthStencilAttachment };
+
+            var frameBufferSpecification = new FrameBufferSpecification();
+            frameBufferSpecification.textureSpecifications = new List<FrameBufferTextureSpecification>();
+            frameBufferSpecification.textureSpecifications.Add(ColorTexture);
+            frameBufferSpecification.textureSpecifications.Add(DepthTexture);
+            frameBufferSpecification.Width = Window.ClientSize.X;
+            frameBufferSpecification.Height = Window.ClientSize.Y;
+
+            frameBuffer = new FrameBuffer(frameBufferSpecification);
+            frameBuffer.Init();
+
+            //Mouse picking texture
+            ColorTexture = new FrameBufferTextureSpecification { TextureTarget = TextureTarget.Texture2D, PixelInternalFormat = PixelInternalFormat.Rgb32f, PixelFormat = PixelFormat.Rgba, PixelType = PixelType.Float, Attachment = FramebufferAttachment.ColorAttachment0 };
+            DepthTexture = new FrameBufferTextureSpecification { TextureTarget = TextureTarget.Texture2D, SizedInternalFormat = SizedInternalFormat.DepthComponent32f, Attachment = FramebufferAttachment.DepthAttachment };
+
+            var fbSpec = new FrameBufferSpecification();
+            fbSpec.textureSpecifications = new List<FrameBufferTextureSpecification>();
+            fbSpec.textureSpecifications.Add(ColorTexture);
+            fbSpec.textureSpecifications.Add(DepthTexture);
+            fbSpec.Width = Window.ClientSize.X;
+            fbSpec.Height = Window.ClientSize.Y;
+
+            pickingBuffer = new FrameBuffer(fbSpec);
+            pickingBuffer.Init();
         }
 
         public override void Update(float deltaTime)
@@ -96,7 +130,7 @@ namespace GameEngine.LevelEditor
                 float deltaY = Window.MouseState.Y - lastPos.Y;
                 lastPos = new Vector2(Window.MouseState.X, Window.MouseState.Y);
 
-                if (Window.MouseState.IsButtonDown(MouseButton.Right) && editorInterface.IsScenViewSelected)
+                if (Window.MouseState.IsButtonDown(MouseButton.Right) && editorInterface.IsScenViewSelected && scene != null)
                 {
                     Window.CursorState = CursorState.Grabbed;
                     scene.GetCamera().CameraRotation(new Vector2(deltaX, deltaY) * 0.4f);
@@ -106,21 +140,24 @@ namespace GameEngine.LevelEditor
 
 
             }
-            scene.Update(deltaTime);
+            if (scene != null)
+                scene.Update(deltaTime);
         }
 
         public override void Draw()
         {
             GL.ClearColor(Color4.White);
-            GL.Enable(EnableCap.DepthTest);
-            GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-            GL.Enable(EnableCap.CullFace);
-            GL.CullFace(CullFaceMode.Back);
 
-            frameBuffer.Bind();
-            scene.Draw();
-            frameBuffer.Unbind();
+            if (scene != null)
+            {
+                pickingBuffer.Bind();
+                scene.Draw();
+                pickingBuffer.Unbind();
+
+                frameBuffer.Bind();
+                scene.Draw();
+                frameBuffer.Unbind();
+            }
         }
 
         public override void ImGuiDraw(GameWindow window, float deltaTime)
@@ -131,13 +168,34 @@ namespace GameEngine.LevelEditor
 
             ImGui.DockSpaceOverViewport();
 
+            ImGui.Text(pickingBuffer.ReadPixel((int)ImGui.GetMousePos().X, (int)ImGui.GetMousePos().Y, 0).ToString());
+
+            ImGui.BeginMainMenuBar();
+            if(ImGui.MenuItem("Save scen", "Ctrl + S"))
+            {
+                //Task.Run(async () => await SceneSerialize.Serialize(scene));
+                SceneSerialize.Serialize(scene);
+            }
+            if(ImGui.MenuItem("Open scen", "Ctrl + O"))
+            {
+                scene = null;
+                this.scene = SceneSerialize.Deserialize().Result;
+                if(scene == null)
+                {
+                    throw new Exception();
+                }
+                scene.Start();
+                editorInterface.SetScene(scene);
+            }
+            ImGui.EndMainMenuBar();
+
             editorInterface.Draw();
             editorInterface.SetTextureScenView(frameBuffer.GetTexture(0));
         }
 
         private void Window_MouseWheel(MouseWheelEventArgs obj)
         {
-            if(editorInterface.IsScenViewSelected)
+            if(editorInterface.IsScenViewSelected && scene != null)
                 scene.GetCamera().GetComponent<CameraRender>().Fov -= obj.OffsetY;
         }
 
@@ -145,10 +203,10 @@ namespace GameEngine.LevelEditor
         {
             editorInterface.SetWindowResize(width, height);
 
-            scene.GetCamera().GetComponent<CameraRender>().Aspect = width/ height;
+            if(scene != null && scene.GetCamera() != null && scene.GetCamera().GetComponent<CameraRender>() != null && height > 0)
+                scene.GetCamera().GetComponent<CameraRender>().Aspect = width/ height;
         }
 
         public Scene GetScene() => scene;
-
     }
 }

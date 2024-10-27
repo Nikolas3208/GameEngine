@@ -18,12 +18,12 @@ namespace GameEngine.Core.Structs
         public int Id;
         public LightType Type;
 
-        public Vector3 Position;
-        public Vector3 Direction;
+        public Vector3f Position;
+        public Vector3f Direction;
 
-        public Vector3 Ambient = new Vector3(0.2f);
-        public Vector3 Diffuse = new Vector3(0.8f);
-        public Vector3 Specular = new Vector3(1.0f);
+        public Vector3f Ambient = new Vector3f(0.2f);
+        public Vector3f Diffuse = new Vector3f(0.8f);
+        public Vector3f Specular = new Vector3f(1.0f);
 
         public float Constant = 1.0f;
         public float Linear = 0.09f;
@@ -34,7 +34,7 @@ namespace GameEngine.Core.Structs
 
         public Light() { }
 
-        public Light(Vector3 position, Vector3 ambient, Vector3 diffuse, Vector3 specular, bool isPointLight)
+        public Light(Vector3f position, Vector3f ambient, Vector3f diffuse, Vector3f specular, bool isPointLight)
         {
             if(isPointLight)
             {
@@ -55,7 +55,7 @@ namespace GameEngine.Core.Structs
 
         }
 
-        public Light(Vector3 position, Vector3 direction, Vector3 ambient, Vector3 diffuse, Vector3 specular)
+        public Light(Vector3f position, Vector3f direction, Vector3f ambient, Vector3f diffuse, Vector3f specular)
         {
             Type = LightType.Spot;
             Position = position;

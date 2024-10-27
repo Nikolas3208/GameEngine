@@ -7,12 +7,15 @@ using GameEngine.Resources.Meshes;
 using GameEngine.Resources.Textures;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
+using Orleans;
+using Orleans.CodeGeneration;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -23,11 +26,14 @@ namespace GameEngine.GameObjects.Components.List
         Perspective = 0,
         Orthgrafic = 1
     }
+
+    [Serializable]
     public class CameraRender : Component
     {
         private CubemapTexture texture;
         private Mesh mesh;
-        private Shader scyBoxShader;
+        [JsonIgnore]
+        private Shader skyBoxShader;
 
         private Matrix4 projection = Matrix4.Identity;
         private float fov = MathHelper.PiOver2;
@@ -40,11 +46,11 @@ namespace GameEngine.GameObjects.Components.List
         public float size = 10;
 
 
-        private Vector3 front = -Vector3.UnitZ;
+        private Vector3f front = -Vector3f.UnitZ;
 
-        private Vector3 up = Vector3.UnitY;
+        private Vector3f up = Vector3f.UnitY;
 
-        private Vector3 right = Vector3.UnitX;
+        private Vector3f right = Vector3f.UnitX;
 
         private Vertex[] skyboxVertices =
          {
@@ -83,11 +89,10 @@ namespace GameEngine.GameObjects.Components.List
 
         public float Aspect { get => aspect; set => aspect = value; }
 
-        public Vector3 Front => front;
+        public Vector3f Front => front;
+        public Vector3f Up => up;
 
-        public Vector3 Up => up;
-
-        public Vector3 Right => right;
+        public Vector3f Right => right;
 
         public float Pitch
         {
@@ -121,11 +126,11 @@ namespace GameEngine.GameObjects.Components.List
 
         public bool IsSkyBox = true;
 
-        public Vector3 Position;
+        public Vector3f Position;
 
         public ProjectionType ProjectionType = ProjectionType.Perspective;
 
-        public CameraRender(Vector3 position, float aspect)
+        public CameraRender(Vector3f position, float aspect)
         {
             Position = position;
             Aspect = aspect;
@@ -141,7 +146,7 @@ namespace GameEngine.GameObjects.Components.List
 
             projection = Matrix4.Identity;
 
-            scyBoxShader = Shader.LoadFromFile(AssetManager.GetShader("skybox"));
+            skyBoxShader = Shader.LoadFromFile(AssetManager.GetShader("skybox"));
 
             string[] paths = {
                 AssetManager.GetTexture("right"),
@@ -154,11 +159,11 @@ namespace GameEngine.GameObjects.Components.List
 
             texture = CubemapTexture.LoadFromFile(paths);
 
-            VertexArray vertexArray = new VertexArray(new VertexBuffer(skyboxVertices), new IndexBuffer(skyboxIndices), scyBoxShader);
+            VertexArray vertexArray = new VertexArray(new VertexBuffer(skyboxVertices), new IndexBuffer(skyboxIndices), skyBoxShader);
 
             mesh = new Mesh(vertexArray);
 
-            scyBoxShader.Use();
+            skyBoxShader.Use();
         }
 
         public override void Update(float deltaTime)
@@ -179,15 +184,17 @@ namespace GameEngine.GameObjects.Components.List
             front.X = MathF.Cos(pitch) * MathF.Cos(yaw);
             front.Y = MathF.Sin(pitch);
             front.Z = MathF.Cos(pitch) * MathF.Sin(yaw);
-            front = Vector3.Normalize(front);
+            front = Vector3f.Normalize(front);
 
-            right = Vector3.Normalize(Vector3.Cross(front, Vector3.UnitY));
-            up = Vector3.Normalize(Vector3.Cross(right, front));
+
+
+            right = Vector3f.Vector3F(Vector3.Normalize(Vector3.Cross(Vector3f.Vector3(front), Vector3.UnitY)));
+            up = Vector3f.Vector3F(Vector3.Normalize(Vector3.Cross(Vector3f.Vector3(right), Vector3f.Vector3(front))));
         }
 
         public Matrix4 GetViewMatrix()
         {
-            return Matrix4.LookAt(Position, Position + front, up);
+            return Matrix4.LookAt(Vector3f.Vector3(Position), Vector3f.Vector3(Position + front), Vector3f.Vector3(up));
         }
 
         public Matrix4 GetProjectionMatrix()
@@ -197,17 +204,17 @@ namespace GameEngine.GameObjects.Components.List
 
         public override void Draw(Shader shader)
         {
-            if (IsSkyBox)
+            if (IsSkyBox && skyBoxShader != null)
             {
                 GL.CullFace(CullFaceMode.Front);
                 GL.FrontFace(FrontFaceDirection.Ccw);
                 GL.DepthFunc(DepthFunction.Lequal);
 
-                this.scyBoxShader.Use();
+                this.skyBoxShader.Use();
 
-                this.scyBoxShader.SetMatrix4("projection", GetProjectionMatrix());
-                this.scyBoxShader.SetMatrix4("view", GetViewMatrix());
-                this.scyBoxShader.SetInt("skybox", 0);
+                this.skyBoxShader.SetMatrix4("projection", GetProjectionMatrix());
+                this.skyBoxShader.SetMatrix4("view", GetViewMatrix());
+                this.skyBoxShader.SetInt("skybox", 0);
                 texture.Use(TextureUnit.Texture0);
 
                 mesh.Draw(PrimitiveType.Triangles);

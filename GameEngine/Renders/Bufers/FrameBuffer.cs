@@ -127,10 +127,13 @@ namespace GameEngine.Renders.Bufers
         {
             Vector4 pixel = new Vector4(-1);
 
+            Bind();
             GL.ReadBuffer(ReadBufferMode.ColorAttachment0 + attachmentIndex);
 
             GL.ReadPixels<Vector4>(x, y, frameBufferSpecification.Width, frameBufferSpecification.Height, frameBufferSpecification.textureSpecifications[attachmentIndex].PixelFormat, 
                 frameBufferSpecification.textureSpecifications[attachmentIndex].PixelType, ref pixel);
+
+            Unbind();
 
             return pixel;
         }

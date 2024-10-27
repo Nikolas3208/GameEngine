@@ -5,14 +5,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace GameEngine.Core
 {
+    [Serializable]
     public class Shader
     {
         protected int Handle;
-
+        
         protected Dictionary<string, int> uniformLocations;
 
         public static Shader LoadFromFile(string path)
@@ -29,7 +31,8 @@ namespace GameEngine.Core
 
         public Shader(string vertPath, string fragPath, string geomPath = "")
         {
-            Handle = GL.CreateProgram();
+
+            int Handle = GL.CreateProgram();
 
             string shaderSource = File.ReadAllText(vertPath);
             int shaderVert = CreateShader(ShaderType.VertexShader, shaderSource);
@@ -61,6 +64,8 @@ namespace GameEngine.Core
             GL.DeleteShader(shaderGeom);
 
             GetUniformsLocation(Handle);
+
+            this.Handle = Handle;
         }
 
         protected void GetUniformsLocation(int handle)
@@ -161,6 +166,15 @@ namespace GameEngine.Core
             }
         }
 
+        public void SetVector3(string name, Core.Structs.Vector3f value)
+        {
+            if (ContainsKey(name))
+            {
+                Use();
+                GL.Uniform3(GetUniformLocation(name), new Vector3(value.X, value.Y, value.Z));
+            }
+        }
+
         public void SetVector4(string name, Vector4 value)
         {
             if (ContainsKey(name))
@@ -177,6 +191,11 @@ namespace GameEngine.Core
                 Use();
                 GL.UniformMatrix4(GetUniformLocation(name), true, ref value);
             }
+        }
+
+        ~Shader()
+        {
+            //GL.DeleteProgram(Handle);
         }
     }
 }

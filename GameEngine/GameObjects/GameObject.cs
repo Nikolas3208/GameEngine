@@ -1,21 +1,25 @@
 ﻿using GameEngine.Core;
 using GameEngine.GameObjects.Components;
 using GameEngine.GameObjects.Components.List;
+using GameEngine.GameObjects.List;
 using GameEngine.Resources;
 using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace GameEngine.GameObjects
 {
     public class GameObject
     {
+        [JsonInclude]
         private List<Component> components;
 
-        protected Shader shader;
+        [JsonIgnore]
+        protected Shader shader = null;
 
         public string Name { get; set; } = "GameObject";
         public int Id { get; set; }
@@ -60,8 +64,8 @@ namespace GameEngine.GameObjects
 
         public void AddComponent(Component component)
         {
-            components.Add(component);
             component.gameObject = this;
+            components.Add(component);
         }
 
         public T GetComponent<T>() where T : Component

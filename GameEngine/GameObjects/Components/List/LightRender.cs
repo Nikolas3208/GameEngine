@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace GameEngine.GameObjects.Components.List
@@ -20,7 +21,7 @@ namespace GameEngine.GameObjects.Components.List
         public override void Start()
         {
             Name = "Light";
-            Light = new Light(gameObject.GetComponent<TransformComponet>().Position, new Vector3(0.5f), new Vector3(0.5f), new Vector3(0.5f), false);
+            Light = new Light(gameObject.GetComponent<TransformComponet>().Position, new Vector3f(0.5f), new Vector3f(0.5f), new Vector3f(0.5f), false);
         }
 
         public void SetLight(Light light) => Light = light;
