@@ -16,10 +16,31 @@ namespace GameEngine.GameObjects.Components.List
 {
     public class MeshRender : Component
     {
-        [JsonIgnore]
+        [JsonInclude]
         public List<Mesh> meshes;
         [JsonInclude]
         public string MeshName = "Mesh";
+
+        public MeshRender(string meshName)
+        {
+            meshes = new List<Mesh>();
+            if(AssetManager.GetMesh(meshName) != null)
+                AddMeshRange(MeshLoader.LoadMesh(AssetManager.GetMesh(meshName)));
+        }
+
+        public MeshRender(Mesh mesh)
+        {
+            mesh = new Mesh();
+
+            MeshName = mesh.Name;
+            AddMesh(mesh);
+        }
+
+        public MeshRender(List<Mesh> meshes, string meshName)
+        {
+            this.meshes = meshes;
+            MeshName = meshName;
+        }
 
         public MeshRender()
         {
@@ -31,7 +52,10 @@ namespace GameEngine.GameObjects.Components.List
 
         public override void Start()
         {
-
+            foreach (var mesh in meshes)
+            {
+                mesh.InitBuffers();
+            }
         }
 
         public override void Update(float deltaTime)
@@ -53,8 +77,15 @@ namespace GameEngine.GameObjects.Components.List
 
         public void AddMesh(Mesh mesh)
         {
-            if(meshes != null)
+            if (meshes != null)
+            {
+                foreach (var mesh1 in meshes)
+                {
+                    if (mesh.Name == mesh1.Name)
+                        return;
+                }
                 meshes.Add(mesh);
+            }
         }
 
         public void AddMeshRange(List<Mesh> meshes)

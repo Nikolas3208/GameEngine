@@ -179,13 +179,21 @@ namespace GameEngine.LevelEditor
             if(ImGui.MenuItem("Open scen", "Ctrl + O"))
             {
                 scene = null;
-                this.scene = SceneSerialize.Deserialize().Result;
+                try
+                {
+                    scene = SceneSerialize.Deserialize().Result;
+                    scene.SetCamera(SceneCamera);
+                    scene.Start();
+                    editorInterface.SetScene(scene);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
                 if(scene == null)
                 {
                     throw new Exception();
                 }
-                scene.Start();
-                editorInterface.SetScene(scene);
             }
             ImGui.EndMainMenuBar();
 

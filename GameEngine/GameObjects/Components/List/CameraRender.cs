@@ -7,8 +7,6 @@ using GameEngine.Resources.Meshes;
 using GameEngine.Resources.Textures;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
-using Orleans;
-using Orleans.CodeGeneration;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -55,14 +53,14 @@ namespace GameEngine.GameObjects.Components.List
         private Vertex[] skyboxVertices =
          {
 	        //   Coordinates
-	        new Vertex(new Vector3(-1.0f, -1.0f,  1.0f)),//        7--------6
-	        new Vertex(new Vector3( 1.0f, -1.0f,  1.0f)),//       /|       /|
-            new Vertex(new Vector3(1.0f, -1.0f,  -1.0f)),//      4--------5 |
-	        new Vertex(new Vector3(-1.0f, -1.0f,  -1.0f)),//      | |      | |
-	        new Vertex(new Vector3(-1.0f, 1.0f,  1.0f)),//      | 3------|-2
-	        new Vertex(new Vector3(1.0f, 1.0f,  1.0f)),//      |/       |/
-	        new Vertex(new Vector3(1.0f, 1.0f,  -1.0f)),//      0--------1
-	        new Vertex(new Vector3(-1.0f, 1.0f,  -1.0f))
+	        new Vertex(new Vector3f(-1.0f, -1.0f,  1.0f)),//        7--------6
+	        new Vertex(new Vector3f( 1.0f, -1.0f,  1.0f)),//       /|       /|
+            new Vertex(new Vector3f(1.0f, -1.0f,  -1.0f)),//      4--------5 |
+	        new Vertex(new Vector3f(-1.0f, -1.0f,  -1.0f)),//      | |      | |
+	        new Vertex(new Vector3f(-1.0f, 1.0f,  1.0f)),//      | 3------|-2
+	        new Vertex(new Vector3f(1.0f, 1.0f,  1.0f)),//      |/       |/
+	        new Vertex(new Vector3f(1.0f, 1.0f,  -1.0f)),//      0--------1
+	        new Vertex(new Vector3f(-1.0f, 1.0f,  -1.0f))
         };
 
         private uint[] skyboxIndices =

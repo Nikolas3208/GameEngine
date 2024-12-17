@@ -40,6 +40,8 @@ namespace GameEngine.Core.Structs
         public static Vector3f UnitX => new Vector3f(1, 0, 0);
         public static Vector3f UnitY => new Vector3f(0, 1, 0);
         public static Vector3f UnitZ => new Vector3f(0, 0, 1);
+        public static Vector3f One => new Vector3f(1, 1, 1);
+        public static Vector3f Zero => new Vector3f(0, 0, 0);
 
         public static Vector3f operator +(Vector3f v1, Vector3f v2) => new Vector3f(v1.X + v2.X, v1.Y + v2.Y, v1.Z + v2.Z);
         public static Vector3f operator -(Vector3f v1, Vector3f v2) => new Vector3f(v1.X - v2.X, v1.Y - v2.Y, v1.Z - v2.Z);

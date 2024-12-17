@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace GameEngine.Renders.Bufers
@@ -10,10 +11,14 @@ namespace GameEngine.Renders.Bufers
     public class IndexBuffer
     {
         private int IndexBufferId;
+
+        [JsonInclude]
         private uint[] indices;
 
+        [JsonIgnore]
         public int Count;
 
+        [JsonConstructor]
         public IndexBuffer(uint[] indices)
         {
             this.indices = indices;

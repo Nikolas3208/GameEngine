@@ -21,19 +21,23 @@ namespace GameEngine.GameObjects.List
         Left, Right, Up, Down, Breack, Front
     }
 
+    [JsonDerivedType(typeof(Camera), 0)]
     public class Camera : GameObject
     {
-        [JsonIgnore]
+        [JsonInclude]
         private CameraRender render;
+
+        [JsonConstructor]
         public Camera(Vector3f position, float aspect)
         {
             AddComponent(new CameraRender(position, aspect));
-            render = GetComponent<CameraRender>();
+            
             Name = "Main camera";
         }
 
         public override void Start()
         {
+            render = GetComponent<CameraRender>();
             base.Start();
         }
 

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace GameEngine.Renders.Bufers
@@ -13,8 +14,10 @@ namespace GameEngine.Renders.Bufers
     {
         private int VertexBufferId;
 
+        [JsonInclude]
         private Vertex[] vertices;
 
+        [JsonConstructor]
         public VertexBuffer(Vertex[] vertices)
         {
             this.vertices = vertices;

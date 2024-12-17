@@ -6,19 +6,30 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace GameEngine.Renders
 {
     public class Mesh
     {
-        private VertexArray? vertexArray;
+        [JsonInclude]
+        private VertexArray vertexArray;
+
+        [JsonInclude]
         private Material material;
 
+        [JsonIgnore]
         public int Id = 0;
+        [JsonIgnore]
         public string Name = "Mesh";
 
         public Mesh() { }
+
+        public Mesh(string name)
+        {
+            Name = name;
+        }
 
         public Mesh(VertexArray vertexArray)
         {
@@ -36,7 +47,8 @@ namespace GameEngine.Renders
 
         public void Draw(PrimitiveType type)
         {
-            vertexArray!.Draw(type);
+            if (vertexArray != null)
+                vertexArray!.Draw(type);
         }
 
         public void Draw(PrimitiveType type, Shader shader)
@@ -61,8 +73,14 @@ namespace GameEngine.Renders
                 shader.SetVector3("material.color", material.Color);
                 shader.SetFloat("material.shininess", material.Shininess);
             }
+            if (vertexArray != null)
+                vertexArray!.Draw(type);
+        }
 
-            vertexArray!.Draw(type);
+        public void InitBuffers()
+        {
+
+            vertexArray.Init(null);
         }
     }
 }

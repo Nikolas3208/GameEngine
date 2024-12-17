@@ -18,7 +18,7 @@ namespace GameEngine.GameObjects.Components.List
 
         private Vector3f position;
         private Vector3f rotation;
-        private Vector3f scale;
+        private Vector3f scale = new Vector3f(1, 1, 1);
 
         public Vector3f Position 
         {  
@@ -30,7 +30,7 @@ namespace GameEngine.GameObjects.Components.List
             } 
         }
         public Vector3f Rotation { get => rotation; set { rotation = value; RotateMatrix(Vector3f.Vector3(value)); } }
-        public Vector3f Scale { get => scale; set { scale = value; scaleMatrix = Matrix4.CreateScale(value.X); } }
+        public Vector3f Scale { get => scale; set { scale = value; scaleMatrix = Matrix4.CreateScale(value.X, value.Y, value.Z); } }
 
         private void RotateMatrix(Vector3 value)
         {
@@ -39,6 +39,18 @@ namespace GameEngine.GameObjects.Components.List
             rotationMatrix *= Matrix4.CreateRotationX(MathHelper.DegreesToRadians(value.X));
             rotationMatrix *= Matrix4.CreateRotationY(MathHelper.DegreesToRadians(value.Y));
             rotationMatrix *= Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(value.Z));
+        }
+
+        public TransformComponet()
+        {
+
+        }
+
+        public TransformComponet(Vector3f position, Vector3f rotation, Vector3f scale)
+        {
+            Position = position;
+            Rotation = rotation;
+            Scale = scale;
         }
 
         public override void Start()

@@ -18,9 +18,9 @@ out vec4 LightSpacePos;
 
 void main()
 {
-    gl_Position = vec4(aPos, 1.0) * model * rotation * scale * view * projection;
-    FragPos = vec3(vec4(aPos, 1.0) * model * rotation * scale);
+    FragPos = vec3(vec4(aPos, 1.0) * rotation * scale * model);
+    gl_Position = vec4(FragPos, 1.0) * view * projection;
     Normal = aNormal * mat3(transpose(inverse(model)));
     TexCoords = aTexCoords.xy;
-    LightSpacePos = vec4(aPos, 1.0) * model * rotation * scale * lightview * lightprojection;
+    LightSpacePos = vec4(FragPos, 1.0) * lightview * lightprojection;
 }

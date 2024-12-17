@@ -16,18 +16,18 @@ namespace GameEngine.Resources.Meshes
 {
     public class MeshLoader
     {
-        public static Vector3 FromVector(Vector3D vec)
+        public static Vector3f FromVector(Vector3D vec)
         {
-            Vector3 v;
+            Vector3f v;
             v.X = vec.X;
             v.Y = vec.Y;
             v.Z = vec.Z;
             return v;
         }
 
-        public static Vector2 FromVector2D(Vector3D vec)
+        public static Vector2f FromVector2D(Vector3D vec)
         {
-            Vector2 v;
+            Vector2f v;
             v.X = vec.X;
             v.Y = vec.Y;
             return v;

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace GameEngine.Core.Structs
@@ -15,7 +16,13 @@ namespace GameEngine.Core.Structs
 
         public List<Texture> textures;
 
-        public Vector3 Color = Vector3.One;
+        public Vector3f Color = Vector3f.One;
+
+        [JsonConstructor]
+        public Material(List<Texture> textures)
+        {
+            this.textures = textures;
+        }
 
         public Material()
         {

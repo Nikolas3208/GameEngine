@@ -14,8 +14,11 @@ namespace GameEngine.Core
     public class Shader
     {
         protected int Handle;
-        
+
         protected Dictionary<string, int> uniformLocations;
+
+        [JsonInclude]
+        private string vertPath, fragPath, geomPath;
 
         public static Shader LoadFromFile(string path)
         {
@@ -29,8 +32,12 @@ namespace GameEngine.Core
             }
         }
 
+        [JsonConstructor]
         public Shader(string vertPath, string fragPath, string geomPath = "")
         {
+            this.vertPath = vertPath;
+            this.fragPath = fragPath;
+            this.geomPath = geomPath;
 
             int Handle = GL.CreateProgram();
 

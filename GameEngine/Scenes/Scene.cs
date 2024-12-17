@@ -22,39 +22,49 @@ namespace GameEngine.Scenes
         private List<GameObject> gameObjects;
 
         [JsonIgnore]
-        private Camera ScenCamera = null;
+        private GameObject ScenCamera = null;
         public string Name { get; set; } = "MainScen";
 
         public Scene()
         {
             gameObjects = new List<GameObject>();
-            //SetCamera(new Camera(Vector3f.UnitZ * 3, 1));
 
             GL.Enable(EnableCap.DepthTest);
+
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
             GL.Enable(EnableCap.CullFace);
-            GL.CullFace(CullFaceMode.Back);
+            //GL.CullFace(CullFaceMode.Back);
             GL.Enable(EnableCap.Texture2D);
         }
 
-        public void SetCamera(Camera camera) { if (ScenCamera != null) { RemoveGameObject(ScenCamera); } ScenCamera = camera; AddGameObject(ScenCamera); }
-        public Camera GetCamera() => ScenCamera;
+        public void SetCamera(Camera camera) { if (ScenCamera != null) { RemoveGameObject(ScenCamera); } ScenCamera = camera; }
+        public Camera GetCamera() => (Camera)ScenCamera;
 
         public void AddGameObject(GameObject gameObject)
         {
+            int index = 2;
+            foreach (GameObject go in gameObjects)
+            {
+                if(go.Name == gameObject.Name)
+                {
+                    if (index == 2)
+                    {
+                        gameObject.Name += $" ({index})";
+                    }
+                    else
+                    {
+                        gameObject.Name = gameObject.Name.Replace($"({index - 1})", $"({index})");
+                    }
+                    index++;
+                }
+            }
             gameObject.Id = gameObjects.Count;
             gameObjects.Add(gameObject);
         }
         public T GetGameObject<T>() where T : GameObject
         {
-            foreach (var gameObject in gameObjects)
-            {
-                if (gameObject.GetType().Equals(typeof(T)))
-                    return (T)gameObject;
-            }
-
-            return null;
+            return (T)gameObjects.Where(g => g.GetType() == typeof(T));
         }
         public GameObject GetGameObjectById(int id)
         {
@@ -77,7 +87,8 @@ namespace GameEngine.Scenes
 
         public void Start()
         {
-            //ScenCamera.Start();
+            if (ScenCamera != null)
+                ScenCamera.Start();
             foreach (var gameObject in gameObjects)
             {
                 if (ScenCamera == null && gameObject.GetComponent<CameraRender>() != null)
@@ -95,10 +106,11 @@ namespace GameEngine.Scenes
         public GameObject light = null;
         public void Update(float deltaTime)
         {
-            //ScenCamera.Update(deltaTime);
+            if (ScenCamera != null)
+                ScenCamera.Update(deltaTime);
             foreach (var gameObject in gameObjects)
             {
-                if(gameObject.GetComponent<LightRender>() != null && light == null)
+                if (gameObject.GetComponent<LightRender>() != null && light == null)
                 {
                     light = gameObject;
                 }
@@ -108,6 +120,8 @@ namespace GameEngine.Scenes
 
         public void Draw()
         {
+            if (ScenCamera != null)
+                ScenCamera.Draw();
             foreach (var gameObject in gameObjects)
             {
                 if (ScenCamera != null)

@@ -1,5 +1,6 @@
 ﻿using GameEngine.Core;
 using GameEngine.Core.Structs;
+using GameEngine.GameObjects.Components;
 using GameEngine.GameObjects.Components.List;
 using GameEngine.Renders;
 using GameEngine.Renders.Bufers;
@@ -10,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace GameEngine.GameObjects.List
@@ -18,20 +20,22 @@ namespace GameEngine.GameObjects.List
     {
         Vertex[] vertices =
         {
-            new Vertex(new Vector3(-1.0f, 0.0f, -1.0f)),
-            new Vertex(new Vector3( 1.0f, 0.0f, -1.0f)),
-            new Vertex(new Vector3( 1.0f, 0.0f,  1.0f)),
-            new Vertex(new Vector3(-1.0f, 0.0f,  1.0f))
+            new Vertex(new Vector3f(-1.0f, 0.0f, -1.0f)),
+            new Vertex(new Vector3f( 1.0f, 0.0f, -1.0f)),
+            new Vertex(new Vector3f( 1.0f, 0.0f,  1.0f)),
+            new Vertex(new Vector3f(-1.0f, 0.0f,  1.0f))
         };
 
         uint[] indices = { 0, 2, 1, 2, 0, 3 };
+
+
+        public Grid() { }
+
         public override void Start()
         {
             shader = Shader.LoadFromFile(AssetManager.GetShader("grid"));
 
-            VertexArray vertexArray = new VertexArray();
-            vertexArray.SetVertexBuffer(new VertexBuffer(vertices));
-            vertexArray.SetIndexBuffer(new IndexBuffer(indices));
+            VertexArray vertexArray = new VertexArray(new VertexBuffer(vertices), new IndexBuffer(indices));
             vertexArray.Init(shader);
 
             Mesh mesh = new Mesh(vertexArray);
@@ -39,7 +43,8 @@ namespace GameEngine.GameObjects.List
             MeshRender meshRender = new MeshRender();
             meshRender.AddMesh(mesh);
 
-            AddComponent(meshRender);
+            if(GetComponent<MeshRender>() == null)
+                AddComponent(meshRender);
 
             Name = "Grid";
 

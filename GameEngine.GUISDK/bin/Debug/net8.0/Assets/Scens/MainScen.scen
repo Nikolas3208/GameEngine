@@ -6,7 +6,8 @@
     "$values": [
       {
         "$id": "3",
-        "Name": "Main camera",
+        "$type": 2,
+        "Name": "Grid",
         "Id": 0,
         "components": {
           "$id": "4",
@@ -15,9 +16,9 @@
               "$id": "5",
               "$type": 1,
               "Position": {
-                "X": -0.44780338,
-                "Y": 13.203488,
-                "Z": 16.57996
+                "X": 0,
+                "Y": 0,
+                "Z": 0
               },
               "Rotation": {
                 "X": 0,
@@ -25,108 +26,140 @@
                 "Z": 0
               },
               "Scale": {
-                "X": 0,
-                "Y": 0,
-                "Z": 0
-              },
-              "gameObject": {
-                "$ref": "3"
+                "X": 1,
+                "Y": 1,
+                "Z": 1
               },
               "Name": "Transform"
             },
             {
               "$id": "6",
-              "$type": 0,
-              "Aspect": 1,
-              "Front": {
-                "X": 0.045166947,
-                "Y": -0.5877803,
-                "Z": -0.80775875
-              },
-              "Up": {
-                "X": 0.03281529,
-                "Y": 0.80902064,
-                "Z": -0.58686364
-              },
-              "Right": {
-                "X": 0.9984403,
-                "Y": -0,
-                "Z": 0.05582917
-              },
-              "Pitch": -35.99965,
-              "Yaw": -86.79955,
-              "Fov": 90,
-              "depthNear": 0.01,
-              "depthFar": 1000,
-              "size": 10,
-              "IsSkyBox": true,
-              "Position": {
-                "X": -0.44780338,
-                "Y": 13.203488,
-                "Z": 16.57996
-              },
-              "ProjectionType": 0,
-              "gameObject": {
-                "$ref": "3"
-              },
-              "Name": "Camera render"
-            }
-          ]
-        },
-        "IsSelected": false
-      },
-      {
-        "$id": "7",
-        "Name": "Grid",
-        "Id": 1,
-        "components": {
-          "$id": "8",
-          "$values": [
-            {
-              "$id": "9",
-              "$type": 1,
-              "Position": {
-                "X": 0,
-                "Y": 0,
-                "Z": 0
-              },
-              "Rotation": {
-                "X": 0,
-                "Y": 0,
-                "Z": 0
-              },
-              "Scale": {
-                "X": 0,
-                "Y": 0,
-                "Z": 0
-              },
-              "gameObject": {
-                "$ref": "7"
-              },
-              "Name": "Transform"
-            },
-            {
-              "$id": "10",
               "$type": 3,
-              "MeshName": "Mesh",
-              "gameObject": {
-                "$ref": "7"
+              "meshes": {
+                "$id": "7",
+                "$values": [
+                  {
+                    "$id": "8",
+                    "vertexArray": {
+                      "$id": "9",
+                      "vertexBuffer": {
+                        "$id": "10",
+                        "vertices": [
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": 0,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": 0,
+                              "Y": 0,
+                              "Z": 0
+                            },
+                            "TexCoords": {
+                              "X": 0,
+                              "Y": 0
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": 0,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": 0,
+                              "Y": 0,
+                              "Z": 0
+                            },
+                            "TexCoords": {
+                              "X": 0,
+                              "Y": 0
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": 0,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": 0,
+                              "Y": 0,
+                              "Z": 0
+                            },
+                            "TexCoords": {
+                              "X": 0,
+                              "Y": 0
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": 0,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": 0,
+                              "Y": 0,
+                              "Z": 0
+                            },
+                            "TexCoords": {
+                              "X": 0,
+                              "Y": 0
+                            }
+                          }
+                        ]
+                      },
+                      "indexBuffer": {
+                        "$id": "11",
+                        "indices": [
+                          0,
+                          2,
+                          1,
+                          2,
+                          0,
+                          3
+                        ]
+                      }
+                    },
+                    "material": {
+                      "Id": 0,
+                      "Name": null,
+                      "Shininess": 0,
+                      "textures": null,
+                      "Color": {
+                        "X": 0,
+                        "Y": 0,
+                        "Z": 0
+                      }
+                    }
+                  }
+                ]
               },
+              "MeshName": "Mesh",
               "Name": "Mesh render"
             }
           ]
         },
+        "shader": {
+          "$id": "12",
+          "vertPath": "Shaders\\grid.vert",
+          "fragPath": "Shaders\\grid.frag",
+          "geomPath": ""
+        },
         "IsSelected": false
       },
       {
-        "$id": "11",
+        "$id": "13",
+        "$type": 0,
         "Name": "Light",
-        "Id": 2,
+        "Id": 1,
         "components": {
-          "$id": "12",
+          "$id": "14",
           "$values": [
             {
-              "$id": "13",
+              "$id": "15",
               "$type": 1,
               "Position": {
                 "X": 0,
@@ -139,17 +172,14 @@
                 "Z": 0
               },
               "Scale": {
-                "X": 0,
-                "Y": 0,
-                "Z": 0
-              },
-              "gameObject": {
-                "$ref": "11"
+                "X": 1,
+                "Y": 1,
+                "Z": 1
               },
               "Name": "Transform"
             },
             {
-              "$id": "14",
+              "$id": "16",
               "$type": 2,
               "Light": {
                 "Id": 0,
@@ -186,27 +216,31 @@
                 "OuterCutOff": 17.5
               },
               "IsShadowUse": false,
-              "gameObject": {
-                "$ref": "11"
-              },
               "Name": "Light"
             }
           ]
         },
+        "shader": {
+          "$id": "17",
+          "vertPath": "Shaders\\multipleLights.vert",
+          "fragPath": "Shaders\\multipleLights.frag",
+          "geomPath": ""
+        },
         "IsSelected": false
       },
       {
-        "$id": "15",
+        "$id": "18",
+        "$type": 0,
         "Name": "Cube",
-        "Id": 3,
+        "Id": 2,
         "components": {
-          "$id": "16",
+          "$id": "19",
           "$values": [
             {
-              "$id": "17",
+              "$id": "20",
               "$type": 1,
               "Position": {
-                "X": -1,
+                "X": -9,
                 "Y": 0,
                 "Z": 0
               },
@@ -216,128 +250,720 @@
                 "Z": 0
               },
               "Scale": {
-                "X": 0,
-                "Y": 0,
-                "Z": 0
+                "X": 1,
+                "Y": 1,
+                "Z": 1
               },
-              "gameObject": {
-                "$ref": "15"
-              },
-              "Name": "Component"
+              "Name": "Transform"
             },
-            {
-              "$id": "18",
-              "$type": 3,
-              "MeshName": "Cube",
-              "gameObject": {
-                "$ref": "15"
-              },
-              "Name": "Mesh render"
-            }
-          ]
-        },
-        "IsSelected": false
-      },
-      {
-        "$id": "19",
-        "Name": "Sphere",
-        "Id": 4,
-        "components": {
-          "$id": "20",
-          "$values": [
             {
               "$id": "21",
-              "$type": 1,
-              "Position": {
-                "X": 5,
-                "Y": 0,
-                "Z": 0
-              },
-              "Rotation": {
-                "X": 0,
-                "Y": 0,
-                "Z": 0
-              },
-              "Scale": {
-                "X": 0,
-                "Y": 0,
-                "Z": 0
-              },
-              "gameObject": {
-                "$ref": "19"
-              },
-              "Name": "Component"
-            },
-            {
-              "$id": "22",
               "$type": 3,
-              "MeshName": "Sphere",
-              "gameObject": {
-                "$ref": "19"
+              "meshes": {
+                "$id": "22",
+                "$values": [
+                  {
+                    "$id": "23",
+                    "vertexArray": {
+                      "$id": "24",
+                      "vertexBuffer": {
+                        "$id": "25",
+                        "vertices": [
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": 1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": 1
+                            },
+                            "TexCoords": {
+                              "X": 0.009434,
+                              "Y": 0.657233
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": -1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": 1
+                            },
+                            "TexCoords": {
+                              "X": 0.323899,
+                              "Y": 0.342767
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": -1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": 1
+                            },
+                            "TexCoords": {
+                              "X": 0.323899,
+                              "Y": 0.657233
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": 1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": -1
+                            },
+                            "TexCoords": {
+                              "X": 0.342767,
+                              "Y": 0.990566
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": -1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": -1
+                            },
+                            "TexCoords": {
+                              "X": 0.657233,
+                              "Y": 0.676101
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": -1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": -1
+                            },
+                            "TexCoords": {
+                              "X": 0.657233,
+                              "Y": 0.990566
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": 1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": 1
+                            },
+                            "TexCoords": {
+                              "X": 0.009434,
+                              "Y": 0.657233
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": 1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": 1
+                            },
+                            "TexCoords": {
+                              "X": 0.009434,
+                              "Y": 0.342767
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": -1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": 1
+                            },
+                            "TexCoords": {
+                              "X": 0.323899,
+                              "Y": 0.342767
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": 1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": -1
+                            },
+                            "TexCoords": {
+                              "X": 0.342767,
+                              "Y": 0.990566
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": 1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": -1
+                            },
+                            "TexCoords": {
+                              "X": 0.342767,
+                              "Y": 0.676101
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": -1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": -1
+                            },
+                            "TexCoords": {
+                              "X": 0.657233,
+                              "Y": 0.676101
+                            }
+                          }
+                        ]
+                      },
+                      "indexBuffer": {
+                        "$id": "26",
+                        "indices": [
+                          0,
+                          1,
+                          2,
+                          3,
+                          4,
+                          5,
+                          6,
+                          7,
+                          8,
+                          9,
+                          10,
+                          11
+                        ]
+                      }
+                    },
+                    "material": {
+                      "Id": 2,
+                      "Name": "Material.001",
+                      "Shininess": 32,
+                      "textures": {
+                        "$id": "27",
+                        "$values": []
+                      },
+                      "Color": {
+                        "X": 1,
+                        "Y": 1,
+                        "Z": 1
+                      }
+                    }
+                  },
+                  {
+                    "$id": "28",
+                    "vertexArray": {
+                      "$id": "29",
+                      "vertexBuffer": {
+                        "$id": "30",
+                        "vertices": [
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": 1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": 1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.323899,
+                              "Y": 0.323899
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": 1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": 1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.009434,
+                              "Y": 0.009434
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": 1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": 1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.323899,
+                              "Y": 0.009434
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": 1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.342767,
+                              "Y": 0.323899
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": -1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.657233,
+                              "Y": 0.009434
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": -1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.657233,
+                              "Y": 0.323899
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": -1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.657233,
+                              "Y": 0.657233
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": -1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.342767,
+                              "Y": 0.342767
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": -1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.657233,
+                              "Y": 0.342767
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": 1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": 1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.009434,
+                              "Y": 0.990566
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": -1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": 1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.323899,
+                              "Y": 0.676101
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": -1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": 1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.323899,
+                              "Y": 0.990566
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": 1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": 1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.323899,
+                              "Y": 0.323899
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": 1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": 1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.009434,
+                              "Y": 0.323899
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": 1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": 1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.009434,
+                              "Y": 0.009434
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": 1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.342767,
+                              "Y": 0.323899
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": 1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.342767,
+                              "Y": 0.009434
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": -1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.657233,
+                              "Y": 0.009434
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": -1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.657233,
+                              "Y": 0.657233
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": -1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.342767,
+                              "Y": 0.657233
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": -1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.342767,
+                              "Y": 0.342767
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": 1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": 1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.009434,
+                              "Y": 0.990566
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": 1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": 1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.009434,
+                              "Y": 0.676101
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": -1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": 1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.323899,
+                              "Y": 0.676101
+                            }
+                          }
+                        ]
+                      },
+                      "indexBuffer": {
+                        "$id": "31",
+                        "indices": [
+                          0,
+                          1,
+                          2,
+                          3,
+                          4,
+                          5,
+                          6,
+                          7,
+                          8,
+                          9,
+                          10,
+                          11,
+                          12,
+                          13,
+                          14,
+                          15,
+                          16,
+                          17,
+                          18,
+                          19,
+                          20,
+                          21,
+                          22,
+                          23
+                        ]
+                      }
+                    },
+                    "material": {
+                      "Id": 1,
+                      "Name": "Material",
+                      "Shininess": 32,
+                      "textures": {
+                        "$id": "32",
+                        "$values": []
+                      },
+                      "Color": {
+                        "X": 1,
+                        "Y": 1,
+                        "Z": 1
+                      }
+                    }
+                  }
+                ]
               },
+              "MeshName": "Cube",
               "Name": "Mesh render"
             }
           ]
         },
-        "IsSelected": false
-      },
-      {
-        "$id": "23",
-        "Name": "Cylinder",
-        "Id": 5,
-        "components": {
-          "$id": "24",
-          "$values": [
-            {
-              "$id": "25",
-              "$type": 1,
-              "Position": {
-                "X": 0,
-                "Y": 7,
-                "Z": 0
-              },
-              "Rotation": {
-                "X": 0,
-                "Y": 0,
-                "Z": 0
-              },
-              "Scale": {
-                "X": 0,
-                "Y": 0,
-                "Z": 0
-              },
-              "gameObject": {
-                "$ref": "23"
-              },
-              "Name": "Component"
-            },
-            {
-              "$id": "26",
-              "$type": 3,
-              "MeshName": "Cylinder",
-              "gameObject": {
-                "$ref": "23"
-              },
-              "Name": "Mesh render"
-            }
-          ]
+        "shader": {
+          "$id": "33",
+          "vertPath": "Shaders\\multipleLights.vert",
+          "fragPath": "Shaders\\multipleLights.frag",
+          "geomPath": ""
         },
         "IsSelected": false
       },
       {
-        "$id": "27",
-        "Name": "Plane",
-        "Id": 6,
+        "$id": "34",
+        "$type": 0,
+        "Name": "Cube (2)",
+        "Id": 3,
         "components": {
-          "$id": "28",
+          "$id": "35",
           "$values": [
             {
-              "$id": "29",
+              "$id": "36",
               "$type": 1,
               "Position": {
                 "X": 0,
-                "Y": 0,
-                "Z": 4
+                "Y": 3,
+                "Z": 10
               },
               "Rotation": {
                 "X": 0,
@@ -345,25 +971,1423 @@
                 "Z": 0
               },
               "Scale": {
+                "X": 1,
+                "Y": 1,
+                "Z": 1
+              },
+              "Name": "Transform"
+            },
+            {
+              "$id": "37",
+              "$type": 3,
+              "meshes": {
+                "$id": "38",
+                "$values": [
+                  {
+                    "$id": "39",
+                    "vertexArray": {
+                      "$id": "40",
+                      "vertexBuffer": {
+                        "$id": "41",
+                        "vertices": [
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": 1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": 1
+                            },
+                            "TexCoords": {
+                              "X": 0.009434,
+                              "Y": 0.657233
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": -1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": 1
+                            },
+                            "TexCoords": {
+                              "X": 0.323899,
+                              "Y": 0.342767
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": -1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": 1
+                            },
+                            "TexCoords": {
+                              "X": 0.323899,
+                              "Y": 0.657233
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": 1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": -1
+                            },
+                            "TexCoords": {
+                              "X": 0.342767,
+                              "Y": 0.990566
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": -1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": -1
+                            },
+                            "TexCoords": {
+                              "X": 0.657233,
+                              "Y": 0.676101
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": -1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": -1
+                            },
+                            "TexCoords": {
+                              "X": 0.657233,
+                              "Y": 0.990566
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": 1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": 1
+                            },
+                            "TexCoords": {
+                              "X": 0.009434,
+                              "Y": 0.657233
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": 1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": 1
+                            },
+                            "TexCoords": {
+                              "X": 0.009434,
+                              "Y": 0.342767
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": -1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": 1
+                            },
+                            "TexCoords": {
+                              "X": 0.323899,
+                              "Y": 0.342767
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": 1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": -1
+                            },
+                            "TexCoords": {
+                              "X": 0.342767,
+                              "Y": 0.990566
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": 1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": -1
+                            },
+                            "TexCoords": {
+                              "X": 0.342767,
+                              "Y": 0.676101
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": -1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": -1
+                            },
+                            "TexCoords": {
+                              "X": 0.657233,
+                              "Y": 0.676101
+                            }
+                          }
+                        ]
+                      },
+                      "indexBuffer": {
+                        "$id": "42",
+                        "indices": [
+                          0,
+                          1,
+                          2,
+                          3,
+                          4,
+                          5,
+                          6,
+                          7,
+                          8,
+                          9,
+                          10,
+                          11
+                        ]
+                      }
+                    },
+                    "material": {
+                      "Id": 2,
+                      "Name": "Material.001",
+                      "Shininess": 32,
+                      "textures": {
+                        "$id": "43",
+                        "$values": []
+                      },
+                      "Color": {
+                        "X": 1,
+                        "Y": 1,
+                        "Z": 1
+                      }
+                    }
+                  },
+                  {
+                    "$id": "44",
+                    "vertexArray": {
+                      "$id": "45",
+                      "vertexBuffer": {
+                        "$id": "46",
+                        "vertices": [
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": 1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": 1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.323899,
+                              "Y": 0.323899
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": 1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": 1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.009434,
+                              "Y": 0.009434
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": 1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": 1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.323899,
+                              "Y": 0.009434
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": 1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.342767,
+                              "Y": 0.323899
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": -1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.657233,
+                              "Y": 0.009434
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": -1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.657233,
+                              "Y": 0.323899
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": -1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.657233,
+                              "Y": 0.657233
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": -1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.342767,
+                              "Y": 0.342767
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": -1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.657233,
+                              "Y": 0.342767
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": 1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": 1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.009434,
+                              "Y": 0.990566
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": -1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": 1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.323899,
+                              "Y": 0.676101
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": -1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": 1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.323899,
+                              "Y": 0.990566
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": 1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": 1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.323899,
+                              "Y": 0.323899
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": 1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": 1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.009434,
+                              "Y": 0.323899
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": 1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": 1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.009434,
+                              "Y": 0.009434
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": 1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.342767,
+                              "Y": 0.323899
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": 1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.342767,
+                              "Y": 0.009434
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": -1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.657233,
+                              "Y": 0.009434
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": -1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.657233,
+                              "Y": 0.657233
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": -1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.342767,
+                              "Y": 0.657233
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": -1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.342767,
+                              "Y": 0.342767
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": 1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": 1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.009434,
+                              "Y": 0.990566
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": 1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": 1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.009434,
+                              "Y": 0.676101
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": -1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": 1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.323899,
+                              "Y": 0.676101
+                            }
+                          }
+                        ]
+                      },
+                      "indexBuffer": {
+                        "$id": "47",
+                        "indices": [
+                          0,
+                          1,
+                          2,
+                          3,
+                          4,
+                          5,
+                          6,
+                          7,
+                          8,
+                          9,
+                          10,
+                          11,
+                          12,
+                          13,
+                          14,
+                          15,
+                          16,
+                          17,
+                          18,
+                          19,
+                          20,
+                          21,
+                          22,
+                          23
+                        ]
+                      }
+                    },
+                    "material": {
+                      "Id": 1,
+                      "Name": "Material",
+                      "Shininess": 32,
+                      "textures": {
+                        "$id": "48",
+                        "$values": []
+                      },
+                      "Color": {
+                        "X": 1,
+                        "Y": 1,
+                        "Z": 1
+                      }
+                    }
+                  }
+                ]
+              },
+              "MeshName": "Cube",
+              "Name": "Mesh render"
+            }
+          ]
+        },
+        "shader": {
+          "$id": "49",
+          "vertPath": "Shaders\\multipleLights.vert",
+          "fragPath": "Shaders\\multipleLights.frag",
+          "geomPath": ""
+        },
+        "IsSelected": false
+      },
+      {
+        "$id": "50",
+        "$type": 0,
+        "Name": "Cube (3)",
+        "Id": 4,
+        "components": {
+          "$id": "51",
+          "$values": [
+            {
+              "$id": "52",
+              "$type": 1,
+              "Position": {
                 "X": 0,
                 "Y": 0,
                 "Z": 0
               },
-              "gameObject": {
-                "$ref": "27"
+              "Rotation": {
+                "X": 0,
+                "Y": 0,
+                "Z": 0
               },
-              "Name": "Component"
+              "Scale": {
+                "X": 1,
+                "Y": 1,
+                "Z": 1
+              },
+              "Name": "Transform"
             },
             {
-              "$id": "30",
+              "$id": "53",
               "$type": 3,
-              "MeshName": "Plane",
-              "gameObject": {
-                "$ref": "27"
+              "meshes": {
+                "$id": "54",
+                "$values": [
+                  {
+                    "$id": "55",
+                    "vertexArray": {
+                      "$id": "56",
+                      "vertexBuffer": {
+                        "$id": "57",
+                        "vertices": [
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": 1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": 1
+                            },
+                            "TexCoords": {
+                              "X": 0.009434,
+                              "Y": 0.657233
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": -1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": 1
+                            },
+                            "TexCoords": {
+                              "X": 0.323899,
+                              "Y": 0.342767
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": -1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": 1
+                            },
+                            "TexCoords": {
+                              "X": 0.323899,
+                              "Y": 0.657233
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": 1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": -1
+                            },
+                            "TexCoords": {
+                              "X": 0.342767,
+                              "Y": 0.990566
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": -1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": -1
+                            },
+                            "TexCoords": {
+                              "X": 0.657233,
+                              "Y": 0.676101
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": -1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": -1
+                            },
+                            "TexCoords": {
+                              "X": 0.657233,
+                              "Y": 0.990566
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": 1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": 1
+                            },
+                            "TexCoords": {
+                              "X": 0.009434,
+                              "Y": 0.657233
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": 1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": 1
+                            },
+                            "TexCoords": {
+                              "X": 0.009434,
+                              "Y": 0.342767
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": -1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": 1
+                            },
+                            "TexCoords": {
+                              "X": 0.323899,
+                              "Y": 0.342767
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": 1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": -1
+                            },
+                            "TexCoords": {
+                              "X": 0.342767,
+                              "Y": 0.990566
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": 1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": -1
+                            },
+                            "TexCoords": {
+                              "X": 0.342767,
+                              "Y": 0.676101
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": -1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -0,
+                              "Z": -1
+                            },
+                            "TexCoords": {
+                              "X": 0.657233,
+                              "Y": 0.676101
+                            }
+                          }
+                        ]
+                      },
+                      "indexBuffer": {
+                        "$id": "58",
+                        "indices": [
+                          0,
+                          1,
+                          2,
+                          3,
+                          4,
+                          5,
+                          6,
+                          7,
+                          8,
+                          9,
+                          10,
+                          11
+                        ]
+                      }
+                    },
+                    "material": {
+                      "Id": 2,
+                      "Name": "Material.001",
+                      "Shininess": 32,
+                      "textures": {
+                        "$id": "59",
+                        "$values": []
+                      },
+                      "Color": {
+                        "X": 1,
+                        "Y": 1,
+                        "Z": 1
+                      }
+                    }
+                  },
+                  {
+                    "$id": "60",
+                    "vertexArray": {
+                      "$id": "61",
+                      "vertexBuffer": {
+                        "$id": "62",
+                        "vertices": [
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": 1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": 1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.323899,
+                              "Y": 0.323899
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": 1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": 1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.009434,
+                              "Y": 0.009434
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": 1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": 1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.323899,
+                              "Y": 0.009434
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": 1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.342767,
+                              "Y": 0.323899
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": -1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.657233,
+                              "Y": 0.009434
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": -1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.657233,
+                              "Y": 0.323899
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": -1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.657233,
+                              "Y": 0.657233
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": -1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.342767,
+                              "Y": 0.342767
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": -1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.657233,
+                              "Y": 0.342767
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": 1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": 1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.009434,
+                              "Y": 0.990566
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": -1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": 1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.323899,
+                              "Y": 0.676101
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": -1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": 1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.323899,
+                              "Y": 0.990566
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": 1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": 1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.323899,
+                              "Y": 0.323899
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": 1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": 1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.009434,
+                              "Y": 0.323899
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": 1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": 1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.009434,
+                              "Y": 0.009434
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": 1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.342767,
+                              "Y": 0.323899
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": 1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.342767,
+                              "Y": 0.009434
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": -1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.657233,
+                              "Y": 0.009434
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": -1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.657233,
+                              "Y": 0.657233
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": -1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.342767,
+                              "Y": 0.657233
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": -1,
+                              "Y": -1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": -0,
+                              "Y": -1,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.342767,
+                              "Y": 0.342767
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": 1,
+                              "Z": -1
+                            },
+                            "Normal": {
+                              "X": 1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.009434,
+                              "Y": 0.990566
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": 1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": 1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.009434,
+                              "Y": 0.676101
+                            }
+                          },
+                          {
+                            "Position": {
+                              "X": 1,
+                              "Y": -1,
+                              "Z": 1
+                            },
+                            "Normal": {
+                              "X": 1,
+                              "Y": -0,
+                              "Z": -0
+                            },
+                            "TexCoords": {
+                              "X": 0.323899,
+                              "Y": 0.676101
+                            }
+                          }
+                        ]
+                      },
+                      "indexBuffer": {
+                        "$id": "63",
+                        "indices": [
+                          0,
+                          1,
+                          2,
+                          3,
+                          4,
+                          5,
+                          6,
+                          7,
+                          8,
+                          9,
+                          10,
+                          11,
+                          12,
+                          13,
+                          14,
+                          15,
+                          16,
+                          17,
+                          18,
+                          19,
+                          20,
+                          21,
+                          22,
+                          23
+                        ]
+                      }
+                    },
+                    "material": {
+                      "Id": 1,
+                      "Name": "Material",
+                      "Shininess": 32,
+                      "textures": {
+                        "$id": "64",
+                        "$values": []
+                      },
+                      "Color": {
+                        "X": 1,
+                        "Y": 1,
+                        "Z": 1
+                      }
+                    }
+                  }
+                ]
               },
+              "MeshName": "Cube",
               "Name": "Mesh render"
             }
           ]
+        },
+        "shader": {
+          "$id": "65",
+          "vertPath": "Shaders\\multipleLights.vert",
+          "fragPath": "Shaders\\multipleLights.frag",
+          "geomPath": ""
         },
         "IsSelected": false
       }

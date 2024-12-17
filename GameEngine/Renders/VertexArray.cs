@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace GameEngine.Renders
@@ -16,11 +17,28 @@ namespace GameEngine.Renders
     {
         private int VertexArrayId;
 
-        private VertexBuffer? vertexBuffer;
-        private IndexBuffer? indexBuffer;
+        [JsonInclude]
+        private VertexBuffer vertexBuffer;
+        [JsonInclude]
+        private IndexBuffer indexBuffer;
 
-        public VertexArray() { }
+        public VertexArray()
+        {
 
+        }
+
+        public VertexArray(VertexArray vertexArray)
+        {
+
+        }
+
+        public VertexArray(VertexBuffer vertexBuffer, IndexBuffer indexBuffer)
+        {
+            this.vertexBuffer = vertexBuffer;
+            this.indexBuffer = indexBuffer;
+
+            Init(null);
+        }
         public VertexArray(VertexBuffer vertexBuffer, IndexBuffer indexBuffer, Shader shader = null)
         {
             this.vertexBuffer = vertexBuffer;

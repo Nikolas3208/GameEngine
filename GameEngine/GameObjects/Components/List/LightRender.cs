@@ -21,7 +21,8 @@ namespace GameEngine.GameObjects.Components.List
         public override void Start()
         {
             Name = "Light";
-            Light = new Light(gameObject.GetComponent<TransformComponet>().Position, new Vector3f(0.5f), new Vector3f(0.5f), new Vector3f(0.5f), false);
+            if(gameObject != null)
+                Light = new Light(gameObject.GetComponent<TransformComponet>().Position, new Vector3f(0.5f), new Vector3f(0.5f), new Vector3f(0.5f), false);
         }
 
         public void SetLight(Light light) => Light = light;

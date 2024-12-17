@@ -9,28 +9,28 @@ namespace GameEngine.Core.Structs
 {
     public struct Vertex
     {
-        public Vector3 Position = new Vector3();
-        public Vector3 Normal = new Vector3();
-        public Vector2 TexCoords = new Vector2();
+        public Vector3f Position = new Vector3f();
+        public Vector3f Normal = new Vector3f();
+        public Vector2f TexCoords = new Vector2f();
 
-        public Vertex(Vector3 pos)
+        public Vertex(Vector3f pos)
         {
             Position = pos;
         }
 
-        public Vertex(Vector3 pos, Vector2 texCoord)
+        public Vertex(Vector3f pos, Vector2f texCoord)
         {
             Position = pos;
             TexCoords = texCoord;
         }
 
-        public Vertex(Vector3 pos, Vector3 normal)
+        public Vertex(Vector3f pos, Vector3f normal)
         {
             Position = pos;
             Normal = normal;
         }
 
-        public Vertex(Vector3 pos, Vector2 texCoord, Vector3 normal)
+        public Vertex(Vector3f pos, Vector2f texCoord, Vector3f normal)
         {
             Position = pos;
             TexCoords = texCoord;

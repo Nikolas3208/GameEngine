@@ -15,7 +15,7 @@ namespace GameEngine.GameObjects.Components
     [JsonDerivedType(typeof(MeshRender), 3)]
     public class Component
     {
-        [JsonInclude]
+        [JsonIgnore]
         public GameObject gameObject;
 
         [JsonInclude]

@@ -101,9 +101,9 @@ namespace GameEngine.LevelEditor.Interface
             }
             if (ImGui.BeginPopup("Add object"))
             {
-                GameObject gameObject = new GameObject();
                 if (ImGui.Selectable("Add empty object"))
                 {
+                    GameObject gameObject = new GameObject();
                     scene.AddGameObject(gameObject);
 
                     ImGui.CloseCurrentPopup();
@@ -112,13 +112,14 @@ namespace GameEngine.LevelEditor.Interface
                 ImGui.Separator();
                 if (ImGui.BeginMenu("3d objects"))
                 {
-                    MeshRender meshRender = new MeshRender();
-                    meshRender.Start();
 
                     for (int i = 0; i < meshs3dObject.Length; i++)
                     {
                         if (ImGui.MenuItem(meshs3dObject[i]))
                         {
+                            GameObject gameObject = new GameObject();
+                            MeshRender meshRender = new MeshRender();
+                            meshRender.Start();
                             meshRender.AddMeshRange(MeshLoader.LoadMesh(AssetManager.GetMesh(meshs3dObject[i]), gameObject.GetShader()));
                             gameObject.AddComponent(meshRender);
                             gameObject.Name = meshs3dObject[i];
@@ -156,6 +157,10 @@ namespace GameEngine.LevelEditor.Interface
                 return;
 
             var gameObject = gameObjects[currentGameObject];
+
+            ImGui.Spacing();
+            ImGui.Text(gameObject.Name);
+            ImGui.Spacing();
 
             foreach (var component in gameObject.GetComponents())
             {

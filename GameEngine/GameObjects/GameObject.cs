@@ -1,4 +1,5 @@
 ﻿using GameEngine.Core;
+using GameEngine.Core.Structs;
 using GameEngine.GameObjects.Components;
 using GameEngine.GameObjects.Components.List;
 using GameEngine.GameObjects.List;
@@ -13,12 +14,15 @@ using System.Threading.Tasks;
 
 namespace GameEngine.GameObjects
 {
+    [JsonDerivedType(typeof(GameObject), 0)]
+    [JsonDerivedType(typeof(Camera), 1)]
+    [JsonDerivedType(typeof(Grid), 2)]
     public class GameObject
     {
         [JsonInclude]
-        private List<Component> components;
+        protected List<Component> components;
 
-        [JsonIgnore]
+        [JsonInclude]
         protected Shader shader = null;
 
         public string Name { get; set; } = "GameObject";
@@ -26,19 +30,22 @@ namespace GameEngine.GameObjects
 
         public bool IsSelected = false;
 
+        [JsonConstructor]
         public GameObject()
         {
             if(shader == null)
                 shader = Shader.LoadFromFile(AssetManager.GetShader("multipleLights"));
 
             components = new List<Component>();
-            AddComponent(new TransformComponet());
+            if(GetComponent<TransformComponet>() == null)
+                AddComponent(new TransformComponet(new Vector3f(), new Vector3f(), new Vector3f(1)));
         }
 
         public virtual void Start()
         {
             foreach (var component in components)
             {
+                component.gameObject = this;
                 component.Start();
             }
         }
@@ -64,21 +71,24 @@ namespace GameEngine.GameObjects
 
         public void AddComponent(Component component)
         {
-            component.gameObject = this;
-            components.Add(component);
+            if (!components.Contains(component))
+            {
+                component.gameObject = this;
+                components.Add(component);
+            }
+            else
+                throw new Exception("This component is contains this object");
         }
 
         public T GetComponent<T>() where T : Component
         {
-            foreach (Component comp in components)
+            if (components.Count > 0)
             {
-                if(comp.GetType().Equals(typeof(T)))
-                    return (T)comp;
+                return  (T)components.Find(c => c.GetType() == typeof(T));
             }
 
             return null;
         }
-
         public List<Component> GetComponents() => components;
         public void RemoveComponent(Component component) => components.Remove(component);
     }
