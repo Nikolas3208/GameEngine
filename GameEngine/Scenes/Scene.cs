@@ -1,4 +1,5 @@
-﻿using GameEngine.Core.Structs;
+﻿using GameEngine.Core;
+using GameEngine.Core.Structs;
 using GameEngine.GameObjects;
 using GameEngine.GameObjects.Components.List;
 using GameEngine.GameObjects.List;
@@ -118,18 +119,32 @@ namespace GameEngine.Scenes
             }
         }
 
-        public void Draw()
+        public void Draw(Shader shader = null)
         {
-            if (ScenCamera != null)
-                ScenCamera.Draw();
-            foreach (var gameObject in gameObjects)
+            if (shader == null)
             {
                 if (ScenCamera != null)
-                    ScenCamera.GetComponent<CameraRender>().Draw(gameObject.GetShader());
-                if(light != null)
-                    light.GetComponent<LightRender>().Draw(gameObject.GetShader());
-                gameObject.GetShader().SetInt("useShadow", 0);
-                gameObject.Draw();
+                    ScenCamera.Draw();
+                foreach (var gameObject in gameObjects)
+                {
+                    if (ScenCamera != null)
+                        ScenCamera.GetComponent<CameraRender>().Draw(gameObject.GetShader());
+                    if (light != null)
+                        light.GetComponent<LightRender>().Draw(gameObject.GetShader());
+                    gameObject.GetShader().SetInt("useShadow", 0);
+                    gameObject.Draw();
+                }
+            }
+            else
+            {
+                if (ScenCamera != null)
+                    ScenCamera.Draw();
+                foreach (var gameObject in gameObjects)
+                {
+                    if (ScenCamera != null)
+                        ScenCamera.GetComponent<CameraRender>().Draw(shader);
+                    gameObject.Draw(shader);
+                }
             }
         }
     }

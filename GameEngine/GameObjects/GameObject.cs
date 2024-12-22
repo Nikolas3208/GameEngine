@@ -45,7 +45,7 @@ namespace GameEngine.GameObjects
         {
             foreach (var component in components)
             {
-                component.gameObject = this;
+                component.GameObject = this;
                 component.Start();
             }
         }
@@ -58,11 +58,23 @@ namespace GameEngine.GameObjects
             }
         }
 
-        public virtual void Draw()
+        public virtual void Draw(Shader shader = null)
         {
-            foreach (var component in components)
+            if (shader == null)
             {
-                component.Draw(shader);
+                this.shader.SetInt("gameObjectId", Id);
+                foreach (var component in components)
+                {
+                    component.Draw(this.shader);
+                }
+            }
+            else
+            {
+                shader.SetInt("gameObjectId", Id);
+                foreach (var component in components)
+                {
+                    component.Draw(shader);
+                }
             }
         }
 
@@ -73,7 +85,7 @@ namespace GameEngine.GameObjects
         {
             if (!components.Contains(component))
             {
-                component.gameObject = this;
+                component.GameObject = this;
                 components.Add(component);
             }
             else

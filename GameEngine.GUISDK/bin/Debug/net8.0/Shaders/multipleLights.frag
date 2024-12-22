@@ -71,6 +71,10 @@ uniform vec3 lightPos;
 
 out vec4 FragColor;
 
+uniform int usePicking;
+uniform int gameObjectId;
+uniform int meshId;
+
 float shadow;
 
 // array of offset direction for sampling
@@ -246,6 +250,11 @@ void main()
     {
         result = vec4(CalculateSpotLight(spotLight, normalize(Normal), FragPos, normalize(viewPos - FragPos)) * (1 - shadow) * material.color, 1.0);
     }
-
+    
+    if(usePicking == 1)
+    {
+        result = vec4(gameObjectId, meshId, gl_PrimitiveID, 1);
+    }
+    
     FragColor = result;
 }

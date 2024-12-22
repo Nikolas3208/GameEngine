@@ -13,6 +13,7 @@ namespace GameEngine.Renders.Bufers
         public int Count;
 
         public int TextureId;
+        public bool CreateTexture;
 
         public TextureTarget TextureTarget;
         public PixelInternalFormat PixelInternalFormat;
@@ -32,13 +33,18 @@ namespace GameEngine.Renders.Bufers
     }
     public class FrameBuffer
     {
-        private FrameBufferSpecification frameBufferSpecification;
+        public FrameBufferSpecification frameBufferSpecification;
 
         private int FrameBufferIndex = -1;
 
         public FrameBuffer(FrameBufferSpecification frameBufferSpecification)
         {
             this.frameBufferSpecification = frameBufferSpecification;
+        }
+        
+        public void GenTextures(ref int id)
+        {
+            GL.GenTextures(1, out id);
         }
 
         public void CreateTextures(ref int id)
@@ -81,7 +87,7 @@ namespace GameEngine.Renders.Bufers
 
         public void Init()
         {
-            GL.CreateFramebuffers(1, out FrameBufferIndex);
+            FrameBufferIndex = GL.GenFramebuffer();
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, FrameBufferIndex);
 
             var textureSpecifications = frameBufferSpecification.textureSpecifications;
@@ -90,7 +96,12 @@ namespace GameEngine.Renders.Bufers
             {
                 var textureSpecification = textureSpecifications[i];
 
-                CreateTextures(ref textureSpecification.TextureId);
+                if (textureSpecification.CreateTexture)
+                    CreateTextures(ref textureSpecification.TextureId);
+                else
+                {
+                    GenTextures(ref  textureSpecification.TextureId);
+                }
 
                 BindTexture(TextureTarget.Texture2D, textureSpecification.TextureId);
 
@@ -118,16 +129,30 @@ namespace GameEngine.Renders.Bufers
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         }
 
+        public void Bind(int width, int height)
+        {
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, FrameBufferIndex);
+            GL.Viewport(0, 0, width, height);
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+        }
+
         public void Unbind()
         {
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
         }
 
+        public void Unbind(int width, int height)
+        {
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+            GL.Viewport(0, 0, width, height);
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+        }
+
         public Vector4 ReadPixel(int x, int y, int attachmentIndex)
         {
-            Vector4 pixel = new Vector4(-1);
+            Vector4 pixel = new Vector4(-10);
 
-            Bind();
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, FrameBufferIndex);
             GL.ReadBuffer(ReadBufferMode.ColorAttachment0 + attachmentIndex);
 
             GL.ReadPixels<Vector4>(x, y, frameBufferSpecification.Width, frameBufferSpecification.Height, frameBufferSpecification.textureSpecifications[attachmentIndex].PixelFormat, 

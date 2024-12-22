@@ -51,7 +51,7 @@ namespace GameEngine.GameObjects.List
             base.Start();
         }
 
-        public override void Draw()
+        public override void Draw(Shader shader = null)
         {
             GL.Disable(EnableCap.CullFace);
             base.Draw();

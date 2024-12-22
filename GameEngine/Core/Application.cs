@@ -20,7 +20,6 @@ namespace GameEngine.Core
         {
             window = new GameWindow(GameWindowSettings.Default, windowSettings);
 
-            window.Resize += Window_Resize;
             window.Load += Window_Load;
             window.UpdateFrame += Window_UpdateFrame;
             window.RenderFrame += Window_RenderFrame;
@@ -34,7 +33,16 @@ namespace GameEngine.Core
         }
 
 
-        public void AddLayer(Layer layer) => this.layer = layer;
+        public void AddLayer(Layer layer)
+        {
+            this.layer = layer;
+            if (layer != null)
+            {
+                window.Resize += layer.OnResize;
+                window.MouseWheel += layer.OnMouseWheel;
+                window.TextInput += layer.OnTextInput;
+            }
+        }
 
         public void Run()
         {
@@ -69,13 +77,6 @@ namespace GameEngine.Core
             layer.ImGuiDraw(window, (float)obj.Time);
 
             window.SwapBuffers();
-        }
-
-        private void Window_Resize(OpenTK.Windowing.Common.ResizeEventArgs obj)
-        {
-            GL.Viewport(0, 0, obj.Width, obj.Height);
-
-            layer.Resize(window.ClientSize.X, window.ClientSize.Y);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using OpenTK.Windowing.Desktop;
+﻿using OpenTK.Windowing.Common;
+using OpenTK.Windowing.Desktop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,8 @@ namespace GameEngine.Core
         public abstract void ImGuiDraw(GameWindow window, float deltaTime);
         public abstract void Draw();
 
-        public abstract void Resize(int width, int height);
+        public abstract void OnResize(ResizeEventArgs e);
+        public abstract void OnTextInput(TextInputEventArgs e);
+        public abstract void OnMouseWheel(MouseWheelEventArgs e);
     }
 }

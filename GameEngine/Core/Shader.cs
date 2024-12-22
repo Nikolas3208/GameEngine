@@ -22,14 +22,19 @@ namespace GameEngine.Core
 
         public static Shader LoadFromFile(string path)
         {
-            if (File.Exists(path + ".geom"))
+            if (path != null && path != "")
             {
-                return new Shader(path + ".vert", path + ".frag", path + ".geom");
+                if (File.Exists(path + ".geom"))
+                {
+                    return new Shader(path + ".vert", path + ".frag", path + ".geom");
+                }
+                else
+                {
+                    return new Shader(path + ".vert", path + ".frag");
+                }
             }
             else
-            {
-                return new Shader(path + ".vert", path + ".frag");
-            }
+                throw new Exception("Path is null");
         }
 
         [JsonConstructor]

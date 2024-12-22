@@ -31,8 +31,8 @@ namespace GameEngine.Widgets
         private int _shaderFontTextureLocation;
         private int _shaderProjectionMatrixLocation;
 
-        private int _windowWidth;
-        private int _windowHeight;
+        public int WindowWidth { get; set; }
+        public int WindowHeight { get; set; }
 
         private System.Numerics.Vector2 _scaleFactor = System.Numerics.Vector2.One;
 
@@ -46,8 +46,8 @@ namespace GameEngine.Widgets
         /// </summary>
         public ImGuiController(int width, int height)
         {
-            _windowWidth = width;
-            _windowHeight = height;
+            WindowWidth = width;
+            WindowHeight = height;
 
             int major = GL.GetInteger(GetPName.MajorVersion);
             int minor = GL.GetInteger(GetPName.MinorVersion);
@@ -77,8 +77,8 @@ namespace GameEngine.Widgets
 
         public void WindowResized(int width, int height)
         {
-            _windowWidth = width;
-            _windowHeight = height;
+            WindowWidth = width;
+            WindowHeight = height;
         }
 
         public void DestroyDeviceObjects()
@@ -236,8 +236,8 @@ namespace GameEngine.Widgets
         {
             ImGuiIOPtr io = ImGui.GetIO();
             io.DisplaySize = new System.Numerics.Vector2(
-                _windowWidth / _scaleFactor.X,
-                _windowHeight / _scaleFactor.Y);
+                WindowWidth / _scaleFactor.X,
+                WindowHeight / _scaleFactor.Y);
             io.DisplayFramebufferScale = _scaleFactor;
             io.DeltaTime = deltaSeconds; // DeltaTime is in seconds.
         }
@@ -429,7 +429,7 @@ namespace GameEngine.Widgets
 
                         // We do _windowHeight - (int)clip.W instead of (int)clip.Y because gl has flipped Y when it comes to these coordinates
                         var clip = pcmd.ClipRect;
-                        GL.Scissor((int)clip.X, _windowHeight - (int)clip.W, (int)(clip.Z - clip.X), (int)(clip.W - clip.Y));
+                        GL.Scissor((int)clip.X, WindowHeight - (int)clip.W, (int)(clip.Z - clip.X), (int)(clip.W - clip.Y));
                         CheckGLError("Scissor");
 
                         if ((io.BackendFlags & ImGuiBackendFlags.RendererHasVtxOffset) != 0)

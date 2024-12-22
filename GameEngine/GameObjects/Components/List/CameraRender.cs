@@ -122,7 +122,7 @@ namespace GameEngine.GameObjects.Components.List
             }
         }
 
-        public bool IsSkyBox = true;
+        public bool IsSkyBox = false;
 
         public Vector3f Position;
 
@@ -221,6 +221,8 @@ namespace GameEngine.GameObjects.Components.List
 
                 GL.CullFace(CullFaceMode.Back);
             }
+
+            shader.SetVector3("gCameraWorldPos", Position);
 
             shader.Use();
 

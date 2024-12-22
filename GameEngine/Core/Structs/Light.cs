@@ -21,9 +21,9 @@ namespace GameEngine.Core.Structs
         public Vector3f Position;
         public Vector3f Direction;
 
-        public Vector3f Ambient = new Vector3f(0.2f);
-        public Vector3f Diffuse = new Vector3f(0.8f);
-        public Vector3f Specular = new Vector3f(1.0f);
+        public Vector3f Ambient;// = new Vector3f(0.2f);
+        public Vector3f Diffuse;// = new Vector3f(0.8f);
+        public Vector3f Specular;// = new Vector3f(1.0f);
 
         public float Constant = 1.0f;
         public float Linear = 0.09f;

@@ -17,6 +17,7 @@ using GameEngine.Core.Structs;
 using GameEngine.Renders;
 using OpenTK.Windowing.Desktop;
 using GameEngine.Scenes;
+using OpenTK.Graphics.OpenGL4;
 
 namespace GameEngine.LevelEditor.Interface
 {
@@ -62,6 +63,8 @@ namespace GameEngine.LevelEditor.Interface
 
         public void Draw()
         {
+            GL.Viewport(0, 0, _controller.WindowWidth, _controller.WindowHeight);
+
             GameObjectsListView(scene.GetGameObjects());
             ScenView();
             PropertisObjectView(scene.GetGameObjects());
@@ -140,7 +143,7 @@ namespace GameEngine.LevelEditor.Interface
             ImGui.Begin("Scen");
             IsScenViewSelected = ImGui.IsWindowFocused();
 
-            ImGui.Image(textureScenView, ImGui.GetContentRegionAvail(), CreateVector2(0, 1), CreateVector2(1, 0));
+            ImGui.Image(textureScenView, ImGui.GetContentRegionAvail(), new System.Numerics.Vector2(0,1), new System.Numerics.Vector2(1, 0));
 
             Size = ImGui.GetItemRectSize();
             SizeMin = ImGui.GetItemRectMin();
@@ -179,7 +182,7 @@ namespace GameEngine.LevelEditor.Interface
                         if (rotation != transform.Rotation)
                             transform.Rotation = rotation;
 
-                        Vector3f scale = CreateImGuiDragFloat3("Scale", transform.Scale);
+                        Vector3f scale = CreateImGuiDragFloat3("Scale", transform.Scale, 0.05f);
                         if (scale != transform.Scale)
                             transform.Scale = scale;
                     }
@@ -214,30 +217,30 @@ namespace GameEngine.LevelEditor.Interface
                     else if (component.GetType() == typeof(LightRender))
                     {
                         var lightRender = gameObject.GetComponent<LightRender>();
-                        var light = lightRender.GetLight();
+                        currendLightType = (int)lightRender.LightType - 1;
 
                         ImGui.Combo("Light type", ref currendLightType, lightType, lightType.Length);
 
                         if (currendLightType + 1 == (int)LightType.Point)
                         {
-                            light.Type = LightType.Point;
+                            lightRender.LightType = LightType.Point;
                             ImGui.Spacing();
-                            light.Position = CreateImGuiDragFloat3("Position", light.Position);
+                            lightRender.Position = CreateImGuiDragFloat3("Position", lightRender.Position);
                             ImGui.Separator();
                             ImGui.Spacing();
-                            light.Ambient = new Vector3f(CreateImGuiSloderFloat("Ambient", light.Ambient.X, 0, 1));
+                            lightRender.Ambient = new Vector3f(CreateImGuiSloderFloat("Ambient", lightRender.Ambient.X, 0, 1));
                             ImGui.Spacing();
-                            light.Diffuse = new Vector3f(CreateImGuiSloderFloat("Diffuse", light.Diffuse.X, 0, 1));
+                            lightRender.Diffuse = new Vector3f(CreateImGuiSloderFloat("Diffuse", lightRender.Diffuse.X, 0, 1));
                             ImGui.Spacing();
-                            light.Specular = new Vector3f(CreateImGuiSloderFloat("Specular", light.Specular.X, 0, 1));
+                            lightRender.Specular = new Vector3f(CreateImGuiSloderFloat("Specular", lightRender.Specular.X, 0, 1));
                             ImGui.Spacing();
                             ImGui.Separator();
 
-                            light.Constant = CreateImGuiSloderFloat("Constant", light.Constant, 0, 1);
+                            lightRender.Constant = CreateImGuiSloderFloat("Constant", lightRender.Constant, 0, 1);
                             ImGui.Spacing();
-                            light.Linear = CreateImGuiSloderFloat("Linear", light.Linear, 0, 1);
+                            lightRender.Linear = CreateImGuiSloderFloat("Linear", lightRender.Linear, 0, 1);
                             ImGui.Spacing();
-                            light.Quadratic = CreateImGuiSloderFloat("Quadratic", light.Quadratic, 0, 1);
+                            lightRender.Quadratic = CreateImGuiSloderFloat("Quadratic", lightRender.Quadratic, 0, 1);
 
                             ImGui.Spacing();
                             ImGui.Checkbox("Shadow", ref lightRender.IsShadowUse);
@@ -254,18 +257,18 @@ namespace GameEngine.LevelEditor.Interface
                         }
                         else if (currendLightType + 1 == (int)LightType.Directional)
                         {
-                            light.Type = LightType.Directional;
+                            lightRender.LightType = LightType.Directional;
 
                             ImGui.Spacing();
-                            light.Direction = CreateImGuiDragFloat3("Direction", light.Direction);
+                            lightRender.Direction = CreateImGuiDragFloat3("Direction", lightRender.Direction);
                             ImGui.Separator();
 
                             ImGui.Spacing();
-                            light.Ambient = new Vector3f(CreateImGuiSloderFloat("Ambient", light.Ambient.X, 0, 1));
+                            lightRender.Ambient = new Vector3f(CreateImGuiSloderFloat("Ambient", lightRender.Ambient.X, 0, 1));
                             ImGui.Spacing();
-                            light.Diffuse = new Vector3f(CreateImGuiSloderFloat("Diffuse", light.Diffuse.X, 0, 1));
+                            lightRender.Diffuse = new Vector3f(CreateImGuiSloderFloat("Diffuse", lightRender.Diffuse.X, 0, 1));
                             ImGui.Spacing();
-                            light.Specular = new Vector3f(CreateImGuiSloderFloat("Specular", light.Specular.X, 0, 1));
+                            lightRender.Specular = new Vector3f(CreateImGuiSloderFloat("Specular", lightRender.Specular.X, 0, 1));
                             ImGui.Spacing();
 
                             ImGui.Spacing();
@@ -280,34 +283,34 @@ namespace GameEngine.LevelEditor.Interface
                         }
                         else if (currendLightType + 1 == (int)LightType.Spot)
                         {
-                            light.Type = LightType.Spot;
+                            lightRender.LightType = LightType.Spot;
 
                             ImGui.Spacing();
-                            light.Position = CreateImGuiDragFloat3("Position", light.Position);
+                            lightRender.Position = CreateImGuiDragFloat3("Position", lightRender.Position);
                             ImGui.Spacing();
-                            light.Direction = CreateImGuiDragFloat3("Direction", light.Direction);
+                            lightRender.Direction = CreateImGuiDragFloat3("Direction", lightRender.Direction);
                             ImGui.Separator();
 
                             ImGui.Spacing();
-                            light.Ambient = new Vector3f(CreateImGuiSloderFloat("Ambient", light.Ambient.X, 0, 1));
+                            lightRender.Ambient = new Vector3f(CreateImGuiSloderFloat("Ambient", lightRender.Ambient.X, 0, 1));
                             ImGui.Spacing();
-                            light.Diffuse = new Vector3f(CreateImGuiSloderFloat("Diffuse", light.Diffuse.X, 0, 1));
+                            lightRender.Diffuse = new Vector3f(CreateImGuiSloderFloat("Diffuse", lightRender.Diffuse.X, 0, 1));
                             ImGui.Spacing();
-                            light.Specular = new Vector3f(CreateImGuiSloderFloat("Specular", light.Specular.X, 0, 1));
+                            lightRender.Specular = new Vector3f(CreateImGuiSloderFloat("Specular", lightRender.Specular.X, 0, 1));
                             ImGui.Spacing();
                             ImGui.Separator();
 
-                            light.Constant = CreateImGuiSloderFloat("Constant", light.Constant, 0, 1);
+                            lightRender.Constant = CreateImGuiSloderFloat("Constant", lightRender.Constant, 0, 1);
                             ImGui.Spacing();
-                            light.Linear = CreateImGuiSloderFloat("Linear", light.Linear, 0, 1);
+                            lightRender.Linear = CreateImGuiSloderFloat("Linear", lightRender.Linear, 0, 1);
                             ImGui.Spacing();
-                            light.Quadratic = CreateImGuiSloderFloat("Quadratic", light.Quadratic, 0, 1);
+                            lightRender.Quadratic = CreateImGuiSloderFloat("Quadratic", lightRender.Quadratic, 0, 1);
                             ImGui.Spacing();
                             cutOff = CreateImGuiSloderFloat("CutOff", cutOff, 0, 100);
-                            light.CutOff = MathF.Cos(MathHelper.DegreesToRadians(cutOff));
+                            lightRender.CutOff = MathF.Cos(MathHelper.DegreesToRadians(cutOff));
                             ImGui.Spacing();
                             outCutOff = CreateImGuiSloderFloat("OuterCutOff", outCutOff, 0, 100);
-                            light.OuterCutOff = MathF.Cos(MathHelper.DegreesToRadians(outCutOff));
+                            lightRender.OuterCutOff = MathF.Cos(MathHelper.DegreesToRadians(outCutOff));
 
                             ImGui.Spacing();
                             ImGui.Checkbox("Shadow", ref lightRender.IsShadowUse);
@@ -319,8 +322,6 @@ namespace GameEngine.LevelEditor.Interface
                             //ImGui.SliderFloat("depthFar", ref lightRender.shadowBuffer.depthFar, -100, 100);
                             ImGui.Spacing();
                         }
-
-                        lightRender.SetLight(light);
                     }
                     else if (component.GetType() == typeof(MeshRender))
                     {
@@ -409,11 +410,11 @@ namespace GameEngine.LevelEditor.Interface
             return CreateVector3(vector2);
         }
 
-        public Vector3f CreateImGuiDragFloat3(string lable, Vector3f vector)
+        public Vector3f CreateImGuiDragFloat3(string lable, Vector3f vector, float speed = 1)
         {
             var vector2 = CreateVector3(vector);
 
-            ImGui.DragFloat3(lable, ref vector2);
+            ImGui.DragFloat3(lable, ref vector2, speed);
 
             return CreateVector3f(vector2);
         }

@@ -67,7 +67,6 @@ namespace GameEngine.GameObjects.Components.List
         {
             shader.SetInt("material.diffuse", 0);
             shader.SetInt("material.specular", 1);
-            shader.SetInt("gameObjectId", gameObject.Id);
             foreach (var mesh in meshes)
             {
                 shader.SetInt("meshId", mesh.Id);

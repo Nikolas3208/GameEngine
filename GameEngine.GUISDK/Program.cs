@@ -9,7 +9,7 @@ namespace GameEngin.LevelEditor
     {
         public static void Main(string[] args)
         {
-            EditorApplication editor = EditorApplication.CreateApplication(new NativeWindowSettings { Title = "Editor", Size = new Vector2i(1920, 1080) });
+            EditorApplication editor = EditorApplication.CreateApplication(new NativeWindowSettings { Title = "Editor", ClientSize = new Vector2i(1920, 1080) });
             editor.AddLayer(new EditorLayer());
             editor.Run();
         }

@@ -77,7 +77,7 @@ namespace GameEngine.GameObjects.List
             base.Update(deltaTime);
         }
 
-        public override void Draw()
+        public override void Draw(Shader shader = null)
         {
             base.Draw();
         }

@@ -15,8 +15,12 @@ namespace GameEngine.GameObjects.Components
     [JsonDerivedType(typeof(MeshRender), 3)]
     public class Component
     {
-        [JsonIgnore]
-        public GameObject gameObject;
+        private GameObject gameObject;
+
+        [JsonInclude]
+        public GameObject GameObject { get => gameObject; set { gameObject = value; gameObjectId = value.Id; } }
+
+        public int gameObjectId;
 
         [JsonInclude]
         public string Name = "Component";

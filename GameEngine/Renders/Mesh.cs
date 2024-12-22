@@ -62,8 +62,12 @@ namespace GameEngine.Renders
                     shader.SetInt("material.useTexture", 1);
                     for (int i = 0; i < material.textures.Count; i++)
                     {
-                        material.textures[i].Use(TextureUnit.Texture0 + i);
+                        GL.ActiveTexture(TextureUnit.Texture0 + i);
+                        shader.SetInt($"material.{material.textures[i].Type}", i);
+                        GL.BindTexture(TextureTarget.Texture2D, material.textures[i].Id);
                     }
+
+                    GL.ActiveTexture(TextureUnit.Texture0);
                 }
                 else
                 {
@@ -79,7 +83,6 @@ namespace GameEngine.Renders
 
         public void InitBuffers()
         {
-
             vertexArray.Init(null);
         }
     }
