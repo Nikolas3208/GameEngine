@@ -71,9 +71,10 @@ namespace GameEngine.Renders.Bufers
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0 + index, TextureTarget.Texture2D, id, 0);
         }
 
-        public void AttachDepthTexture(TextureTarget2d target, SizedInternalFormat sizedInternalFormat, int width, int height, FramebufferAttachment framebufferAttachment, int id)
+        public void AttachDepthTexture(TextureTarget2d target, SizedInternalFormat sizedInternalFormat, PixelInternalFormat pixelInternalFormat, int width, int height, PixelFormat pixelFormat, PixelType pixelType, FramebufferAttachment framebufferAttachment, int id)
         {
             GL.TexStorage2D(TextureTarget2d.Texture2D, 1, sizedInternalFormat, width, height);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, pixelInternalFormat, width, height, 0, pixelFormat, pixelType, nint.Zero);
 
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)All.Linear);
@@ -109,11 +110,14 @@ namespace GameEngine.Renders.Bufers
                 {
                     AttachColorTexture(textureSpecification.PixelInternalFormat, frameBufferSpecification.Width, frameBufferSpecification.Height, textureSpecification.PixelFormat, 
                         textureSpecification.PixelType, textureSpecification.TextureId, i);
+
+                    DrawBuffersEnum[] bufers = { DrawBuffersEnum.ColorAttachment0, DrawBuffersEnum.ColorAttachment0, DrawBuffersEnum.ColorAttachment0, DrawBuffersEnum.ColorAttachment0 };
+                    GL.DrawBuffers(textureSpecification.TextureId, bufers);
                 }
                 else
                 {
-                    AttachDepthTexture(TextureTarget2d.Texture2D, textureSpecification.SizedInternalFormat, frameBufferSpecification.Width, frameBufferSpecification.Height, 
-                        textureSpecification.Attachment, textureSpecification.TextureId);
+                    AttachDepthTexture(TextureTarget2d.Texture2D, textureSpecification.SizedInternalFormat, textureSpecification.PixelInternalFormat, frameBufferSpecification.Width, frameBufferSpecification.Height,
+                         textureSpecification.PixelFormat, textureSpecification.PixelType, textureSpecification.Attachment, textureSpecification.TextureId);
                 }
 
                 textureSpecifications[i] = textureSpecification;
@@ -153,11 +157,13 @@ namespace GameEngine.Renders.Bufers
             Vector4 pixel = new Vector4(-10);
 
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, FrameBufferIndex);
+            GL.ReadBuffer(ReadBufferMode.ColorAttachment0);
+
             GL.ReadBuffer(ReadBufferMode.ColorAttachment0 + attachmentIndex);
 
-            GL.ReadPixels<Vector4>(x, y, frameBufferSpecification.Width, frameBufferSpecification.Height, frameBufferSpecification.textureSpecifications[attachmentIndex].PixelFormat, 
+            GL.ReadPixels<Vector4>(x, y, 1, 1, frameBufferSpecification.textureSpecifications[attachmentIndex].PixelFormat, 
                 frameBufferSpecification.textureSpecifications[attachmentIndex].PixelType, ref pixel);
-
+            GL.ReadBuffer(ReadBufferMode.None);
             Unbind();
 
             return pixel;

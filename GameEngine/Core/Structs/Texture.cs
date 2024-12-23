@@ -11,7 +11,7 @@ namespace GameEngine.Core.Structs
     {
         public int Id;
         public TextureType Type;
-        public string Path;
+        public string Path = string.Empty;
 
         public Texture()
         {

@@ -35,7 +35,7 @@ namespace GameEngine.Scenes
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
             GL.Enable(EnableCap.CullFace);
-            //GL.CullFace(CullFaceMode.Back);
+            GL.CullFace(CullFaceMode.Back);
             GL.Enable(EnableCap.Texture2D);
         }
 
@@ -65,14 +65,11 @@ namespace GameEngine.Scenes
         }
         public T GetGameObject<T>() where T : GameObject
         {
-            return (T)gameObjects.Where(g => g.GetType() == typeof(T));
+            return (T)gameObjects.Find(g => g.GetType() == typeof(T));
         }
         public GameObject GetGameObjectById(int id)
         {
-            if (gameObjects.Where(x => x.Id == id).Count() > 0)
-                return gameObjects[id];
-
-            return null;
+            return gameObjects.Find(x => x.Id == id);
         }
 
         public List<GameObject> GetGameObjects() { return gameObjects; }
@@ -127,13 +124,24 @@ namespace GameEngine.Scenes
                     ScenCamera.Draw();
                 foreach (var gameObject in gameObjects)
                 {
-                    if (ScenCamera != null)
-                        ScenCamera.GetComponent<CameraRender>().Draw(gameObject.GetShader());
-                    if (light != null)
-                        light.GetComponent<LightRender>().Draw(gameObject.GetShader());
-                    gameObject.GetShader().SetInt("useShadow", 0);
-                    gameObject.Draw();
+                    if (gameObject is Grid)
+                    {
+
+                    }
+                    else
+                    {
+                        if (ScenCamera != null)
+                            ScenCamera.GetComponent<CameraRender>().Draw(gameObject.GetShader());
+                        if (light != null)
+                            light.GetComponent<LightRender>().Draw(gameObject.GetShader());
+                        gameObject.GetShader().SetInt("useShadow", 0);
+                        gameObject.Draw();
+                    }
                 }
+
+                if (ScenCamera != null)
+                    ScenCamera.GetComponent<CameraRender>().Draw(GetGameObject<Grid>().GetShader());
+                GetGameObject<Grid>().Draw();
             }
             else
             {
@@ -143,6 +151,8 @@ namespace GameEngine.Scenes
                 {
                     if (ScenCamera != null)
                         ScenCamera.GetComponent<CameraRender>().Draw(shader);
+                    if (light != null)
+                        light.GetComponent<LightRender>().Draw(shader);
                     gameObject.Draw(shader);
                 }
             }

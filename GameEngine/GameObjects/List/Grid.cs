@@ -35,13 +35,9 @@ namespace GameEngine.GameObjects.List
         {
             shader = Shader.LoadFromFile(AssetManager.GetShader("grid"));
 
-            VertexArray vertexArray = new VertexArray(new VertexBuffer(vertices), new IndexBuffer(indices));
-            vertexArray.Init(shader);
-
-            Mesh mesh = new Mesh(vertexArray);
-
             MeshRender meshRender = new MeshRender();
-            meshRender.AddMesh(mesh);
+            meshRender.meshPath = AssetManager.GetMesh("Plane");
+            meshRender.Start();
 
             if(GetComponent<MeshRender>() == null)
                 AddComponent(meshRender);
@@ -54,6 +50,8 @@ namespace GameEngine.GameObjects.List
         public override void Draw(Shader shader = null)
         {
             GL.Disable(EnableCap.CullFace);
+            GL.Enable(EnableCap.Blend);
+            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
             base.Draw();
             GL.Enable(EnableCap.CullFace);
         }

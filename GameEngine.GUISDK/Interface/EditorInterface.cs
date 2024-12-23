@@ -43,12 +43,13 @@ namespace GameEngine.LevelEditor.Interface
         private string[] gameObjectComponents = { "Transform", "Camera render", "Light", "Mesh render" };
         private string[] meshs3dObject = { "Cube", "Sphere", "Cylinder", "Plane" };
 
+        private bool renameGameObject;
+
         public bool IsScenViewSelected = false;
         public bool IsListObjectsSelected = false;
         public System.Numerics.Vector2 Size;
 
         public System.Numerics.Vector2 SizeMin;
-
 
         public EditorInterface(int width, int height, Scene scene)
         {
@@ -90,8 +91,19 @@ namespace GameEngine.LevelEditor.Interface
             {
                 foreach (var gameObject in gameObjects)
                 {
-                    if (ImGui.Selectable(gameObject.Name))
+                    if(gameObject.Id == currentGameObject && renameGameObject)
+                    {
+                        string name = gameObject.Name;
+                        ImGui.InputText("", input: ref name, maxLength: 30);
+                        gameObject.Name = name;
+                    }
+                    else if (ImGui.Selectable(gameObject.Name, false,ImGuiSelectableFlags.AllowDoubleClick))
+                    {
+                        if(ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
+                            scene.GetCamera().GetComponent<CameraRender>().Position = gameObject.GetComponent<TransformComponet>().Position;
+
                         currentGameObject = gameObject.Id;
+                    }
                 }
                 ImGui.TreePop();
 
@@ -124,12 +136,25 @@ namespace GameEngine.LevelEditor.Interface
                             MeshRender meshRender = new MeshRender();
                             meshRender.Start();
                             meshRender.AddMeshRange(MeshLoader.LoadMesh(AssetManager.GetMesh(meshs3dObject[i]), gameObject.GetShader()));
+                            meshRender.meshPath = AssetManager.GetMesh(meshs3dObject[i]);
                             gameObject.AddComponent(meshRender);
                             gameObject.Name = meshs3dObject[i];
 
                             scene.AddGameObject(gameObject);
+                            return;
                         }
                     }
+                    ImGui.EndMenu();
+                }
+                ImGui.SeparatorText("object");
+                if(ImGui.MenuItem("Delete", "Del"))
+                {
+                    if(currentGameObject >= 0)
+                        scene.RemoveGameObjectById(currentGameObject);
+                }
+                else if(ImGui.MenuItem("Rename", "F2"))
+                {
+
                 }
             }
 
@@ -162,7 +187,9 @@ namespace GameEngine.LevelEditor.Interface
             var gameObject = gameObjects[currentGameObject];
 
             ImGui.Spacing();
-            ImGui.Text(gameObject.Name);
+            string name = gameObject.Name;
+            ImGui.InputText("", input: ref name, maxLength: 30);
+            gameObject.Name = name;
             ImGui.Spacing();
 
             foreach (var component in gameObject.GetComponents())
@@ -173,12 +200,12 @@ namespace GameEngine.LevelEditor.Interface
                     {
                         var transform = gameObject.GetComponent<TransformComponet>();
 
-                        Vector3f translate = CreateImGuiDragFloat3("Position", transform.Position);
+                        Vector3f translate = CreateImGuiDragFloat3("Position", transform.Position, 0.05f);
 
                         if (transform.Position != translate)
                             transform.Position = translate;
 
-                        Vector3f rotation = CreateImGuiDragFloat3("Rotation", transform.Rotation);
+                        Vector3f rotation = CreateImGuiDragFloat3("Rotation", transform.Rotation, 0.05f);
                         if (rotation != transform.Rotation)
                             transform.Rotation = rotation;
 
@@ -223,9 +250,12 @@ namespace GameEngine.LevelEditor.Interface
 
                         if (currendLightType + 1 == (int)LightType.Point)
                         {
+                            gameObject.GetComponent<TransformComponet>().Rotation = new Vector3f(180, 0, 0);
+                            gameObject.GetComponent<TransformComponet>().Scale = new Vector3f(0.3f, 0.3f, 0.3f);
+
                             lightRender.LightType = LightType.Point;
                             ImGui.Spacing();
-                            lightRender.Position = CreateImGuiDragFloat3("Position", lightRender.Position);
+                            lightRender.Position = gameObject.GetComponent<TransformComponet>().Position;
                             ImGui.Separator();
                             ImGui.Spacing();
                             lightRender.Ambient = new Vector3f(CreateImGuiSloderFloat("Ambient", lightRender.Ambient.X, 0, 1));
@@ -260,7 +290,7 @@ namespace GameEngine.LevelEditor.Interface
                             lightRender.LightType = LightType.Directional;
 
                             ImGui.Spacing();
-                            lightRender.Direction = CreateImGuiDragFloat3("Direction", lightRender.Direction);
+                            lightRender.Direction = gameObject.GetComponent<TransformComponet>().Rotation;
                             ImGui.Separator();
 
                             ImGui.Spacing();
@@ -286,9 +316,9 @@ namespace GameEngine.LevelEditor.Interface
                             lightRender.LightType = LightType.Spot;
 
                             ImGui.Spacing();
-                            lightRender.Position = CreateImGuiDragFloat3("Position", lightRender.Position);
+                            lightRender.Position = gameObject.GetComponent<TransformComponet>().Position;
                             ImGui.Spacing();
-                            lightRender.Direction = CreateImGuiDragFloat3("Direction", lightRender.Direction);
+                            lightRender.Direction = gameObject.GetComponent<TransformComponet>().Rotation;
                             ImGui.Separator();
 
                             ImGui.Spacing();
@@ -345,28 +375,13 @@ namespace GameEngine.LevelEditor.Interface
                             {
                                 meshRender.meshes = new List<Mesh>();
                                 meshRender.AddMeshRange(MeshLoader.LoadMesh(AssetManager.GetMeshes().Values.ToArray()[currentSelectMesh]));
+                                meshRender.meshPath = AssetManager.GetMeshes().Values.ToArray()[currentSelectMesh];
 
                                 ImGui.CloseCurrentPopup();
                             }
                         }
                         ImGui.Spacing();
                         ImGui.Separator();
-                        /*if (ImGui.TreeNodeEx("Materials"))
-                            foreach (var mesh in meshRender.meshes)
-                            {
-                                buttonPos = ImGui.GetCursorPos();
-                                if (ImGui.ArrowButton("Select materials", ImGuiDir.Right))
-                                {
-                                    ImGui.OpenPopup("Select mesh");
-                                }
-
-                                cursorPos = ImGui.GetCursorPos();
-                                ImGui.SetCursorPos(CreateVector2(size.X - 75, buttonPos.Y));
-                                if(ImGui.Selectable(mesh.GetMaterial().Name))
-                                {
-
-                                }
-                            }*/
                     }
                     ImGui.Spacing();
                     ImGui.Separator();
@@ -388,6 +403,7 @@ namespace GameEngine.LevelEditor.Interface
                     component.Start();
 
                     gameObject.AddComponent(component);
+                    gameObject.Start();
 
                     ImGui.CloseCurrentPopup();
                 }

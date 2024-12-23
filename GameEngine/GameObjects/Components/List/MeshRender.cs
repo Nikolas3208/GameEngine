@@ -16,31 +16,11 @@ namespace GameEngine.GameObjects.Components.List
 {
     public class MeshRender : Component
     {
-        [JsonInclude]
+        public string meshPath = string.Empty;
+        [JsonIgnore]
         public List<Mesh> meshes;
         [JsonInclude]
         public string MeshName = "Mesh";
-
-        public MeshRender(string meshName)
-        {
-            meshes = new List<Mesh>();
-            if(AssetManager.GetMesh(meshName) != null)
-                AddMeshRange(MeshLoader.LoadMesh(AssetManager.GetMesh(meshName)));
-        }
-
-        public MeshRender(Mesh mesh)
-        {
-            mesh = new Mesh();
-
-            MeshName = mesh.Name;
-            AddMesh(mesh);
-        }
-
-        public MeshRender(List<Mesh> meshes, string meshName)
-        {
-            this.meshes = meshes;
-            MeshName = meshName;
-        }
 
         public MeshRender()
         {
@@ -52,6 +32,14 @@ namespace GameEngine.GameObjects.Components.List
 
         public override void Start()
         {
+            if(meshes == null || (meshes != null && meshes.Count == 0))
+            {
+                meshes = new List<Mesh>();
+                if(meshPath != string.Empty)
+                {
+                    AddMeshRange(MeshLoader.LoadMesh(meshPath));
+                }
+            }
             foreach (var mesh in meshes)
             {
                 mesh.InitBuffers();

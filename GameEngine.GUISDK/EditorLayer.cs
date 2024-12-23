@@ -44,11 +44,11 @@ namespace GameEngine.LevelEditor
             Window = window;
 
             GL.Enable(EnableCap.DepthTest);
-            GL.Enable(EnableCap.Texture2D);
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
             GL.Enable(EnableCap.CullFace);
             GL.CullFace(CullFaceMode.Back);
+            GL.Enable(EnableCap.Texture2D);
 
             BufferInit();
 
@@ -96,7 +96,7 @@ namespace GameEngine.LevelEditor
 
             //Mouse picking texture
             ColorTexture = new FrameBufferTextureSpecification { TextureTarget = TextureTarget.Texture2D, PixelInternalFormat = PixelInternalFormat.Rgb32f, PixelFormat = PixelFormat.Rgba, PixelType = PixelType.Float, Attachment = FramebufferAttachment.ColorAttachment0 };
-            DepthTexture = new FrameBufferTextureSpecification { TextureTarget = TextureTarget.Texture2D, SizedInternalFormat = SizedInternalFormat.DepthComponent32f, Attachment = FramebufferAttachment.DepthAttachment };
+            DepthTexture = new FrameBufferTextureSpecification { TextureTarget = TextureTarget.Texture2D, PixelInternalFormat = PixelInternalFormat.DepthComponent, PixelFormat = PixelFormat.DepthComponent, PixelType = PixelType.Float, Attachment = FramebufferAttachment.DepthAttachment };
 
             var fbSpec = new FrameBufferSpecification();
             fbSpec.textureSpecifications = new List<FrameBufferTextureSpecification>();
@@ -111,12 +111,38 @@ namespace GameEngine.LevelEditor
 
         public override void Update(float deltaTime)
         {
+            if (Window.KeyboardState.IsKeyDown(Keys.LeftControl) && Window.IsKeyDown(Keys.S))
+            {
+                SceneSerialize.Serialize(scene);
+            }
+            else if (Window.KeyboardState.IsKeyDown(Keys.LeftControl) && Window.IsKeyDown(Keys.O))
+            {
+                scene = SceneSerialize.Deserialize().Result;
+                scene.SetCamera(SceneCamera);
+                scene.Start();
+                editorInterface.SetScene(scene);
+                return;
+            }
 
-            if(Window.KeyboardState.IsKeyDown(Keys.LeftShift))
+            else if (Window.KeyboardState.IsKeyDown(Keys.LeftControl) && Window.IsKeyDown(Keys.LeftShift) && Window.IsKeyDown(Keys.N))
+            {
+                Init(Window);
+                return;
+            }
+
+            if (pickingBuffer.frameBufferSpecification.Width != editorInterface.Size.X && pickingBuffer.frameBufferSpecification.Height != editorInterface.Size.Y)
+            {
+                pickingBuffer.frameBufferSpecification.Width = (int)editorInterface.Size.X; pickingBuffer.frameBufferSpecification.Height = (int)editorInterface.Size.Y;
+                pickingBuffer.Init();
+            }
+            if (scene.GetCamera().GetComponent<CameraRender>().Aspect != editorInterface.Size.X / editorInterface.Size.Y)
+                scene.GetCamera().GetComponent<CameraRender>().Aspect = editorInterface.Size.X / editorInterface.Size.Y;
+
+            if (Window.KeyboardState.IsKeyDown(Keys.LeftShift))
             {
                 _camSpeed = 20;
             }
-            else if(Window.KeyboardState.IsKeyDown(Keys.LeftControl))
+            else if (Window.KeyboardState.IsKeyDown(Keys.LeftControl))
             {
                 _camSpeed = 90;
             }
@@ -125,14 +151,7 @@ namespace GameEngine.LevelEditor
                 _camSpeed = 45;
             }
 
-            if (Window.KeyboardState.IsKeyDown(Keys.W))
-                scene.GetCamera().CameraMove(Direction.Front, deltaTime, _camSpeed);
-            else if (Window.KeyboardState.IsKeyDown(Keys.S))
-                scene.GetCamera().CameraMove(Direction.Breack, deltaTime, _camSpeed);
-            else if (Window.KeyboardState.IsKeyDown(Keys.A))
-                scene.GetCamera().CameraMove(Direction.Left, deltaTime, _camSpeed);
-            else if (Window.KeyboardState.IsKeyDown(Keys.D))
-                scene.GetCamera().CameraMove(Direction.Right, deltaTime, _camSpeed);
+
 
             if (firstMove) // this bool variable is initially set to true
             {
@@ -148,6 +167,15 @@ namespace GameEngine.LevelEditor
 
                 if (Window.MouseState.IsButtonDown(MouseButton.Right) && editorInterface.IsScenViewSelected && scene != null)
                 {
+                    if (Window.KeyboardState.IsKeyDown(Keys.W))
+                        scene.GetCamera().CameraMove(Direction.Front, deltaTime, _camSpeed);
+                    else if (Window.KeyboardState.IsKeyDown(Keys.S))
+                        scene.GetCamera().CameraMove(Direction.Breack, deltaTime, _camSpeed);
+                    else if (Window.KeyboardState.IsKeyDown(Keys.A))
+                        scene.GetCamera().CameraMove(Direction.Left, deltaTime, _camSpeed);
+                    else if (Window.KeyboardState.IsKeyDown(Keys.D))
+                        scene.GetCamera().CameraMove(Direction.Right, deltaTime, _camSpeed);
+
                     Window.CursorState = CursorState.Grabbed;
                     scene.GetCamera().CameraRotation(new Vector2(deltaX, deltaY) * 0.4f);
                 }
@@ -171,26 +199,32 @@ namespace GameEngine.LevelEditor
 
             if (scene != null)
             {
-                /*
-                Shader.SetInt("usePicking", 1);
-                pickingBuffer.Bind();
-                scene.Draw();
-                pickingBuffer.Unbind();
+                if (Window.IsMouseButtonPressed(MouseButton.Left))
+                {
+                    pickingBuffer.Bind();
+                    Shader.Use();
+                    Shader.SetInt("usePicking", 1);
 
-                mouseX = (ImGui.GetMousePos().X - editorInterface.SizeMin.X);
-                mouseY = (ImGui.GetMousePos().Y - editorInterface.SizeMin.Y);
+                    scene.Draw(Shader);
 
-                pick = pickingBuffer.ReadPixel((int)mouseX, (int)mouseY, 0);
+                    pickingBuffer.Unbind(Window.ClientSize.X, Window.ClientSize.Y);
 
+                    mouseX = (Window.MouseState.Position.X - editorInterface.SizeMin.X);
+                    mouseY = (Window.ClientSize.Y) - (Window.MouseState.Position.Y + (Window.ClientSize.Y - editorInterface.Size.Y) - editorInterface.SizeMin.Y);
+
+                    pick = pickingBuffer.ReadPixel((int)mouseX, (int)mouseY, 0);
+                    if((int)pick.X > 0)
+                        editorInterface.currentGameObject = (int)pick.X;
+                }
                 Shader.SetInt("usePicking", 0);
-                */
+                
                 frameBuffer.Bind();
                 scene.Draw();
                 frameBuffer.Unbind();
 
-                scene.Draw();
             }
         }
+        bool ds = false;
 
         public override void ImGuiDraw(GameWindow window, float deltaTime)
         {
@@ -228,29 +262,20 @@ namespace GameEngine.LevelEditor
                     ImGui.EndMenu();
                 }
             }
-            if(ImGui.MenuItem("Open scen", "Ctrl + O"))
-            {
-                scene = null;
-                try
-                {
-                    scene = SceneSerialize.Deserialize().Result;
-                    scene.SetCamera(SceneCamera);
-                    scene.Start();
-                    editorInterface.SetScene(scene);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-                if(scene == null)
-                {
-                    throw new Exception();
-                }
-            }
+            
             ImGui.EndMainMenuBar();
 
+            ImGui.Text(pick.ToString());
+            ImGui.Text(new Vector2(mouseX, mouseY).ToString());
+            ImGui.Checkbox("test", ref ds);
+
+
             editorInterface.Draw();
-            editorInterface.SetTextureScenView(frameBuffer.GetTexture(0));
+
+            if (ds)
+                editorInterface.SetTextureScenView(pickingBuffer.GetTexture(0));
+            else
+                editorInterface.SetTextureScenView(frameBuffer.GetTexture(0));
         }
         public Scene GetScene() => scene;
 
@@ -258,10 +283,14 @@ namespace GameEngine.LevelEditor
         {
             GL.Viewport(0, 0, e.Width, e.Height);
 
+            frameBuffer.frameBufferSpecification.Width = e.Width;
+            frameBuffer.frameBufferSpecification.Height = e.Height;
+            frameBuffer.Init();
+
             editorInterface.SetWindowResize(e.Width, e.Height);
 
             if (scene != null && scene.GetCamera() != null && scene.GetCamera().GetComponent<CameraRender>() != null && e.Height > 0)
-                scene.GetCamera().GetComponent<CameraRender>().Aspect = e.Width / e.Height;
+                scene.GetCamera().GetComponent<CameraRender>().Aspect = editorInterface.Size.X/ editorInterface.Size.Y;
         }
 
         public override void OnTextInput(TextInputEventArgs e)
