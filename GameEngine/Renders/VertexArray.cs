@@ -1,4 +1,4 @@
-﻿using GameEngine.Core;
+﻿using GameEngine.Core.Essentials;
 using GameEngine.Core.Structs;
 using GameEngine.Renders.Bufers;
 using OpenTK.Graphics.OpenGL4;
@@ -72,10 +72,10 @@ namespace GameEngine.Renders
             GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, size, 0);
 
             GL.EnableVertexAttribArray(normalLocation);
-            GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, size, 0 * Marshal.SizeOf(typeof(Vector2)));
+            GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, size, 1 * Marshal.SizeOf(typeof(Vector3)));
 
             GL.EnableVertexAttribArray(textureLocation);
-            GL.VertexAttribPointer(textureLocation, 3, VertexAttribPointerType.Float, false, size, 3 * Marshal.SizeOf(typeof(Vector2)));
+            GL.VertexAttribPointer(textureLocation, 3, VertexAttribPointerType.Float, false, size, 2 * Marshal.SizeOf(typeof(Vector3)));
 
             indexBuffer!.Unbind();
             vertexBuffer!.Unbind();

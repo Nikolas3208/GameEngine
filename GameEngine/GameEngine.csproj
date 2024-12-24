@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <Folder Include="Resources\Shaders\" />
+    <Folder Include="Resources\Textures\" />
   </ItemGroup>
 
 </Project>

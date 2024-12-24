@@ -1,5 +1,4 @@
-﻿using GameEngine.Core;
-using GameEngine.Core.Structs;
+﻿using GameEngine.Core.Essentials;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using System;

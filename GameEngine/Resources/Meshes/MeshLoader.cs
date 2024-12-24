@@ -9,8 +9,8 @@ using System.Xml.Linq;
 using OpenTK.Mathematics;
 using Assimp;
 using Assimp.Configs;
-using GameEngine.Core;
 using GameEngine.Renders;
+using GameEngine.Core.Essentials;
 
 namespace GameEngine.Resources.Meshes
 {
@@ -105,23 +105,23 @@ namespace GameEngine.Resources.Meshes
                     }
 
 
-                    Core.Structs.Material material = new Core.Structs.Material();
+                    Core.Essentials.Material material = new Core.Essentials.Material();
 
                     if (scene.Materials[mesh.MaterialIndex].TextureDiffuse.FilePath != null && scene.Materials[mesh.MaterialIndex].TextureDiffuse.FilePath != "")
                     {
-                        var tex = Core.Texture.LoadFromFile(scene.Materials[mesh.MaterialIndex].TextureDiffuse.FilePath);
+                        var tex = Core.Resources.TextureLoader.LoadFromFile(scene.Materials[mesh.MaterialIndex].TextureDiffuse.FilePath);
                         var texture = new Core.Structs.Texture(tex.Handle, Core.Enums.TextureType.Diffuse);
                         material.textures.Add(texture);
                     }
                     if (scene.Materials[mesh.MaterialIndex].TextureSpecular.FilePath != null && scene.Materials[mesh.MaterialIndex].TextureSpecular.FilePath != "")
                     {
-                        var tex = Core.Texture.LoadFromFile(scene.Materials[mesh.MaterialIndex].TextureSpecular.FilePath);
+                        var tex = Core.Resources.TextureLoader.LoadFromFile(scene.Materials[mesh.MaterialIndex].TextureSpecular.FilePath);
                         var texture = new Core.Structs.Texture(tex.Handle, Core.Enums.TextureType.Specular);
                         material.textures.Add(texture);
                     }
                     if (scene.Materials[mesh.MaterialIndex].TextureNormal.FilePath != null && scene.Materials[mesh.MaterialIndex].TextureNormal.FilePath != "")
                     {
-                        var tex = Core.Texture.LoadFromFile(scene.Materials[mesh.MaterialIndex].TextureNormal.FilePath);
+                        var tex = Core.Resources.TextureLoader.LoadFromFile(scene.Materials[mesh.MaterialIndex].TextureNormal.FilePath);
                         var texture = new Core.Structs.Texture(tex.Handle, Core.Enums.TextureType.Normal);
                         material.textures.Add(texture);
                     }

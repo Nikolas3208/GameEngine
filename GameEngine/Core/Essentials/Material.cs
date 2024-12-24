@@ -1,4 +1,5 @@
-﻿using OpenTK.Mathematics;
+﻿using GameEngine.Core.Structs;
+using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace GameEngine.Core.Structs
+namespace GameEngine.Core.Essentials
 {
     public struct Material
     {
@@ -14,19 +15,19 @@ namespace GameEngine.Core.Structs
         public string Name;
         public float Shininess = 32.0f;
 
-        public List<Texture> textures;
+        public List<Structs.Texture> textures;
 
         public Vector3f Color = Vector3f.One;
 
         [JsonConstructor]
-        public Material(List<Texture> textures)
+        public Material(List<Structs.Texture> textures)
         {
             this.textures = textures;
         }
 
         public Material()
         {
-            textures = new List<Texture>();
+            textures = new List<Structs.Texture>();
         }
     }
 }

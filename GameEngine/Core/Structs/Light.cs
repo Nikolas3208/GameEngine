@@ -1,4 +1,5 @@
-﻿using OpenTK.Mathematics;
+﻿using GameEngine.Core.Enums;
+using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,12 +8,6 @@ using System.Threading.Tasks;
 
 namespace GameEngine.Core.Structs
 {
-    public enum LightType
-    {
-        Point = 1,
-        Directional = 2,
-        Spot = 3
-    }
     public struct Light
     {
         public int Id;

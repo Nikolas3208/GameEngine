@@ -236,7 +236,7 @@ void main()
     vec4 result = vec4(1);
 
     if(useShadow == 0)
-        shadow  = 0;
+        shadow = 0;
 
     if(lightType == 1)
     {        

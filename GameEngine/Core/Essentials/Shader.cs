@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace GameEngine.Core
+namespace GameEngine.Core.Essentials
 {
     [Serializable]
     public class Shader
@@ -178,7 +178,7 @@ namespace GameEngine.Core
             }
         }
 
-        public void SetVector3(string name, Core.Structs.Vector3f value)
+        public void SetVector3(string name, Structs.Vector3f value)
         {
             if (ContainsKey(name))
             {

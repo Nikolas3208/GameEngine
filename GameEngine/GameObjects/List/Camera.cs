@@ -1,5 +1,5 @@
 ﻿using Assimp;
-using GameEngine.Core;
+using GameEngine.Core.Essentials;
 using GameEngine.Core.Structs;
 using GameEngine.GameObjects.Components.List;
 using GameEngine.Resources;

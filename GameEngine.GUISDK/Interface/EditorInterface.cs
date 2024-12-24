@@ -18,6 +18,7 @@ using GameEngine.Renders;
 using OpenTK.Windowing.Desktop;
 using GameEngine.Scenes;
 using OpenTK.Graphics.OpenGL4;
+using GameEngine.Core.Enums;
 
 namespace GameEngine.LevelEditor.Interface
 {
@@ -77,6 +78,8 @@ namespace GameEngine.LevelEditor.Interface
         private void AssetView()
         {
             ImGui.Begin("Assets viwer");
+
+
             ImGui.End();
         }
 

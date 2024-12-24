@@ -1,4 +1,4 @@
-﻿using GameEngine.Core;
+﻿using GameEngine.Core.Essentials;
 using GameEngine.Core.Structs;
 using OpenTK.Mathematics;
 using System;

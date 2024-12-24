@@ -1,8 +1,8 @@
 ﻿using GameEngine.Core;
+using GameEngine.Core.Essentials;
 using GameEngine.Renders;
 using GameEngine.Resources;
 using GameEngine.Resources.Meshes;
-using GameEngine.Resources.Textures;
 using OpenTK.Graphics.OpenGL4;
 using System;
 using System.Collections.Generic;

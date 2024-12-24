@@ -6,13 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameEngine.Core
+namespace GameEngine.Core.Resources
 {
-    public class Texture
+    public class TextureLoader
     {
         public readonly int Handle;
 
-        public static Texture LoadFromFile(string path)
+        public static TextureLoader LoadFromFile(string path, bool smooth = true)
         {
             int handle = GL.GenTexture();
 
@@ -27,17 +27,25 @@ namespace GameEngine.Core
                 GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, image.Data);
             }
 
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+            if (smooth)
+            {
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+            }
+            else
+            {
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+            }
 
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
             GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 
-            return new Texture(handle);
+            return new TextureLoader(handle);
         }
 
-        public Texture(int handle)
+        public TextureLoader(int handle)
         {
             Handle = handle;
         }

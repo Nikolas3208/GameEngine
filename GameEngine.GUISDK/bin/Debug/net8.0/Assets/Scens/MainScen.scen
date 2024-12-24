@@ -8,7 +8,7 @@
         "$id": "3",
         "$type": 2,
         "Name": "Grid",
-        "Id": 0,
+        "Id": 1,
         "components": {
           "$id": "4",
           "$values": [
@@ -33,7 +33,7 @@
               "GameObject": {
                 "$ref": "3"
               },
-              "gameObjectId": 0,
+              "gameObjectId": 1,
               "Name": "Transform"
             },
             {
@@ -44,7 +44,7 @@
               "GameObject": {
                 "$ref": "3"
               },
-              "gameObjectId": 0,
+              "gameObjectId": 1,
               "Name": "Mesh render"
             }
           ]
@@ -61,7 +61,7 @@
         "$id": "8",
         "$type": 0,
         "Name": "Light",
-        "Id": 1,
+        "Id": 2,
         "components": {
           "$id": "9",
           "$values": [
@@ -69,12 +69,12 @@
               "$id": "10",
               "$type": 1,
               "Position": {
-                "X": 1.35,
-                "Y": 6,
-                "Z": 0
+                "X": -15.3,
+                "Y": 4.05,
+                "Z": -5.6
               },
               "Rotation": {
-                "X": 180,
+                "X": 0.55,
                 "Y": 0,
                 "Z": 0
               },
@@ -86,44 +86,44 @@
               "GameObject": {
                 "$ref": "8"
               },
-              "gameObjectId": 1,
+              "gameObjectId": 2,
               "Name": "Transform"
             },
             {
               "$id": "11",
               "$type": 2,
               "LightId": 0,
-              "LightType": 1,
+              "LightType": 2,
               "Position": {
-                "X": 1.35,
-                "Y": 6,
-                "Z": 0
+                "X": -15.3,
+                "Y": 4.05,
+                "Z": -5.6
               },
               "Direction": {
-                "X": 0,
+                "X": 0.55,
                 "Y": 0,
                 "Z": 0
               },
               "Ambient": {
-                "X": 0.577,
-                "Y": 0.577,
-                "Z": 0.577
+                "X": 0.428,
+                "Y": 0.428,
+                "Z": 0.428
               },
               "Diffuse": {
-                "X": 0.485,
-                "Y": 0.485,
-                "Z": 0.485
+                "X": 1,
+                "Y": 1,
+                "Z": 1
               },
               "Specular": {
-                "X": 0,
-                "Y": 0,
-                "Z": 0
+                "X": 0.082,
+                "Y": 0.082,
+                "Z": 0.082
               },
               "Constant": 1,
-              "Linear": 0.09,
-              "Quadratic": 0.032,
-              "CutOff": 12.5,
-              "OuterCutOff": 17.5,
+              "Linear": 0.047,
+              "Quadratic": 0.019,
+              "CutOff": 0.8635012,
+              "OuterCutOff": 0.12720309,
               "IsShadowUse": false,
               "ambient": {
                 "X": 0,
@@ -133,7 +133,7 @@
               "GameObject": {
                 "$ref": "8"
               },
-              "gameObjectId": 1,
+              "gameObjectId": 2,
               "Name": "Light"
             },
             {
@@ -144,7 +144,7 @@
               "GameObject": {
                 "$ref": "8"
               },
-              "gameObjectId": 1,
+              "gameObjectId": 2,
               "Name": "Mesh render"
             }
           ]
@@ -160,8 +160,8 @@
       {
         "$id": "14",
         "$type": 0,
-        "Name": "Plane",
-        "Id": 2,
+        "Name": "Cube",
+        "Id": 3,
         "components": {
           "$id": "15",
           "$values": [
@@ -169,8 +169,8 @@
               "$id": "16",
               "$type": 1,
               "Position": {
-                "X": 0,
-                "Y": 0.01,
+                "X": -2.55,
+                "Y": 2.5,
                 "Z": 0
               },
               "Rotation": {
@@ -179,25 +179,25 @@
                 "Z": 0
               },
               "Scale": {
-                "X": 10,
+                "X": 1,
                 "Y": 1,
-                "Z": 10
+                "Z": 1
               },
               "GameObject": {
                 "$ref": "14"
               },
-              "gameObjectId": 0,
-              "Name": "Component"
+              "gameObjectId": 3,
+              "Name": "Transform"
             },
             {
               "$id": "17",
               "$type": 3,
-              "meshPath": "Assets\\Models\\Plane.obj",
-              "MeshName": "Plane",
+              "meshPath": "Assets\\Models\\Cube.obj",
+              "MeshName": "Cube",
               "GameObject": {
                 "$ref": "14"
               },
-              "gameObjectId": 0,
+              "gameObjectId": 3,
               "Name": "Mesh render"
             }
           ]
@@ -213,8 +213,8 @@
       {
         "$id": "19",
         "$type": 0,
-        "Name": "Cube",
-        "Id": 3,
+        "Name": "Plane",
+        "Id": 4,
         "components": {
           "$id": "20",
           "$values": [
@@ -222,35 +222,35 @@
               "$id": "21",
               "$type": 1,
               "Position": {
-                "X": 4.5,
-                "Y": 1.65,
+                "X": 0,
+                "Y": 0.1,
                 "Z": 0
               },
               "Rotation": {
-                "X": 0,
+                "X": -4.25,
                 "Y": 0,
                 "Z": 0
               },
               "Scale": {
-                "X": 1,
+                "X": 100,
                 "Y": 1,
-                "Z": 1
+                "Z": 100
               },
               "GameObject": {
                 "$ref": "19"
               },
-              "gameObjectId": 0,
-              "Name": "Component"
+              "gameObjectId": 4,
+              "Name": "Transform"
             },
             {
               "$id": "22",
               "$type": 3,
-              "meshPath": "Assets\\Models\\Cube.obj",
-              "MeshName": "Cube",
+              "meshPath": "Assets\\Models\\Plane.obj",
+              "MeshName": "Plane",
               "GameObject": {
                 "$ref": "19"
               },
-              "gameObjectId": 3,
+              "gameObjectId": 4,
               "Name": "Mesh render"
             }
           ]
@@ -266,8 +266,8 @@
       {
         "$id": "24",
         "$type": 0,
-        "Name": "",
-        "Id": 4,
+        "Name": "GameObject",
+        "Id": 5,
         "components": {
           "$id": "25",
           "$values": [
@@ -275,8 +275,8 @@
               "$id": "26",
               "$type": 1,
               "Position": {
-                "X": 0,
-                "Y": 0,
+                "X": -14.55,
+                "Y": 2.2,
                 "Z": 0
               },
               "Rotation": {
@@ -292,13 +292,24 @@
               "GameObject": {
                 "$ref": "24"
               },
-              "gameObjectId": 0,
-              "Name": "Component"
+              "gameObjectId": 5,
+              "Name": "Transform"
+            },
+            {
+              "$id": "27",
+              "$type": 3,
+              "meshPath": "Assets\\Models\\house2.obj",
+              "MeshName": "house2",
+              "GameObject": {
+                "$ref": "24"
+              },
+              "gameObjectId": 5,
+              "Name": "Mesh render"
             }
           ]
         },
         "shader": {
-          "$id": "27",
+          "$id": "28",
           "vertPath": "Shaders\\multipleLights.vert",
           "fragPath": "Shaders\\multipleLights.frag",
           "geomPath": ""

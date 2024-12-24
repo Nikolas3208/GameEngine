@@ -1,4 +1,5 @@
-﻿using GameEngine.Core;
+﻿using GameEngine.Core.Enums;
+using GameEngine.Core.Essentials;
 using GameEngine.Core.Structs;
 using GameEngine.Renders.Bufers;
 using OpenTK.Mathematics;

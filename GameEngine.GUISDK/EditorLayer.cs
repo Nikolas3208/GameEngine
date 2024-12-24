@@ -1,4 +1,5 @@
 ﻿using GameEngine.Core;
+using GameEngine.Core.Essentials;
 using GameEngine.Core.Structs;
 using GameEngine.GameObjects;
 using GameEngine.GameObjects.Components.List;
@@ -213,7 +214,8 @@ namespace GameEngine.LevelEditor
                     mouseY = (Window.ClientSize.Y) - (Window.MouseState.Position.Y + (Window.ClientSize.Y - editorInterface.Size.Y) - editorInterface.SizeMin.Y);
 
                     pick = pickingBuffer.ReadPixel((int)mouseX, (int)mouseY, 0);
-                    if((int)pick.X > 0)
+
+                    if(mouseX > 0 && mouseY > 0 && mouseX < editorInterface.Size.X && mouseY < editorInterface.Size.Y)
                         editorInterface.currentGameObject = (int)pick.X;
                 }
                 Shader.SetInt("usePicking", 0);
@@ -224,7 +226,6 @@ namespace GameEngine.LevelEditor
 
             }
         }
-        bool ds = false;
 
         public override void ImGuiDraw(GameWindow window, float deltaTime)
         {
@@ -265,18 +266,8 @@ namespace GameEngine.LevelEditor
             
             ImGui.EndMainMenuBar();
 
-            ImGui.Text(pick.ToString());
-            ImGui.Text(new Vector2(mouseX, mouseY).ToString());
-            ImGui.Text(editorInterface.currentGameObject.ToString());
-            ImGui.Checkbox("test", ref ds);
-
-
             editorInterface.Draw();
-
-            if (ds)
-                editorInterface.SetTextureScenView(pickingBuffer.GetTexture(0));
-            else
-                editorInterface.SetTextureScenView(frameBuffer.GetTexture(0));
+            editorInterface.SetTextureScenView(frameBuffer.GetTexture(0));
         }
         public Scene GetScene() => scene;
 

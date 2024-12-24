@@ -1,4 +1,5 @@
-﻿using GameEngine.Core;
+﻿using GameEngine.Core.Resources;
+using GameEngine.Core.Structs;
 using OpenTK.Graphics.OpenGL4;
 using StbImageSharp;
 using System;
@@ -7,9 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameEngine.Resources.Textures
+namespace GameEngine.Core.Essentials
 {
-    public class CubemapTexture : Texture
+    public class CubemapTexture : TextureLoader
     {
         private static int textureId;
         public static CubemapTexture LoadFromFile(string[] paths)
@@ -20,7 +21,7 @@ namespace GameEngine.Resources.Textures
 
             for (int i = 0; i < paths.Length; i++)
             {
-                using(Stream stream = File.OpenRead(paths[i]))
+                using (Stream stream = File.OpenRead(paths[i]))
                 {
                     StbImage.stbi_set_flip_vertically_on_load(0);
                     ImageResult image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);

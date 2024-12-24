@@ -1,10 +1,9 @@
-﻿using GameEngine.Core;
+﻿using GameEngine.Core.Essentials;
 using GameEngine.Core.Structs;
 using GameEngine.Renders;
 using GameEngine.Renders.Bufers;
 using GameEngine.Resources;
 using GameEngine.Resources.Meshes;
-using GameEngine.Resources.Textures;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using System;

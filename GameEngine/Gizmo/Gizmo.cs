@@ -1,4 +1,4 @@
-﻿using GameEngine.Core;
+﻿using GameEngine.Core.Essentials;
 using GameEngine.Renders;
 using GameEngine.Resources;
 using GameEngine.Resources.Meshes;
