@@ -181,10 +181,13 @@ namespace GameEngine.LevelEditor.Interface
             ImGui.Begin("Propertis");
             var size = ImGui.GetWindowSize();
 
-            if (currentGameObject == -1 || currentGameObject >= gameObjects.Count)
+            if (currentGameObject == -1)
                 return;
 
-            var gameObject = gameObjects[currentGameObject];
+            var gameObject = scene.GetGameObjectById(currentGameObject);
+
+            if (gameObject == null)
+                return;
 
             ImGui.Spacing();
             string name = gameObject.Name;
@@ -397,13 +400,14 @@ namespace GameEngine.LevelEditor.Interface
 
             if (ImGui.BeginPopup("Add component"))
             {
+                ImGui.Text("Components");
+                ImGui.Spacing();
                 if (ImGui.Combo("", ref currentComponent, gameObjectComponents, gameObjectComponents.Length))
                 {
                     Component component = ComponentList.GetComponentById(currentComponent);
-                    component.Start();
-
                     gameObject.AddComponent(component);
-                    gameObject.Start();
+                    component.Start();
+                    currentComponent = -1;
 
                     ImGui.CloseCurrentPopup();
                 }

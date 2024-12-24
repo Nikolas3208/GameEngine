@@ -69,8 +69,8 @@
               "$id": "10",
               "$type": 1,
               "Position": {
-                "X": 0,
-                "Y": 5.7,
+                "X": 1.35,
+                "Y": 6,
                 "Z": 0
               },
               "Rotation": {
@@ -95,8 +95,8 @@
               "LightId": 0,
               "LightType": 1,
               "Position": {
-                "X": 0,
-                "Y": 5.7,
+                "X": 1.35,
+                "Y": 6,
                 "Z": 0
               },
               "Direction": {
@@ -160,13 +160,119 @@
       {
         "$id": "14",
         "$type": 0,
-        "Name": "Cube",
+        "Name": "Plane",
         "Id": 2,
         "components": {
           "$id": "15",
           "$values": [
             {
               "$id": "16",
+              "$type": 1,
+              "Position": {
+                "X": 0,
+                "Y": 0.01,
+                "Z": 0
+              },
+              "Rotation": {
+                "X": 0,
+                "Y": 0,
+                "Z": 0
+              },
+              "Scale": {
+                "X": 10,
+                "Y": 1,
+                "Z": 10
+              },
+              "GameObject": {
+                "$ref": "14"
+              },
+              "gameObjectId": 0,
+              "Name": "Component"
+            },
+            {
+              "$id": "17",
+              "$type": 3,
+              "meshPath": "Assets\\Models\\Plane.obj",
+              "MeshName": "Plane",
+              "GameObject": {
+                "$ref": "14"
+              },
+              "gameObjectId": 0,
+              "Name": "Mesh render"
+            }
+          ]
+        },
+        "shader": {
+          "$id": "18",
+          "vertPath": "Shaders\\multipleLights.vert",
+          "fragPath": "Shaders\\multipleLights.frag",
+          "geomPath": ""
+        },
+        "IsSelected": false
+      },
+      {
+        "$id": "19",
+        "$type": 0,
+        "Name": "Cube",
+        "Id": 3,
+        "components": {
+          "$id": "20",
+          "$values": [
+            {
+              "$id": "21",
+              "$type": 1,
+              "Position": {
+                "X": 4.5,
+                "Y": 1.65,
+                "Z": 0
+              },
+              "Rotation": {
+                "X": 0,
+                "Y": 0,
+                "Z": 0
+              },
+              "Scale": {
+                "X": 1,
+                "Y": 1,
+                "Z": 1
+              },
+              "GameObject": {
+                "$ref": "19"
+              },
+              "gameObjectId": 0,
+              "Name": "Component"
+            },
+            {
+              "$id": "22",
+              "$type": 3,
+              "meshPath": "Assets\\Models\\Cube.obj",
+              "MeshName": "Cube",
+              "GameObject": {
+                "$ref": "19"
+              },
+              "gameObjectId": 3,
+              "Name": "Mesh render"
+            }
+          ]
+        },
+        "shader": {
+          "$id": "23",
+          "vertPath": "Shaders\\multipleLights.vert",
+          "fragPath": "Shaders\\multipleLights.frag",
+          "geomPath": ""
+        },
+        "IsSelected": false
+      },
+      {
+        "$id": "24",
+        "$type": 0,
+        "Name": "",
+        "Id": 4,
+        "components": {
+          "$id": "25",
+          "$values": [
+            {
+              "$id": "26",
               "$type": 1,
               "Position": {
                 "X": 0,
@@ -184,26 +290,15 @@
                 "Z": 1
               },
               "GameObject": {
-                "$ref": "14"
+                "$ref": "24"
               },
-              "gameObjectId": 2,
-              "Name": "Transform"
-            },
-            {
-              "$id": "17",
-              "$type": 3,
-              "meshPath": "Assets\\Models\\house2.obj",
-              "MeshName": "house2",
-              "GameObject": {
-                "$ref": "14"
-              },
-              "gameObjectId": 2,
-              "Name": "Mesh render"
+              "gameObjectId": 0,
+              "Name": "Component"
             }
           ]
         },
         "shader": {
-          "$id": "18",
+          "$id": "27",
           "vertPath": "Shaders\\multipleLights.vert",
           "fragPath": "Shaders\\multipleLights.frag",
           "geomPath": ""

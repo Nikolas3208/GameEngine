@@ -24,6 +24,7 @@ namespace GameEngine.Scenes
 
         [JsonIgnore]
         private GameObject ScenCamera = null;
+        private int index = 1;
         public string Name { get; set; } = "MainScen";
 
         public Scene()
@@ -60,8 +61,10 @@ namespace GameEngine.Scenes
                     index++;
                 }
             }
-            gameObject.Id = gameObjects.Count;
+            gameObject.Id = this.index;
             gameObjects.Add(gameObject);
+
+            this.index++;
         }
         public T GetGameObject<T>() where T : GameObject
         {
@@ -69,7 +72,13 @@ namespace GameEngine.Scenes
         }
         public GameObject GetGameObjectById(int id)
         {
-            return gameObjects.Find(x => x.Id == id);
+            foreach (var go in gameObjects)
+            {
+                if (go.Id == id)
+                    return go;
+            }
+
+            return null;
         }
 
         public List<GameObject> GetGameObjects() { return gameObjects; }
@@ -149,11 +158,18 @@ namespace GameEngine.Scenes
                     ScenCamera.Draw();
                 foreach (var gameObject in gameObjects)
                 {
-                    if (ScenCamera != null)
-                        ScenCamera.GetComponent<CameraRender>().Draw(shader);
-                    if (light != null)
-                        light.GetComponent<LightRender>().Draw(shader);
-                    gameObject.Draw(shader);
+                    if (gameObject is Grid)
+                    {
+
+                    }
+                    else
+                    {
+                        if (ScenCamera != null)
+                            ScenCamera.GetComponent<CameraRender>().Draw(shader);
+                        if (light != null)
+                            light.GetComponent<LightRender>().Draw(shader);
+                        gameObject.Draw(shader);
+                    }
                 }
             }
         }

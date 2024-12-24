@@ -240,7 +240,7 @@ void main()
 
     if(lightType == 1)
     {        
-        result = vec4(CalculatePointLight(pointLight, normalize(Normal), FragPos, normalize(viewPos - FragPos)) * material.color * (1 - shadow), 1.0);
+        result = vec4(CalculatePointLight(pointLight, normalize(Normal), FragPos, normalize(viewPos - FragPos)) * material.color, 1.0);
     }
     if(lightType == 2)
     {
@@ -248,7 +248,7 @@ void main()
     }
     if(lightType == 3)
     {
-        result = vec4(CalculateSpotLight(spotLight, normalize(Normal), FragPos, normalize(viewPos - FragPos)) * (1 - shadow) * material.color, 1.0);
+        result = vec4(CalculateSpotLight(spotLight, normalize(Normal), FragPos, normalize(viewPos - FragPos)) * material.color, 1.0);
     }
     
     if(usePicking == 1)

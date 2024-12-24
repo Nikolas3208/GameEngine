@@ -267,6 +267,7 @@ namespace GameEngine.LevelEditor
 
             ImGui.Text(pick.ToString());
             ImGui.Text(new Vector2(mouseX, mouseY).ToString());
+            ImGui.Text(editorInterface.currentGameObject.ToString());
             ImGui.Checkbox("test", ref ds);
 
 
