@@ -1,24 +1,21 @@
-﻿namespace GameEngine.Example
+﻿using OpenTK.Mathematics;
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.Desktop;
+
+namespace GameEngine.Example
 {
     public class Program
     {
-        private Game Game { get; set; }
+        private static TestGame Game { get; set; }
         public static void Main(string[] args)
         {
-            if(args.Length != 0)
-            {
-                if (args[0] == "--config")
-                {
-                    Game engin = new Game(args[1]);
-                    engin.Run();
-                }
-                
-            }
-            else
-            {
-                Game engin = new Game();
-                engin.Run();
-            }
+            var gameWindowSetings = GameWindowSettings.Default;
+
+            Game = new TestGame(new GameWindow(gameWindowSetings,
+                new NativeWindowSettings() { ClientSize = new Vector2i(1920, 1080),
+                    Vsync = VSyncMode.On,
+                    Title = "Game Engine" }), new TestScene());
+            Game.Run();
         }
     }
 }

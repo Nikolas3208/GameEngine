@@ -1,6 +1,5 @@
-﻿using GameEngine.Core.Essentials;
-using GameEngine.Renders;
-using GameEngine.Resources.Meshes;
+﻿using GameEngine.Core.Resources.Loaders.MeshLoaders;
+using GameEngine.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +10,7 @@ namespace GameEngine.Core.Resources
 {
     public class AssetManager : IAssetManager
     {
-        private Dictionary<string, TextureLoader> _textures = [];
+        private Dictionary<string, Texture> _textures = [];
         private Dictionary<string, Material> _materials = [];
         private Dictionary<string, Shader> _shaders = [];
         private Dictionary<string, List<Mesh>> _meshs = [];
@@ -41,7 +40,7 @@ namespace GameEngine.Core.Resources
             if(_shaders.ContainsKey(shaderName))
                 return false;
 
-            _shaders.Add(shaderName, Shader.LoadFromFile(vertPath));
+            _shaders.Add(shaderName, new Shader(vertPath, fragPath, geomPath));
             return true;
         }
 
@@ -50,7 +49,7 @@ namespace GameEngine.Core.Resources
             if (_textures.ContainsKey(texName))
                 return false;
 
-            var tex = TextureLoader.LoadFromFile(texPath, smooth);
+            var tex = Texture.LoadFromFile(texPath, smooth);
             if (tex == null)
                 return false;
 
@@ -80,6 +79,7 @@ namespace GameEngine.Core.Resources
                 return _meshs[meshName];
             }
 
+            return null;
             throw new Exception("This mesh name is not contains on map");
         }
 
@@ -103,7 +103,7 @@ namespace GameEngine.Core.Resources
             return _shaders;
         }
 
-        public TextureLoader GetTexture(string texName)
+        public Texture GetTexture(string texName)
         {
             if(_textures.ContainsKey(texName))
             {
@@ -113,7 +113,7 @@ namespace GameEngine.Core.Resources
             throw new Exception("This texture name is not contains on map");
         }
 
-        public Dictionary<string, TextureLoader> GetTextures()
+        public Dictionary<string, Texture> GetTextures()
         {
             return _textures;
         }

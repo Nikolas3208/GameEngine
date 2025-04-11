@@ -1,5 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>net8.0</TargetFramework>
@@ -7,27 +6,30 @@
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
-
   <ItemGroup>
     <Compile Remove="Content\**" />
+    <Compile Remove="Core\Maths\**" />
+    <Compile Remove="GameObjects\**" />
+    <Compile Remove="Renders\**" />
     <Compile Remove="Shaders\**" />
     <EmbeddedResource Remove="Content\**" />
+    <EmbeddedResource Remove="Core\Maths\**" />
+    <EmbeddedResource Remove="GameObjects\**" />
+    <EmbeddedResource Remove="Renders\**" />
     <EmbeddedResource Remove="Shaders\**" />
     <None Remove="Content\**" />
+    <None Remove="Core\Maths\**" />
+    <None Remove="GameObjects\**" />
+    <None Remove="Renders\**" />
     <None Remove="Shaders\**" />
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="AssimpNet" Version="4.1.0" />
     <PackageReference Include="ImGui.NET" Version="1.91.0.1" />
     <PackageReference Include="OpenTK" Version="4.8.2" />
     <PackageReference Include="StbImageSharp" Version="2.30.15" />
     <PackageReference Include="System.Text.Json" Version="8.0.5" />
   </ItemGroup>
-
   <ItemGroup>
-    <Folder Include="Resources\Shaders\" />
-    <Folder Include="Resources\Textures\" />
+    <Folder Include="Physics\" />
   </ItemGroup>
-
 </Project>
