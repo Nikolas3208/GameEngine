@@ -1,6 +1,7 @@
 ﻿using GameEngine.Core;
 using GameEngine.Core.GameObjects;
 using GameEngine.Core.GameObjects.Components;
+using GameEngine.Core.Serializer;
 using GameEngine.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
@@ -14,16 +15,22 @@ namespace GameEngine.Example
     {
         private Light _flashLight;
         private List<Mesh> _meshes;
+
+        private bool _firstMove = true;
+        private Vector2 _lastPos;
+        
         public TestScene()
         {
 
         }
 
-        public override void Statr()
+        public override void Start()
         {
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.CullFace);
             GL.CullFace(CullFaceMode.Back);
+
+            shader = assetManager.GetShader("base");
 
             _flashLight = new Light(new Vector3(1), new Vector3(1), new Vector3(0),
                 0.09f, 0.032f, 1, MathF.Cos(MathHelper.DegreesToRadians(12.5f)),
@@ -31,65 +38,24 @@ namespace GameEngine.Example
 
             AddLight(_flashLight);
 
-            Light light = Light.DefaultPoint;
-
             _meshes = assetManager.GetMesh("Cube");
-            
-            for(int i = 0; i< _meshes.Count; i++)
-            {
-                //_meshes[i].SetMaterial(Material.Default);
-            }
 
-            for (int i = 0; i < 5; i++) 
-            {
-                light = Light.DefaultPoint;
+            var meshRender = new MeshRender(_meshes.ToArray());
+            var gameObject = new GameObject(this);
+            gameObject.AddComponent(meshRender);
+            gameObject.Position = new Vector3(0, 0, 0);
 
-                float x = Random.Shared.Next(-15, 15);
-                float y = Random.Shared.Next(-15, 15);
-                float z = Random.Shared.Next(-15, 15);
+            AddGameObject(gameObject);
 
-                light.Position = new Vector3(x, y, z);
-                light.Direction = new Vector3(x, y, z);
+            game!.GetWindow().CursorState = CursorState.Grabbed;
 
-                lights.Add(light);
-
-
-                var meshRender = new MeshRender(_meshes);
-                var gameObject = new GameObject(this);
-                gameObject.AddComponent(meshRender);
-                gameObject.Position = new Vector3(x, y, z);
-                gameObject.Scale = new Vector3(0.25f);
-                AddGameObject(gameObject);
-            }
-
-            for (int i = 0; i < 15; i++)
-            {
-                float x = Random.Shared.Next(-15, 15);
-                float y = Random.Shared.Next(-15, 15);
-                float z = Random.Shared.Next(-15, 15);
-
-                var meshRender = new MeshRender(assetManager.GetMesh("Cube"));
-                var gameObject = new GameObject(this);
-                gameObject.AddComponent(meshRender);
-                gameObject.Position = new Vector3(x, y, z);
-                AddGameObject(gameObject);
-            }
-
-            game.GetWindow().CursorState = CursorState.Grabbed;
-
-            base.Statr();
+            base.Start();
         }
-
-        private bool _firstMove = true;
-
-        private Vector2 _lastPos;
 
         public override void Update(float deltaTime)
         {
             _flashLight.Position = camera.Position;
             _flashLight.Direction = camera.Front;
-
-            UpdateLight(_flashLight.Id, _flashLight);
 
             var input = game!.GetKeyboardState();
 
@@ -117,14 +83,14 @@ namespace GameEngine.Example
             if(input.IsKeyReleased(Keys.F))
             {
                 var light = Light.DefaultPoint;
-                light.Position = camera.Position - camera.Front;
+                light.Position = camera.Position + camera.Front;
 
                 AddLight(light);
 
-                var meshRender = new MeshRender(_meshes);
+                var meshRender = new MeshRender(_meshes.ToArray());
                 var gameObject = new GameObject(this);
                 gameObject.AddComponent(meshRender);
-                gameObject.Position = light.Position;
+                gameObject.Position = camera.Position + camera.Front;
                 gameObject.Scale = new Vector3(0.25f);
                 AddGameObject(gameObject);
             }

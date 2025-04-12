@@ -30,6 +30,7 @@
     <PackageReference Include="System.Text.Json" Version="8.0.5" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Core\Serializer\Components\" />
     <Folder Include="Physics\" />
   </ItemGroup>
 </Project>

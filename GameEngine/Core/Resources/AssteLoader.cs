@@ -4,7 +4,7 @@
     {
         public static AssetManager CreateManager(string path)
         {
-            var manager = new AssetManager();
+            var manager = new AssetManager(path);
 
             var dir = Directory.GetFiles(path, "*.png", SearchOption.AllDirectories);
 

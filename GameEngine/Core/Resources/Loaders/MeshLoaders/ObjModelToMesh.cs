@@ -53,7 +53,7 @@ namespace GameEngine.Core.Resources.Loaders.MeshLoaders
                 IndexBuffer indexBuffer = new IndexBuffer(indices.ToArray());
                 VertexArray vertexArray = new VertexArray(vertexBuffer, indexBuffer);
 
-                meshes[matName] = new Mesh(vertexArray, meshes[matName].GetMaterial(), " ");
+                meshes[matName] = new Mesh(vertexArray, meshes[matName].GetMaterial(), objModel.Name);
             }
 
             return meshes.Values.ToList();

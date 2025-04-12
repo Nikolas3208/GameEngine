@@ -19,6 +19,8 @@ namespace GameEngine.Core
 
         protected AssetManager assetManager;
 
+        public string Name { get; protected set; } = string.Empty;
+
         public Scene()
         {
             gameObjects = new List<GameObject>();
@@ -26,6 +28,8 @@ namespace GameEngine.Core
 
             assetManager = AssteLoader.CreateManager("Assets");
             shader = assetManager.GetShader("base");
+
+            Name = "Main Scene";
         }
 
         public void SetGame(Game game)
@@ -52,12 +56,17 @@ namespace GameEngine.Core
             return gameObjects.Remove(gameObject);
         }
 
+        public List<GameObject> GetAllGameObjects()
+        {
+            return gameObjects;
+        }
+
         public void AddLight(Light light)
         {
             lights.Add(light);
         }
 
-        public Light GetLight(Guid lightId)
+        public Light? GetLight(Guid lightId)
         {
             return lights.Find(l => l.Id == lightId);
         }
@@ -67,18 +76,18 @@ namespace GameEngine.Core
             return lights.Remove(light);
         }
 
-        public void UpdateLight(Guid lightId, Light light)
+        public List<Light> GetAllLights()
         {
-            for (int i = 0; i < lights.Count; i++)
-            {
-                if(lights[i].Id == lightId)
-                {
-                    lights[i] = light;
-                }
-            }
+            return lights;
         }
 
-        public virtual void Statr()
+        public void OnClear()
+        {
+            gameObjects.Clear();
+            lights.Clear();
+        }
+
+        public virtual void Start()
         {
             foreach (var gameObject in gameObjects)
             {

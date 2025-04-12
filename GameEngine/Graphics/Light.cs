@@ -8,7 +8,7 @@ namespace GameEngine.Graphics
         Point = 1,
         Spot = 2
     }
-    public struct Light
+    public class Light
     {
         public Guid Id { get; }
         public LightType Type { get; }

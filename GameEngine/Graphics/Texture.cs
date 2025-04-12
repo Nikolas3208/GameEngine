@@ -10,11 +10,14 @@ namespace GameEngine.Graphics
 {
     public class Texture
     {
-        public int Handle { get; }
+        public readonly int Handle;
 
-        private Texture(int handle)
+        public readonly string Path;
+
+        private Texture(int handle, string path)
         {
             Handle = handle;
+            Path = path;
         }
 
         public void Use(TextureUnit unit = TextureUnit.Texture0, TextureTarget target = TextureTarget.Texture2D)
@@ -53,7 +56,7 @@ namespace GameEngine.Graphics
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
             GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 
-            return new Texture(handle);
+            return new Texture(handle, path);
         }
     }
 }

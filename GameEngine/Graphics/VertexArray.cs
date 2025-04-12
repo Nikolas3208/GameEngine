@@ -37,6 +37,17 @@ namespace GameEngine.Graphics
         /// </summary>
         public int HandleVAO { get; private set; }
 
+        public VertexArray(Vertex[] vertices)
+        {
+            _vertexBuffer = new VertexBuffer(vertices);
+        }
+
+        public VertexArray(Vertex[] vertices, uint[] indices)
+        {
+            _vertexBuffer = new VertexBuffer(vertices);
+            _indexBuffer = new IndexBuffer(indices);
+        }
+
         public VertexArray(VertexBuffer vertexBuffer)
         {
             _vertexBuffer = vertexBuffer;
@@ -147,6 +158,11 @@ namespace GameEngine.Graphics
         public VertexBuffer GetVertexBuffer()
         {
             return _vertexBuffer;
+        }
+
+        public IndexBuffer? GetIndexBuffer()
+        {
+            return _indexBuffer;
         }
     }
 }

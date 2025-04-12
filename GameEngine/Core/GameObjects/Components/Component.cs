@@ -1,4 +1,6 @@
-﻿namespace GameEngine.Core.GameObjects.Components
+﻿using GameEngine.Core.Serializer;
+
+namespace GameEngine.Core.GameObjects.Components
 {
     public abstract class Component
     {
@@ -20,5 +22,8 @@
         public abstract void Start();
         public abstract void Update(float deltaTime);
         public abstract void Draw(float deltaTime);
+
+        public abstract ComponentData Serialize();
+        public abstract Component Deserialize(ComponentData data);
     }
 }

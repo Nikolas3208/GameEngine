@@ -1,0 +1,266 @@
+{
+  "GameObjects": [
+    {
+      "Name": "GameObject",
+      "Position": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Scale": {
+        "X": 1,
+        "Y": 1,
+        "Z": 1
+      },
+      "Components": [
+        {
+          "Type": "GameEngine.Core.GameObjects.Components.MeshRender, GameEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+          "Properties": {
+            "MeshName": "Cube"
+          }
+        }
+      ]
+    },
+    {
+      "Name": "GameObject",
+      "Position": {
+        "X": 0,
+        "Y": 0,
+        "Z": 3
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Scale": {
+        "X": 0.25,
+        "Y": 0.25,
+        "Z": 0.25
+      },
+      "Components": [
+        {
+          "Type": "GameEngine.Core.GameObjects.Components.MeshRender, GameEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+          "Properties": {
+            "MeshName": "Cube"
+          }
+        }
+      ]
+    },
+    {
+      "Name": "GameObject",
+      "Position": {
+        "X": -2.9731028,
+        "Y": 0.13000536,
+        "Z": 1.1373593
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Scale": {
+        "X": 0.25,
+        "Y": 0.25,
+        "Z": 0.25
+      },
+      "Components": [
+        {
+          "Type": "GameEngine.Core.GameObjects.Components.MeshRender, GameEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+          "Properties": {
+            "MeshName": "Cube"
+          }
+        }
+      ]
+    },
+    {
+      "Name": "GameObject",
+      "Position": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Scale": {
+        "X": 1,
+        "Y": 1,
+        "Z": 1
+      },
+      "Components": [
+        {
+          "Type": "GameEngine.Core.GameObjects.Components.MeshRender, GameEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+          "Properties": {
+            "MeshName": "Cube"
+          }
+        }
+      ]
+    }
+  ],
+  "Lights": [
+    {
+      "Type": 2,
+      "Position": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Direction": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Diffuse": {
+        "X": 1,
+        "Y": 1,
+        "Z": 1
+      },
+      "Specular": {
+        "X": 1,
+        "Y": 1,
+        "Z": 1
+      },
+      "Ambient": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Color": {
+        "X": 1,
+        "Y": 1,
+        "Z": 1,
+        "W": 1
+      },
+      "Linear": 0.09,
+      "Constant": 1,
+      "Quadratic": 0.032,
+      "CutOff": 0.976296,
+      "OuterCutOff": 0.95371693
+    },
+    {
+      "Type": 1,
+      "Position": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Direction": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Diffuse": {
+        "X": 0.8,
+        "Y": 0.8,
+        "Z": 0.8
+      },
+      "Specular": {
+        "X": 1,
+        "Y": 1,
+        "Z": 1
+      },
+      "Ambient": {
+        "X": 0.5,
+        "Y": 0.5,
+        "Z": 0.5
+      },
+      "Color": {
+        "X": 1,
+        "Y": 1,
+        "Z": 1,
+        "W": 1
+      },
+      "Linear": 0.09,
+      "Constant": 1,
+      "Quadratic": 0.032,
+      "CutOff": 0,
+      "OuterCutOff": 0
+    },
+    {
+      "Type": 1,
+      "Position": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Direction": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Diffuse": {
+        "X": 0.8,
+        "Y": 0.8,
+        "Z": 0.8
+      },
+      "Specular": {
+        "X": 1,
+        "Y": 1,
+        "Z": 1
+      },
+      "Ambient": {
+        "X": 0.5,
+        "Y": 0.5,
+        "Z": 0.5
+      },
+      "Color": {
+        "X": 1,
+        "Y": 1,
+        "Z": 1,
+        "W": 1
+      },
+      "Linear": 0.09,
+      "Constant": 1,
+      "Quadratic": 0.032,
+      "CutOff": 0,
+      "OuterCutOff": 0
+    },
+    {
+      "Type": 2,
+      "Position": {
+        "X": 3.6822028,
+        "Y": 1.3313704,
+        "Z": -0.7537134
+      },
+      "Direction": {
+        "X": -0.8407576,
+        "Y": -0.5030157,
+        "Z": 0.20025504
+      },
+      "Diffuse": {
+        "X": 1,
+        "Y": 1,
+        "Z": 1
+      },
+      "Specular": {
+        "X": 1,
+        "Y": 1,
+        "Z": 1
+      },
+      "Ambient": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Color": {
+        "X": 1,
+        "Y": 1,
+        "Z": 1,
+        "W": 1
+      },
+      "Linear": 0.09,
+      "Constant": 1,
+      "Quadratic": 0.032,
+      "CutOff": 0.976296,
+      "OuterCutOff": 0.95371693
+    }
+  ]
+}

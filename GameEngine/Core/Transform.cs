@@ -31,6 +31,15 @@ namespace GameEngine.Core
             UpdateTranform();
         }
 
+        public Transform(Vector3 position, Vector3 scale, Vector3 rotation)
+        {
+            _position = position;
+            _scale = scale;
+            _rotation = rotation;
+
+            UpdateTranform();
+        }
+
         private void UpdateTranform()
         {
            // _model *= Matrix4.CreateRotationX(_rotation.X);

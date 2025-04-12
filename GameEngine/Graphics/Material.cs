@@ -14,6 +14,10 @@ namespace GameEngine.Graphics
 
         public float Shininess { get; set; }
 
+        public bool DiffuseTextureUse { get; set; } = false;
+        public bool SpecularTextureUse { get; set; } = false;
+        public bool NormalTextureUse { get; set; } = false;
+
         public Texture? TexDiff { get; set; }
         public Texture? TexSpec { get; set; }
         public Texture? TexNorm { get; set; }
@@ -104,6 +108,7 @@ namespace GameEngine.Graphics
             {
                 TexNorm.Use(TextureUnit.Texture2);
                 shader.SetInt("material.texNormal", 2);
+                GL.BindTexture(TextureTarget.Texture2D, 0);
             }
         }
 

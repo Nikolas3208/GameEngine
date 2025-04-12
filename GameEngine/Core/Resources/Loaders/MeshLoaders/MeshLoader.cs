@@ -1,6 +1,4 @@
 ﻿using GameEngine.Graphics;
-using GameEngine.Graphics.Bufers;
-using OpenTK.Mathematics;
 
 namespace GameEngine.Core.Resources.Loaders.MeshLoaders
 {

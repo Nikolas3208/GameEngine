@@ -4,18 +4,37 @@ namespace GameEngine.Graphics
 {
     public class Mesh
     {
-        private VertexArray _vertexArray;
-        private Material _material;
+        private VertexArray? _vertexArray;
+        private Material? _material;
 
         public Guid Id { get; }
-        public string Name { get; }
+        public string Name { get; } = string.Empty;
 
-        public Mesh()
+        public Mesh(string name = "mesh")
         {
+            Name = name;
+
             Id = Guid.NewGuid();
         }
 
-        public Mesh(VertexArray vertexArray, Material material, string name)
+        public Mesh(Vertex[] vertices, uint[] indices, string name = "mesh")
+        {
+            _vertexArray = new VertexArray(vertices, indices);
+            Name = name;
+
+            Id = Guid.NewGuid();
+        }
+
+        public Mesh(Vertex[] vertices, uint[] indices, Material material, string name = "mesh")
+        {
+            _vertexArray = new VertexArray(vertices, indices);
+            _material = material;
+            Name = name;
+
+            Id = Guid.NewGuid();
+        }
+
+        public Mesh(VertexArray vertexArray, Material material, string name = "mesh")
         {
             _vertexArray = vertexArray;
             _material = material;
@@ -72,6 +91,39 @@ namespace GameEngine.Graphics
                 return 0;
 
             return (uint)_vertexArray.GetVertexBuffer().Count;
+        }
+
+        public Vertex[]? GetVertices()
+        {
+            if (_vertexArray == null)
+                return null;
+
+            if (_vertexArray.GetVertexBuffer() == null)
+                return null;
+
+            return _vertexArray.GetVertexBuffer().GetVertices();
+        }
+
+        public int GetIndicesCount()
+        {
+            if (_vertexArray == null)
+                return 0;
+
+            if (_vertexArray.GetIndexBuffer() == null)
+                return 0;
+
+            return _vertexArray.GetIndexBuffer()!.Count;
+        }
+
+        public uint[]? GetIndices()
+        {
+            if (_vertexArray == null)
+                return null;
+
+            if (_vertexArray.GetIndexBuffer() == null)
+                return null;
+
+            return _vertexArray.GetIndexBuffer()!.GetIndices();
         }
     }
 }

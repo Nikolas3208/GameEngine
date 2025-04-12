@@ -12,6 +12,7 @@ namespace GameEngine.Core.GameObjects
         protected Shader shader;
 
         public Guid Id { get; }
+        public string Name { get; set; } = nameof(GameObject);
 
         public GameObject(Scene scene)
         {
@@ -23,7 +24,7 @@ namespace GameEngine.Core.GameObjects
             Id = Guid.NewGuid();
         }
 
-        public void AddComponent(Component component)
+        public GameObject AddComponent(Component component)
         {
             if (components.FirstOrDefault(c => c.Id == component.Id) == null
                 || components.FirstOrDefault(c => c.GetType() == component.GetType()) == null)
@@ -35,6 +36,8 @@ namespace GameEngine.Core.GameObjects
             {
                 throw new Exception("Данный компонент или тип уже в списке.");
             }
+
+            return this;
         }
 
         public T GetComponent<T>() where T : Component
@@ -45,6 +48,11 @@ namespace GameEngine.Core.GameObjects
         public bool RemoveComponent(Component component)
         {
             return components.Remove(component);
+        }
+
+        public List<Component> GetAllComponents()
+        {
+            return components;
         }
 
         public virtual void Start()

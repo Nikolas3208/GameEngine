@@ -10,10 +10,18 @@ namespace GameEngine.Core.Resources
 {
     public class AssetManager : IAssetManager
     {
+        private string _path;
+
         private Dictionary<string, Texture> _textures = [];
         private Dictionary<string, Material> _materials = [];
         private Dictionary<string, Shader> _shaders = [];
         private Dictionary<string, List<Mesh>> _meshs = [];
+
+        public AssetManager(string path)
+        {
+            _path = path;
+        }
+
         public bool AddMaterial(string matName, Material mat)
         {
             if(_materials.ContainsKey(matName))
@@ -156,6 +164,11 @@ namespace GameEngine.Core.Resources
             }
 
             return false;
+        }
+
+        public string GetPath()
+        {
+            return _path;
         }
     }
 }

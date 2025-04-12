@@ -7,7 +7,7 @@ namespace GameEngine.Graphics.Bufers
         /// <summary>
         /// Массив индексов
         /// </summary>
-        private uint[] indices;
+        private uint[] _indices;
 
         /// <summary>
         /// Идентефикатор буфера
@@ -25,7 +25,7 @@ namespace GameEngine.Graphics.Bufers
         /// <param name="indices"> Масив индексов </param>
         public IndexBuffer(uint[] indices)
         {
-            this.indices = indices;
+            _indices = indices;
             Count = indices.Length;
 
             Init();
@@ -38,7 +38,7 @@ namespace GameEngine.Graphics.Bufers
         {
             HandleIBO = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, HandleIBO);
-            GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
         }
 
@@ -56,6 +56,11 @@ namespace GameEngine.Graphics.Bufers
         public void Unbind()
         {
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
+        }
+
+        public uint[]? GetIndices()
+        {
+            return _indices;
         }
     }
 }
